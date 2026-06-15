@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<!-- ==================================================================
+     SECURITY REPORT TEMPLATE · kami design system
+     安全扫描报告专用模板 · 内嵌设计系统 · 零外部依赖
+     结构：封面 → 执行摘要 → 高危详情 → 中低危汇总 → 修复路线图 → 附录
+     PDF 生成：chrome --headless --print-to-pdf=output.pdf this-file.html
+     ================================================================== -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>安全扫描报告 · {{PROJECT_NAME}}</title>
+<meta name="author" content="debug-security">
+<meta name="description" content="{{PROJECT_NAME}} 安全扫描结果：{{TOTAL}} 个漏洞，{{CRITICAL}} 个 Critical">
+<meta name="keywords" content="安全扫描,漏洞检测,{{PROJECT_NAME}},CWE,OWASP">
+<meta name="generator" content="debug-security + kami">
+<style>
+  /* ===== FONT: CDN fallback, no local files required ===== */
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W04.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W05.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  /* ===== PAGE ===== */
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    background: #f5f4ed;
+    @top-right {
+      content: string(section-title);
+      font-family: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+      font-size: 8pt;
+      color: #6b6a64;
+    }
+    @bottom-center {
+      content: counter(page) "  ·  安全扫描报告 · {{PROJECT_NAME}}";
+      font-family: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+      font-size: 9pt;
+      color: #6b6a64;
+    }
+  }
+  @page:first {
+    @top-right { content: ""; }
+    @bottom-center { content: ""; }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --parchment: #f5f4ed;
+    --ivory:     #faf9f5;
+    --warm-sand: #e8e6dc;
+    --near-black:#141413;
+    --dark-warm: #3d3d3a;
+    --olive:     #504e49;
+    --stone:     #6b6a64;
+    --brand:     #1B365D;
+    --brand-light:#2D5A8A;
+    --border:    #e8e6dc;
+    --border-soft:#e5e3d8;
+    --tag-bg:    #E4ECF5;
+    --serif: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", Georgia, serif;
+    --sans: var(--serif);
+    /* Severity colors — solid hex, no rgba */
+    --sev-critical: #C62828;
+    --sev-critical-bg: #FDEAEA;
+    --sev-high: #E65100;
+    --sev-high-bg: #FFF3E0;
+    --sev-medium: #F9A825;
+    --sev-medium-bg: #FFFDE7;
+    --sev-low: #2E7D32;
+    --sev-low-bg: #E8F5E9;
+  }
+
+  html, body { background: var(--parchment); }
+
+  @media screen {
+    body { max-width: 210mm; margin: 0 auto; padding: 20mm 22mm 22mm 22mm; }
+  }
+
+  body {
+    color: var(--near-black);
+    font-family: var(--serif);
+    font-size: 10.5pt;
+    line-height: 1.55;
+    letter-spacing: 0.3pt;
+  }
+
+  .sans { font-family: var(--sans); }
+
+  /* ========== COVER ========== */
+  .cover {
+    min-height: 240mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40mm 0 0 0;
+    break-after: page;
+  }
+  .cover-eyebrow {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--brand);
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    margin-bottom: 18pt;
+  }
+  .cover-title {
+    font-size: 36pt;
+    font-weight: 500;
+    color: var(--near-black);
+    line-height: 1.15;
+    letter-spacing: 0.3pt;
+    margin-bottom: 16pt;
+  }
+  .cover-sub {
+    font-family: var(--sans);
+    font-size: 14pt;
+    color: var(--olive);
+    line-height: 1.5;
+    max-width: 85%;
+    margin-bottom: 30pt;
+  }
+  .cover-meta {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--stone);
+    line-height: 1.5;
+  }
+  .cover-meta strong { color: var(--dark-warm); font-weight: 500; }
+
+  /* ========== RISK BADGE ========== */
+  .risk-badge {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 11pt;
+    font-weight: 500;
+    padding: 4pt 14pt;
+    border-radius: 4pt;
+    margin-bottom: 16pt;
+    letter-spacing: 0.5pt;
+  }
+  .risk-critical { background: var(--sev-critical-bg); color: var(--sev-critical); }
+  .risk-warning  { background: var(--sev-medium-bg);   color: var(--sev-medium); }
+  .risk-good     { background: var(--sev-low-bg);       color: var(--sev-low); }
+
+  /* ========== HEADINGS ========== */
+  h1 {
+    font-size: 22pt;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0 0 10pt 0;
+    border-left: 2.5pt solid var(--brand);
+    border-radius: 1.5pt;
+    padding-left: 8pt;
+    color: var(--near-black);
+    break-after: avoid;
+  }
+  h2 {
+    font-size: 16pt;
+    font-weight: 500;
+    line-height: 1.25;
+    margin: 24pt 0 6pt 0;
+    color: var(--near-black);
+    break-after: avoid;
+    string-set: section-title content();
+  }
+  h3 {
+    font-size: 13pt;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 18pt 0 4pt 0;
+    color: var(--dark-warm);
+    break-after: avoid;
+  }
+  .chapter-num {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--brand);
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    margin-bottom: 6pt;
+  }
+
+  /* ========== PARAGRAPHS ========== */
+  p { margin: 0 0 10pt 0; line-height: 1.55; color: var(--near-black); }
+  .lead { font-size: 12pt; line-height: 1.55; color: var(--dark-warm); margin-bottom: 14pt; }
+  .hl { color: var(--brand); font-weight: 500; }
+  strong { font-weight: 500; }
+
+  /* ========== LISTS ========== */
+  ul, ol { margin: 6pt 0 10pt 0; padding-left: 20pt; line-height: 1.55; }
+  ul li::marker { color: var(--brand); }
+  ol li::marker { color: var(--brand); font-weight: 500; }
+
+  /* ========== TABLE (kami-table) ========== */
+  table, .kami-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    margin: 12pt 0;
+    break-inside: avoid;
+  }
+  table th, .kami-table th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--dark-warm);
+    padding: 6pt 8pt;
+    border-bottom: 1pt solid var(--border);
+    background: transparent;
+  }
+  table td, .kami-table td {
+    padding: 5pt 8pt;
+    border-bottom: 0.3pt solid var(--border-soft);
+    vertical-align: top;
+  }
+  table.compact th, .kami-table.compact th { padding: 3pt 6pt; font-size: 8pt; }
+  table.compact td, .kami-table.compact td { padding: 2pt 6pt; font-size: 8pt; line-height: 1.4; }
+  table.striped tbody tr:nth-child(even) td,
+  .kami-table.striped tbody tr:nth-child(even) td { background: var(--ivory); }
+
+  /* ========== SEVERITY TAGS ========== */
+  .sev { display: inline-block; font-size: 8.5pt; font-weight: 500; padding: 1pt 6pt; border-radius: 3pt; }
+  .sev-critical { background: var(--sev-critical-bg); color: var(--sev-critical); }
+  .sev-high     { background: var(--sev-high-bg);     color: var(--sev-high); }
+  .sev-medium   { background: var(--sev-medium-bg);   color: var(--sev-medium); }
+  .sev-low      { background: var(--sev-low-bg);       color: var(--sev-low); }
+
+  /* ========== METRICS ROW ========== */
+  .metrics { display: flex; gap: 12pt; margin: 14pt 0; flex-wrap: wrap; }
+  .metric-card {
+    flex: 1;
+    min-width: 80pt;
+    background: var(--ivory);
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    text-align: center;
+    break-inside: avoid;
+  }
+  .metric-value {
+    font-family: var(--serif);
+    font-size: 20pt;
+    font-weight: 500;
+    color: var(--brand);
+    font-variant-numeric: tabular-nums;
+  }
+  .metric-value.critical { color: var(--sev-critical); }
+  .metric-value.high     { color: var(--sev-high); }
+  .metric-value.medium   { color: var(--sev-medium); }
+  .metric-value.low      { color: var(--sev-low); }
+  .metric-label {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--olive);
+    margin-top: 2pt;
+  }
+
+  /* ========== FINDING CARD ========== */
+  .finding-card {
+    background: var(--ivory);
+    border: 0.5pt solid var(--border);
+    border-left: 3pt solid var(--brand);
+    border-radius: 4pt;
+    padding: 12pt 16pt;
+    margin: 10pt 0;
+    break-inside: avoid;
+  }
+  .finding-card.critical { border-left-color: var(--sev-critical); }
+  .finding-card.high     { border-left-color: var(--sev-high); }
+  .finding-card.medium   { border-left-color: var(--sev-medium); }
+  .finding-card.low      { border-left-color: var(--sev-low); }
+  .finding-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4pt;
+  }
+  .finding-title { font-size: 11pt; font-weight: 500; color: var(--near-black); }
+  .finding-meta { font-size: 8.5pt; color: var(--stone); margin-top: 3pt; }
+  .finding-desc { font-size: 9.5pt; color: var(--dark-warm); margin-top: 6pt; }
+  .finding-fix {
+    background: var(--parchment);
+    border-radius: 3pt;
+    padding: 6pt 10pt;
+    margin-top: 8pt;
+    font-size: 9pt;
+    color: var(--olive);
+  }
+  .finding-fix strong { color: var(--dark-warm); }
+
+  /* ========== CODE ========== */
+  code {
+    font-family: "JetBrains Mono", "SF Mono", Consolas, "TsangerJinKai02", "Source Han Serif SC", monospace;
+    font-size: 9pt;
+    background: var(--ivory);
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+    color: var(--dark-warm);
+  }
+  pre {
+    font-family: "JetBrains Mono", "SF Mono", Consolas, "TsangerJinKai02", "Source Han Serif SC", monospace;
+    font-size: 9pt;
+    line-height: 1.5;
+    background: var(--ivory);
+    border-radius: 4pt;
+    padding: 10pt 14pt;
+    margin: 10pt 0;
+    white-space: pre-wrap;
+    color: var(--near-black);
+    break-inside: avoid;
+  }
+  pre code { background: transparent; padding: 0; font-size: inherit; }
+
+  /* ========== CHART CONTAINER ========== */
+  .chart-container {
+    background: var(--ivory);
+    border-radius: 8pt;
+    padding: 16pt;
+    margin: 14pt 0;
+    text-align: center;
+    break-inside: avoid;
+  }
+  .chart-container svg { max-width: 100%; }
+  .chart-caption {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--stone);
+    margin-top: 8pt;
+  }
+
+  /* ========== REMEDIATION TIMELINE ========== */
+  .remediation-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12pt;
+    margin: 8pt 0;
+    break-inside: avoid;
+  }
+  .remediation-dot {
+    width: 10pt;
+    height: 10pt;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 3pt;
+  }
+  .remediation-dot.p0 { background: var(--sev-critical); }
+  .remediation-dot.p1 { background: var(--sev-high); }
+  .remediation-dot.p2 { background: var(--sev-medium); }
+  .remediation-dot.p3 { background: var(--sev-low); }
+  .remediation-content { flex: 1; }
+  .remediation-priority {
+    font-family: var(--sans);
+    font-size: 9pt;
+    font-weight: 500;
+    color: var(--brand);
+    letter-spacing: 0.3pt;
+  }
+  .remediation-desc { font-size: 9.5pt; color: var(--dark-warm); margin-top: 2pt; }
+  .remediation-deadline {
+    font-size: 8.5pt;
+    color: var(--stone);
+    margin-top: 1pt;
+  }
+
+  /* ========== CHAPTER BREAK ========== */
+  .chapter { break-before: page; }
+
+  /* ========== CALL OUT ========== */
+  .callout {
+    background: var(--ivory);
+    border-left: 2pt solid var(--brand);
+    padding: 10pt 14pt;
+    border-radius: 3pt;
+    margin: 12pt 0;
+    line-height: 1.55;
+    break-inside: avoid;
+  }
+  .takeaway {
+    background: var(--ivory);
+    border-radius: 4pt;
+    padding: 10pt 14pt;
+    margin: 14pt 0;
+    break-inside: avoid;
+  }
+  .takeaway-label {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--brand);
+    letter-spacing: 0.5pt;
+    text-transform: uppercase;
+    margin-bottom: 4pt;
+  }
+
+  /* ========== TAG ========== */
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--brand);
+    font-family: var(--sans);
+    font-size: 9pt;
+    font-weight: 500;
+    padding: 1pt 6pt;
+    border-radius: 3pt;
+    margin-right: 4pt;
+  }
+
+  /* ========== INLINE DONUT CHART (pure SVG) ========== */
+  .donut-legend {
+    display: flex;
+    justify-content: center;
+    gap: 16pt;
+    margin-top: 8pt;
+    font-size: 9pt;
+    color: var(--dark-warm);
+  }
+  .donut-legend-item { display: flex; align-items: center; gap: 4pt; }
+  .donut-legend-dot { width: 8pt; height: 8pt; border-radius: 2pt; }
+</style>
+</head>
+<body>
+
+<!-- ═════════════ COVER ═════════════ -->
+<section class="cover">
+  <div>
+    <div class="cover-eyebrow">Security Scan Report</div>
+    <div class="risk-badge risk-critical"><!-- or risk-warning / risk-good -->
+      <!-- {{RISK_RATING}} --> 🔴 高危
+    </div>
+    <div class="cover-title">{{PROJECT_NAME}}<br>安全扫描报告</div>
+    <div class="cover-sub">共发现 <span class="hl">{{TOTAL}} 个安全漏洞</span>，其中 Critical 级别 {{CRITICAL}} 个，High 级别 {{HIGH}} 个，需要立即关注和修复。</div>
+  </div>
+  <div class="cover-meta">
+    <strong>debug-security v{{VERSION}}</strong><br>
+    {{SCAN_DATE}}<br>
+    扫描路径：{{PROJECT_PATH}}
+  </div>
+</section>
+
+<!-- ═════════════ 执行摘要 ═════════════ -->
+<section class="chapter">
+  <div class="chapter-num">01 · Executive Summary</div>
+  <h1>执行摘要</h1>
+
+  <p class="lead">
+    本次安全扫描覆盖 <span class="hl">{{FILE_COUNT}} 个文件</span>，发现 <span class="hl">{{TOTAL}} 个漏洞</span>。
+    其中 {{CRITICAL}} 个 Critical、{{HIGH}} 个 High、{{MEDIUM}} 个 Medium、{{LOW}} 个 Low。
+  </p>
+
+  <!-- METRICS CARDS -->
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="metric-value">{{TOTAL}}</div>
+      <div class="metric-label">漏洞总数</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value critical">{{CRITICAL}}</div>
+      <div class="metric-label">Critical</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value high">{{HIGH}}</div>
+      <div class="metric-label">High</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value medium">{{MEDIUM}}</div>
+      <div class="metric-label">Medium</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value low">{{LOW}}</div>
+      <div class="metric-label">Low</div>
+    </div>
+  </div>
+
+  <!-- DONUT CHART: severity distribution -->
+  <div class="chart-container">
+    <svg width="200" height="200" viewBox="0 0 200 200" style="display:block;margin:0 auto;">
+      <!--
+        Donut chart: stroke-dasharray = "filled remaining"
+        circumference = 2 * PI * 70 ≈ 439.82
+        Each segment: dasharray = "segment_length remainder"
+        Segments rotate using stroke-dashoffset
+        Replace values proportionally based on actual findings
+      -->
+      <!-- Background circle -->
+      <circle cx="100" cy="100" r="70" fill="none" stroke="#e8e6dc" stroke-width="24"/>
+      <!-- Critical slice -->
+      <circle cx="100" cy="100" r="70" fill="none" stroke="#C62828" stroke-width="24"
+        stroke-dasharray="31.4 408.4" stroke-dashoffset="0"
+        transform="rotate(-90 100 100)"/>
+      <!-- High slice -->
+      <circle cx="100" cy="100" r="70" fill="none" stroke="#E65100" stroke-width="24"
+        stroke-dasharray="125.7 314.1" stroke-dashoffset="-31.4"
+        transform="rotate(-90 100 100)"/>
+      <!-- Medium slice -->
+      <circle cx="100" cy="100" r="70" fill="none" stroke="#F9A825" stroke-width="24"
+        stroke-dasharray="188.5 251.3" stroke-dashoffset="-157.1"
+        transform="rotate(-90 100 100)"/>
+      <!-- Low slice -->
+      <circle cx="100" cy="100" r="70" fill="none" stroke="#2E7D32" stroke-width="24"
+        stroke-dasharray="94.2 345.6" stroke-dashoffset="-345.6"
+        transform="rotate(-90 100 100)"/>
+      <!-- Center label -->
+      <text x="100" y="95" text-anchor="middle" font-size="28" font-weight="500" fill="#141413"
+        font-family="'TsangerJinKai02','Source Han Serif SC',Georgia,serif">{{TOTAL}}</text>
+      <text x="100" y="115" text-anchor="middle" font-size="10" fill="#6b6a64"
+        font-family="'TsangerJinKai02','Source Han Serif SC',Georgia,serif">漏洞总数</text>
+    </svg>
+    <div class="donut-legend">
+      <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#C62828"></div>Critical {{CRITICAL}}</div>
+      <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#E65100"></div>High {{HIGH}}</div>
+      <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#F9A825"></div>Medium {{MEDIUM}}</div>
+      <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#2E7D32"></div>Low {{LOW}}</div>
+    </div>
+    <div class="chart-caption">漏洞严重级别分布</div>
+  </div>
+
+  <h2>风险评级说明</h2>
+  <table>
+    <thead>
+      <tr><th>条件</th><th>评级</th><th>处置要求</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>存在 Critical 漏洞</td><td><span class="sev sev-critical">🔴 高危</span></td><td>24 小时内修复</td></tr>
+      <tr><td>仅 High 漏洞（≤3 个）</td><td><span class="sev sev-high">🟠 中高</span></td><td>72 小时内修复</td></tr>
+      <tr><td>仅 Medium / Low 漏洞</td><td><span class="sev sev-medium">🟡 中等</span></td><td>排期处理</td></tr>
+      <tr><td>无漏洞</td><td><span class="sev sev-low">🟢 良好</span></td><td>保持监控</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═════════════ 高危漏洞详情 ═════════════ -->
+<section class="chapter">
+  <div class="chapter-num">02 · Critical &amp; High Findings</div>
+  <h1>高危漏洞详情</h1>
+
+  <p class="lead">以下为 Critical 和 High 级别漏洞的详细分析，需优先处理。</p>
+
+  <!-- FINDING CARD: repeat for each critical/high finding -->
+  <div class="finding-card critical">
+    <div class="finding-header">
+      <span class="finding-title">#1 {{FINDING_TITLE}}</span>
+      <span class="sev sev-critical">Critical</span>
+    </div>
+    <div class="finding-meta">
+      <span class="tag">CWE-{{CWE_ID}}</span>
+      <code>{{FILE_PATH}}:{{LINE}}</code>
+    </div>
+    <div class="finding-desc">{{FINDING_DESCRIPTION}}</div>
+    <div class="finding-fix">
+      <strong>修复建议：</strong>{{REMEDIATION_ADVICE}}
+    </div>
+  </div>
+
+  <!-- Template: duplicate for each finding -->
+  <div class="finding-card high">
+    <div class="finding-header">
+      <span class="finding-title">#2 {{FINDING_TITLE}}</span>
+      <span class="sev sev-high">High</span>
+    </div>
+    <div class="finding-meta">
+      <span class="tag">CWE-{{CWE_ID}}</span>
+      <code>{{FILE_PATH}}:{{LINE}}</code>
+    </div>
+    <div class="finding-desc">{{FINDING_DESCRIPTION}}</div>
+    <div class="finding-fix">
+      <strong>修复建议：</strong>{{REMEDIATION_ADVICE}}
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════ 中低危漏洞汇总 ═════════════ -->
+<section class="chapter">
+  <div class="chapter-num">03 · Medium &amp; Low Findings</div>
+  <h1>中低危漏洞汇总</h1>
+
+  <p class="lead">以下 Medium 和 Low 级别漏洞建议排期处理。</p>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>级别</th>
+        <th>标题</th>
+        <th>CWE</th>
+        <th>文件</th>
+        <th>行号</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Repeat for each medium/low finding -->
+      <tr>
+        <td>3</td>
+        <td><span class="sev sev-medium">Medium</span></td>
+        <td>{{TITLE}}</td>
+        <td><span class="tag">CWE-{{ID}}</span></td>
+        <td><code>{{FILE}}</code></td>
+        <td>{{LINE}}</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><span class="sev sev-low">Low</span></td>
+        <td>{{TITLE}}</td>
+        <td><span class="tag">CWE-{{ID}}</span></td>
+        <td><code>{{FILE}}</code></td>
+        <td>{{LINE}}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═════════════ 修复路线图 ═════════════ -->
+<section class="chapter">
+  <div class="chapter-num">04 · Remediation Roadmap</div>
+  <h1>修复路线图</h1>
+
+  <p class="lead">按优先级排列的修复建议，确保最关键的安全风险优先被消除。</p>
+
+  <div class="remediation-item">
+    <div class="remediation-dot p0"></div>
+    <div class="remediation-content">
+      <div class="remediation-priority">P0 · Critical — 24 小时内</div>
+      <div class="remediation-desc">修复 {{CRITICAL_COUNT}} 个 Critical 漏洞：API Key 泄露、硬编码密码、SQL 注入等。</div>
+      <div class="remediation-deadline">截止：{{TODAY+1}}</div>
+    </div>
+  </div>
+
+  <div class="remediation-item">
+    <div class="remediation-dot p1"></div>
+    <div class="remediation-content">
+      <div class="remediation-priority">P1 · High — 72 小时内</div>
+      <div class="remediation-desc">修复 {{HIGH_COUNT}} 个 High 漏洞：XSS、路径遍历、不安全的反序列化等。</div>
+      <div class="remediation-deadline">截止：{{TODAY+3}}</div>
+    </div>
+  </div>
+
+  <div class="remediation-item">
+    <div class="remediation-dot p2"></div>
+    <div class="remediation-content">
+      <div class="remediation-priority">P2 · Medium — 1 周内</div>
+      <div class="remediation-desc">处理 {{MEDIUM_COUNT}} 个 Medium 漏洞：信息泄露、配置不当等。</div>
+      <div class="remediation-deadline">截止：{{TODAY+7}}</div>
+    </div>
+  </div>
+
+  <div class="remediation-item">
+    <div class="remediation-dot p3"></div>
+    <div class="remediation-content">
+      <div class="remediation-priority">P3 · Low — 排期处理</div>
+      <div class="remediation-desc">优化 {{LOW_COUNT}} 个 Low 漏洞：代码质量、最佳实践建议等。</div>
+      <div class="remediation-deadline">建议纳入下个迭代</div>
+    </div>
+  </div>
+
+  <!-- BAR CHART: top vulnerable files -->
+  <div class="chart-container">
+    <svg width="460" height="160" viewBox="0 0 460 160" style="display:block;margin:0 auto;">
+      <!-- Horizontal bar chart: top 5 files by vulnerability count -->
+      <!-- Bar 1 -->
+      <rect x="120" y="8" width="280" height="20" rx="3" fill="#C62828" opacity="0.85"/>
+      <text x="115" y="23" text-anchor="end" font-size="9" fill="#3d3d3a"
+        font-family="'TsangerJinKai02','Source Han Serif SC',Georgia,serif">{{FILE_1}}</text>
+      <text x="405" y="23" font-size="9" fill="#3d3d3a" font-variant-numeric="tabular-nums"
+        font-family="'TsangerJinKai02','Source Han Serif SC',Georgia,serif">{{FILE_1_COUNT}}</text>
+      <!-- Bar 2 -->
+      <rect x="120" y="36" width="220" height="20" rx="3" fill="#E65100" opacity="0.85"/>
+      <text x="115" y="51" text-anchor="end" font-size="9" fill="#3d3d3a"
+        font-family="'TsangerJinKai02','Source Han Serif SC',Georgia,serif">{{FILE_2}}</text>
+      <text x="345" y="51" font-size="9" fill="#3d3d3a" font-variant-numeric="tabular-nums"
+        font-family="'TsangerJinKai02','Source Han Serif SC',Georgia,serif">{{FILE_2_COUNT}}</text>
+      <!-- Bar 3 -->
+      <rect x="120" y="64" width="160" height="20" rx="3" fill="#F9A825" opacity="0.85"/>
+      <text x="115" y="79" text-anchor="end" font-size="9" fill="#3d3d3a"
+        font-family="'TsangerJinKai02','Source Han Serif SC',Georgia,serif">{{FILE_3}}</text>
+      <text x="285" y="79" font-size="9" fill="#3d3d3a" font-variant-numeric="tabular-nums"
+        font-family="'TsangerJinKai02','Source Han Serif SC',Georgia,serif">{{FILE_3_COUNT}}</text>
+      <!-- Bar 4 -->
+      <rect x="120" y="92" width="100" height="20" rx="3" fill="#F9A825" opacity="0.65"/>
+      <text x="115" y="107" text-anchor="end" font-size="9" fill="#3d3d3a"
+        font-family="'TsangerJinKai02','Source Han Serif SC',Georgia,serif">{{FILE_4}}</text>
+      <text x="225" y="107" font-size="9" fill="#3d3d3a" font-variant-numeric="tabular-nums"
+        font-family="'TsangerJinKai02','Source Han Serif SC',Georgia,serif">{{FILE_4_COUNT}}</text>
+      <!-- Bar 5 -->
+      <rect x="120" y="120" width="60" height="20" rx="3" fill="#2E7D32" opacity="0.65"/>
+      <text x="115" y="135" text-anchor="end" font-size="9" fill="#3d3d3a"
+        font-family="'TsangerJinKai02','Source Han Serif SC',Georgia,serif">{{FILE_5}}</text>
+      <text x="185" y="135" font-size="9" fill="#3d3d3a" font-variant-numeric="tabular-nums"
+        font-family="'TsangerJinKai02','Source Han Serif SC',Georgia,serif">{{FILE_5_COUNT}}</text>
+    </svg>
+    <div class="chart-caption">漏洞分布最多的文件 Top 5</div>
+  </div>
+</section>
+
+<!-- ═════════════ 附录 ═════════════ -->
+<section class="chapter">
+  <div class="chapter-num">05 · Appendix</div>
+  <h1>附录</h1>
+
+  <h2>A. CWE 参考</h2>
+  <table class="compact">
+    <thead>
+      <tr><th>CWE</th><th>名称</th><th>本次数量</th></tr>
+    </thead>
+    <tbody>
+      <!-- Repeat for each CWE category found -->
+      <tr>
+        <td><span class="tag">CWE-{{ID}}</span></td>
+        <td>{{CWE_NAME}}</td>
+        <td>{{COUNT}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>B. OWASP Top 10 映射</h2>
+  <table class="compact">
+    <thead>
+      <tr><th>OWASP 类别</th><th>涉及漏洞</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>A01:2021 - Broken Access Control</td>
+        <td>{{COUNT}} 个</td>
+      </tr>
+      <tr>
+        <td>A02:2021 - Cryptographic Failures</td>
+        <td>{{COUNT}} 个</td>
+      </tr>
+      <tr>
+        <td>A03:2021 - Injection</td>
+        <td>{{COUNT}} 个</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>C. 扫描配置</h2>
+  <table class="compact">
+    <thead>
+      <tr><th>参数</th><th>值</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>扫描器版本</td><td>debug-security v{{VERSION}}</td></tr>
+      <tr><td>扫描模式</td><td>{{SCAN_MODE}}</td></tr>
+      <tr><td>扫描路径</td><td>{{PROJECT_PATH}}</td></tr>
+      <tr><td>扫描时间</td><td>{{SCAN_DATE}}</td></tr>
+      <tr><td>AI 分析</td><td>{{AI_ENABLED}}</td></tr>
+      <tr><td>扫描文件数</td><td>{{FILE_COUNT}}</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</body>
+</html>

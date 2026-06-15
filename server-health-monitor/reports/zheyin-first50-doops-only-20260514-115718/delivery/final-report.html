@@ -1,0 +1,2406 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>服务器帐户和密码 服务器运行健康报告</title>
+  <style>
+    :root { color-scheme: light; --ink:#172033; --muted:#667085; --line:#d8dee8; --paper:#ffffff; --soft:#f5f7fb; --good:#147a4b; --warn:#a15c00; --bad:#b42318; --unknown:#4b5565; --accent:#1f6f8b; --gold:#b7791f; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font: 14px/1.6 "Microsoft YaHei", "Noto Sans CJK SC", Arial, Helvetica, sans-serif; color: var(--ink); background: #eef2f6; }
+    .guide-cover { padding: 34px 6vw 30px; background: linear-gradient(135deg, #10243f, #24546c 58%, #41635f); color: white; }
+    .cover-grid { display: grid; grid-template-columns: minmax(320px, 1.05fr) minmax(360px, .95fr); gap: 28px; align-items: stretch; max-width: 1280px; margin: 0 auto; }
+    .cover-copy { display:flex; flex-direction:column; gap: 16px; min-width: 0; }
+    .cover-copy h1 { margin: 0; font-size: clamp(28px, 4vw, 46px); line-height: 1.12; letter-spacing: 0; }
+    .cover-kicker { display:flex; flex-wrap:wrap; align-items:center; gap: 10px; }
+    .generated-at { color:#c7d9e4; font-size: 13px; }
+    .conclusion-panel { border: 1px solid rgba(255,255,255,.26); border-radius: 8px; padding: 16px 18px; background: rgba(255,255,255,.10); box-shadow: inset 0 1px 0 rgba(255,255,255,.12); }
+    .conclusion-panel p { margin: 0 0 8px; max-width: 900px; color: #edf6fb; }
+    .conclusion-panel p:last-child { margin-bottom: 0; }
+    .cover-stats { display:grid; grid-template-columns: repeat(4, minmax(86px, 1fr)); gap: 10px; }
+    .cover-stat { border: 1px solid rgba(255,255,255,.22); border-radius: 8px; padding: 10px 12px; background: rgba(255,255,255,.08); }
+    .cover-stat span { display:block; color:#c7d9e4; font-size: 12px; }
+    .cover-stat b { display:block; font-size: 22px; line-height: 1.2; }
+    .guide-visual { border: 1px solid rgba(255,255,255,.28); border-radius: 8px; overflow: hidden; background: rgba(255,255,255,.08); min-height: 220px; display:flex; align-items:center; justify-content:center; }
+    .guide-visual img { display:block; width:100%; height:auto; }
+    .html-guide-visual { padding: 16px; }
+    .guide-map { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; color: #e9f2f8; }
+    .guide-map-head { grid-column: 1 / -1; display:flex; align-items:center; justify-content:space-between; gap: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,.28); }
+    .guide-map-head span { font-weight: 700; }
+    .guide-map-head strong { padding: 3px 9px; border-radius: 999px; background: rgba(255,255,255,.16); }
+    .guide-flow { grid-column: 1 / -1; display:grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .guide-flow span { height: 5px; border-radius: 999px; background: linear-gradient(90deg, #69d2c7, #f4c95d); opacity: .92; }
+    .guide-node { min-height: 58px; border: 1px solid rgba(255,255,255,.24); border-radius: 8px; padding: 10px; background: rgba(255,255,255,.10); }
+    .guide-node small { display:block; color: #b8d4e3; margin-bottom: 4px; }
+    .guide-node b { font-size: 13px; }
+    .guide-node.primary { background: rgba(105,210,199,.16); }
+    .guide-node.risk { background: rgba(244,201,93,.16); }
+    .guide-node.action { background: rgba(255,255,255,.14); }
+    .status-pill { display: inline-block; padding: 5px 10px; border: 1px solid rgba(255,255,255,.5); border-radius: 999px; font-size: 12px; }
+    .report-nav { position: sticky; top: 0; z-index: 2; display: flex; gap: 8px; padding: 10px 6vw; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); box-shadow: 0 8px 22px rgba(16,36,63,.06); }
+    .report-nav a { color: var(--ink); text-decoration: none; font-weight: 700; padding: 6px 10px; border-radius: 8px; }
+    .report-nav a:hover { background: var(--soft); }
+    main.executive-layout { max-width: 1280px; margin: 0 auto; padding: 24px 20px 46px; background: var(--paper); }
+    .section-head { display:flex; justify-content:space-between; align-items:flex-end; gap: 18px; margin-bottom: 14px; }
+    .section-head h2 { margin: 0; font-size: 22px; }
+    .section-note { margin: 0; color: var(--muted); max-width: 620px; }
+    .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: 12px; margin: 18px 0; }
+    .metric { border: 1px solid var(--line); border-radius: 8px; padding: 14px; background: var(--soft); }
+    .metric span { color: var(--muted); }
+    .metric b { display:block; font-size: 28px; line-height: 1.15; }
+    .metric.critical b { color: var(--bad); }
+    .metric.warning b { color: var(--warn); }
+    .metric.review b { color: var(--accent); }
+    .coverage-strip, .trend-strip { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .trend-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .strip-item { border: 1px solid var(--line); border-radius: 8px; padding: 12px; background: #fff; }
+    .strip-item span { display:block; color: var(--muted); font-size: 12px; }
+    .strip-item b { display:block; margin-top: 2px; }
+    .fold-section { border-top: 1px solid var(--line); padding: 28px 0; }
+    .insight-grid { display:grid; grid-template-columns: minmax(0,1.1fr) minmax(280px,.9fr); gap: 14px; margin-top: 16px; }
+    .insight-panel, .score-panel, .reading-map, .action-track, .risk-item { border:1px solid var(--line); border-radius:8px; background:#fff; box-shadow:0 8px 22px rgba(16,36,63,.05); }
+    .insight-panel { padding:16px; }
+    .insight-panel h3, .score-panel h3, .action-track h3 { margin:0 0 10px; font-size:16px; }
+    .insight-panel ul, .score-panel ul, .reading-map ol, .action-track ul { margin:0; padding-left:20px; }
+    .score-panel { padding:16px; display:grid; gap:12px; }
+    .score-duo { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; }
+    .score-duo div { border:1px solid var(--line); border-radius:8px; padding:12px; background:var(--soft); }
+    .score-duo span { display:block; color:var(--muted); font-size:12px; }
+    .score-duo b { display:block; font-size:28px; line-height:1.1; }
+    .reading-map { padding:14px 16px; margin-top:14px; }
+    .reading-map li { margin:6px 0; }
+    .reading-map span { color:var(--muted); margin-left:8px; }
+    .mobile-summary-card { display:none; border:1px solid var(--line); border-radius:8px; padding:14px; margin-top:14px; background:#fbfdff; }
+    .mobile-summary-card b { display:block; font-size:22px; }
+    .risk-queue { display:grid; gap:12px; }
+    .risk-item { padding:14px 16px; border-left:4px solid var(--unknown); }
+    .risk-item.critical { border-left-color:var(--bad); }
+    .risk-item.warning { border-left-color:var(--warn); }
+    .risk-item.info { border-left-color:var(--accent); }
+    .risk-item-head { display:flex; flex-wrap:wrap; gap:8px; align-items:center; color:var(--muted); }
+    .risk-item-head span { padding:2px 8px; border-radius:999px; color:white; background:var(--accent); font-size:12px; }
+    .risk-item-head strong { color:var(--ink); }
+    .risk-item-head em { font-style:normal; }
+    .risk-item h3 { margin:8px 0; font-size:17px; }
+    .risk-item p { margin:6px 0; color:#334155; }
+    .risk-item p b { display:inline-block; min-width:42px; color:var(--ink); }
+    .risk-meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    .risk-meta span { padding:3px 8px; border-radius:999px; background:#eef4fb; color:#334155; font-size:12px; }
+    .evidence-confidence, .coverage-gaps, .metric-insights, .quality-scorecard, .print-summary { margin-top:14px; }
+    .evidence-confidence { border-top:1px solid var(--line); padding-top:12px; }
+    .quality-scorecard { border:1px solid var(--line); border-radius:8px; padding:14px; background:linear-gradient(180deg,#ffffff,#f7fbff); }
+    .quality-meter { height:10px; border-radius:999px; background:#e5eaf1; overflow:hidden; margin:8px 0 10px; }
+    .quality-meter span { display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--accent),#69d2c7); }
+    .action-board { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; }
+    .action-track { padding:14px; }
+    .advanced-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; }
+    .advanced-card { border:1px solid var(--line); border-radius:8px; padding:14px; background:#fff; box-shadow:0 8px 22px rgba(16,36,63,.05); }
+    .advanced-card h3 { margin:0 0 8px; font-size:15px; }
+    .advanced-payload { color:#334155; }
+    .advanced-hidden-summary { margin-bottom:12px; border:1px dashed var(--line); border-radius:8px; padding:12px 14px; background:#fbfdff; color:#475467; }
+    .advanced-hidden-summary strong { display:block; margin-bottom:6px; color:var(--ink); }
+    .advanced-hidden-summary ul { margin:0; padding-left:18px; columns:2; }
+    .advanced-list { margin:0; padding-left:18px; display:grid; gap:8px; }
+    .advanced-kv { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:8px; margin:0; }
+    .advanced-kv div { min-width:0; border:1px solid var(--line); border-radius:8px; padding:8px 9px; background:#f7fbff; }
+    .advanced-kv dt { color:var(--muted); font-size:12px; }
+    .advanced-kv dd { margin:2px 0 0; word-break:break-word; }
+    .print-summary { display:none; border:1px solid var(--line); border-radius:8px; padding:12px; background:#fff; }
+    .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    table { width: 100%; min-width: 980px; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid var(--line); padding: 10px 11px; text-align: left; vertical-align: top; }
+    th { position: sticky; top: 0; background: #edf3f9; font-size: 12px; color: #334155; z-index: 1; }
+    tbody tr:nth-child(even) { background: #fafcff; }
+    tbody tr:hover { background: #f2f7fc; }
+    .matrix-card-list { display: none; }
+    .matrix-card { border: 1px solid var(--line); border-left: 4px solid var(--unknown); border-radius: 8px; padding: 13px 14px; background: #fff; box-shadow: 0 8px 18px rgba(16,36,63,.05); }
+    .matrix-card.healthy { border-left-color: var(--good); }
+    .matrix-card.warning { border-left-color: var(--warn); }
+    .matrix-card.critical { border-left-color: var(--bad); }
+    .matrix-card-head { display:flex; align-items:flex-start; justify-content:space-between; gap: 10px; margin-bottom: 10px; }
+    .matrix-card h3 { margin: 0; font-size: 16px; line-height: 1.35; }
+    .matrix-card dl { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; margin: 0; }
+    .matrix-card dl div { min-width: 0; }
+    .matrix-card dt { color: var(--muted); font-size: 12px; }
+    .matrix-card dd { margin: 1px 0 0; word-break: break-word; }
+    .matrix-card p { margin: 10px 0 0; padding-top: 10px; border-top: 1px solid var(--line); color: #334155; }
+    .badge { display: inline-block; min-width: 76px; padding: 3px 8px; border-radius: 999px; text-align: center; color: white; font-size: 12px; }
+    .badge.healthy { background: var(--good); }
+    .badge.warning { background: var(--warn); }
+    .badge.critical { background: var(--bad); }
+    .badge.unknown { background: var(--unknown); }
+    .finding-list { display:grid; gap: 12px; }
+    .finding-card { border: 1px solid var(--line); border-radius: 8px; padding: 16px; background: #fff; box-shadow: 0 8px 22px rgba(16,36,63,.05); }
+    .finding-card-head { display:flex; align-items:center; justify-content:space-between; gap: 12px; margin-bottom: 8px; }
+    .finding-card h3 { margin: 0; font-size: 18px; }
+    .finding-card ul { list-style:none; padding:0; margin:0; display:grid; gap: 10px; }
+    .finding-card li { border-top: 1px solid var(--line); padding-top: 10px; }
+    .finding-title { display:flex; align-items:center; gap: 10px; font-weight: 700; }
+    .finding-title strong { color: var(--bad); }
+    .finding-meta { display:flex; flex-wrap:wrap; gap: 8px; margin: 8px 0; }
+    .finding-meta span { padding: 3px 8px; border-radius: 999px; background: #eef4fb; color:#334155; font-size: 12px; }
+    .finding-card p { margin: 6px 0; color: #334155; }
+    .finding-card p b { display:inline-block; min-width: 42px; color: var(--ink); }
+    .empty-state { border: 1px dashed var(--line); border-radius: 8px; padding: 18px; background: #fbfdff; color: var(--muted); }
+    .evidence-grid { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    details { border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin: 0; background: #fff; }
+    summary { cursor: pointer; font-weight: 700; }
+    pre { overflow-x: auto; background: #111827; color: #eef2ff; padding: 12px; border-radius: 8px; }
+    @media print { body { background:white; } .report-nav { position: static; box-shadow:none; } main.executive-layout { max-width: none; padding: 0; } .guide-cover { background:#10243f; } .table-scroll { overflow: visible; } details, .risk-item, .action-track { break-inside: avoid; } .print-summary { display:block; } }
+    @media (max-width: 980px) { .cover-grid, .insight-grid, .action-board, .advanced-grid { grid-template-columns: 1fr; } .metric-grid, .coverage-strip, .trend-strip, .evidence-grid, .cover-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .report-nav { overflow-x:auto; } .section-head { display:block; } }
+    @media (max-width: 720px) { .table-scroll { display:none; } .matrix-card-list { display:grid; gap: 10px; } }
+    @media (max-width: 620px) { main.executive-layout { padding: 18px 12px 34px; } .metric-grid, .coverage-strip, .trend-strip, .evidence-grid, .cover-stats, .matrix-card dl, .score-duo, .advanced-kv { grid-template-columns: 1fr; } .advanced-hidden-summary ul { columns:1; } .mobile-summary-card { display:block; } .cover-copy h1 { font-size: 28px; } }
+  </style>
+</head>
+<body>
+  <header class="guide-cover">
+    <div class="cover-grid">
+      <div class="cover-copy">
+        <div class="cover-kicker">
+          <span class="status-pill">服务器运行健康：预警</span>
+          <span class="generated-at">生成时间：2026-05-14 11:57:55</span>
+        </div>
+        <h1>服务器帐户和密码 服务器运行健康报告</h1>
+        <div class="conclusion-panel"><p>环境总体具备可检查基础，但存在应排期跟进的预警或需确认事项。</p>
+<p>本次覆盖 50 台服务器；网络探测为doops 内网探测，主机指标为未提供，服务状态为未提供。</p>
+<p>风险概览：严重 0 项，预警 32 项，需复核 32 项；P1 0 项，P2 0 项，P3 30 项。</p>
+<p>证据边界：网络层探测不能替代主机性能、进程、数据库或业务服务状态；未覆盖项需要在后续巡检中补齐。</p>
+<p>本次为基线巡检，暂无趋势对比。</p>
+<p>首要建议：先复核端口来源和业务端口清单，再按优先级推进主机级采集、责任人确认和处置闭环。</p></div>
+        <div class="cover-stats">
+          <div class="cover-stat"><span>服务器</span><b>50</b></div>
+          <div class="cover-stat"><span>严重</span><b>0</b></div>
+          <div class="cover-stat"><span>预警</span><b>32</b></div>
+          <div class="cover-stat"><span>需复核</span><b>32</b></div>
+        </div>
+      </div>
+      <figure class="guide-visual"><img src="./html-assets/guide-image.png" alt="服务器健康报告导览图"></figure>
+    </div>
+  </header>
+  <nav class="report-nav" aria-label="报告导航">
+    <a href="#summary">摘要</a>
+    <a href="#brief">简报</a>
+    <a href="#risk-queue">风险队列</a>
+    <a href="#matrix">服务器矩阵</a>
+    <a href="#findings">问题风险</a>
+    <a href="#action-board">处置行动</a>
+    <a href="#evidence">技术证据</a>
+    <a href="#appendix">附录</a>
+  </nav>
+  <main class="executive-layout">
+    <section id="summary" class="fold-section">
+      <div class="section-head">
+        <h2>管理摘要</h2>
+        <p class="section-note">用于快速判断本批次风险规模、证据覆盖和趋势变化。</p>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><span>服务器数</span><b>50</b></div>
+        <div class="metric critical"><span>严重问题</span><b>0</b></div>
+        <div class="metric warning"><span>预警问题</span><b>32</b></div>
+        <div class="metric review"><span>需复核</span><b>32</b></div>
+      </div>
+      <div class="coverage-strip">
+        <div class="strip-item"><span>网络探测</span><b>doops 内网探测</b></div>
+        <div class="strip-item"><span>主机指标</span><b>未提供</b></div>
+        <div class="strip-item"><span>服务状态</span><b>未提供</b></div>
+      </div>
+      <div class="trend-strip">
+        <div class="strip-item"><span>趋势状态</span><b>本次为基线巡检，暂无趋势对比。</b></div>
+        <div class="strip-item"><span>新增问题</span><b>0</b></div>
+        <div class="strip-item"><span>已恢复问题</span><b>0</b></div>
+        <div class="strip-item"><span>持续问题</span><b>0</b></div>
+      </div>
+      <div class="mobile-summary-card">
+        <span>移动端速览</span>
+        <b>预警 · 质量分 0</b>
+        <p>本次覆盖 50 台服务器，总体状态为预警。</p>
+      </div>
+    </section>
+    
+      <section id="doops-channel" class="panel-block doops-channel">
+        <div class="section-head"><h2>doops 采集通道</h2><p class="section-note">展示采集通道和工作区证据状态，不直接替代被巡检服务器健康结论。</p></div>
+        
+        <dl class="summary-kv">
+          <div><dt>目标</dt><dd>zheyin</dd></div>
+          <div><dt>Session</dt><dd>server-health-20260514-115718</dd></div>
+          <div><dt>传输模式</dt><dd>workspace-push</dd></div>
+          <div><dt>在线状态</dt><dd>在线</dd></div>
+          <div><dt>忙碌状态</dt><dd>未忙碌或未确认</dd></div>
+          <div><dt>最近心跳</dt><dd>2026-05-14 03:57:07</dd></div>
+          <div><dt>采集节点状态</dt><dd>collected</dd></div>
+          <div><dt>工作区清理</dt><dd>failed</dd></div>
+        </dl>
+      </section>
+        
+    
+    <section id="brief" class="fold-section executive-brief">
+      <div class="section-head">
+        <h2>管理简报</h2>
+        <p class="section-note">把结论、可信度、阅读路径和质量分放在一屏内，适合管理层先读。</p>
+      </div>
+      <div class="insight-grid">
+        <div class="insight-panel">
+          <h3>核心判断</h3>
+          <ul><li>本次覆盖 50 台服务器，总体状态为预警。</li><li>严重 0 项，预警 32 项，需复核 32 项。</li><li>证据可信度为有限，质量分 0 分。</li><li>首要动作：ftp服务器 - 管理端口不可达，需复核是否符合安全策略。</li></ul>
+          <div class="reading-map">
+            <h3>阅读地图</h3>
+            <ol><li><strong>管理简报</strong><span>先读结论、证据可信度和质量分。</span></li><li><strong>风险队列</strong><span>按优先级找到最需要处理的服务器。</span></li><li><strong>覆盖缺口</strong><span>确认哪些结论还不能由本次证据支撑。</span></li><li><strong>处置行动板</strong><span>把发现项转成工单、复核和补采动作。</span></li><li><strong>技术证据</strong><span>展开查看端口、指标、服务和采集边界。</span></li></ol>
+          </div>
+        </div>
+        <aside class="score-panel">
+          <div class="score-duo">
+            <div class="evidence-confidence"><span>证据可信度</span><b>58</b><p>有限</p></div>
+            <div class="quality-scorecard"><span>报告质量分</span><b>0</b><div class="quality-meter"><span></span></div></div>
+          </div>
+          <h3>可信度依据</h3>
+          <ul><li>网络探测：doops 内网探测。</li><li>缺少主机指标，性能和容量判断受限。</li><li>缺少服务状态，应用层健康需要另行确认。</li><li>存在需要人工复核的发现项。</li></ul>
+        </aside>
+      </div>
+      <div class="print-summary">
+        打印摘要：总体状态 预警，质量分 0，证据可信度 58。
+      </div>
+    </section>
+    <section id="risk-queue" class="fold-section">
+      <div class="section-head">
+        <h2>风险队列</h2>
+        <p class="section-note">按优先级和证据强度排序，先处理 P1/P2，再处理需复核项。</p>
+      </div>
+      <div class="risk-queue"><article class="risk-item warning"><div class="risk-item-head"><span>P3</span><strong>ftp服务器</strong><em>复核确认</em></div><h3>管理端口不可达，需复核是否符合安全策略</h3><p>通过 doops 目标 zheyin 对 172.16.70.15:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p><div class="risk-meta"><span>预警</span><span>needs-review</span><span>需复核</span></div></article><article class="risk-item warning"><div class="risk-item-head"><span>P3</span><strong>ibm刀箱管理地址</strong><em>复核确认</em></div><h3>服务器网络不可达，需复核资产清单</h3><p>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p><div class="risk-meta"><span>预警</span><span>needs-review</span><span>需复核</span></div></article><article class="risk-item warning"><div class="risk-item-head"><span>P3</span><strong>linux测试</strong><em>复核确认</em></div><h3>管理端口不可达，需复核是否符合安全策略</h3><p>通过 doops 目标 zheyin 对 172.16.70.20:22 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p><div class="risk-meta"><span>预警</span><span>needs-review</span><span>需复核</span></div></article><article class="risk-item warning"><div class="risk-item-head"><span>P3</span><strong>vmware实体机</strong><em>复核确认</em></div><h3>服务器网络不可达，需复核资产清单</h3><p>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p><div class="risk-meta"><span>预警</span><span>needs-review</span><span>需复核</span></div></article><article class="risk-item warning"><div class="risk-item-head"><span>P3</span><strong>x`</strong><em>复核确认</em></div><h3>管理端口不可达，需复核是否符合安全策略</h3><p>通过 doops 目标 zheyin 对 172.16.70.2:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p><div class="risk-meta"><span>预警</span><span>needs-review</span><span>需复核</span></div></article><article class="risk-item warning"><div class="risk-item-head"><span>P3</span><strong>一卡通人脸识别</strong><em>复核确认</em></div><h3>服务器网络不可达，需复核资产清单</h3><p>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p><div class="risk-meta"><span>预警</span><span>needs-review</span><span>需复核</span></div></article><article class="risk-item warning"><div class="risk-item-head"><span>P3</span><strong>一卡通前置机（双网卡）</strong><em>复核确认</em></div><h3>服务器网络不可达，需复核资产清单</h3><p>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p><div class="risk-meta"><span>预警</span><span>needs-review</span><span>需复核</span></div></article><article class="risk-item warning"><div class="risk-item-head"><span>P3</span><strong>人事系统_no6</strong><em>复核确认</em></div><h3>管理端口不可达，需复核是否符合安全策略</h3><p>通过 doops 目标 zheyin 对 172.16.70.13:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p><div class="risk-meta"><span>预警</span><span>needs-review</span><span>需复核</span></div></article></div>
+    </section>
+    <section id="coverage-gaps" class="fold-section coverage-gaps">
+      <div class="section-head">
+        <h2>覆盖缺口</h2>
+        <p class="section-note">说明哪些结论还缺证据支撑，避免把网络可达性误读成完整健康。</p>
+      </div>
+      <div class="insight-grid">
+        <div class="insight-panel"><h3>缺口清单</h3><ul><li>主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。</li><li>关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。</li><li>50 台服务器未提供负责人，影响工单派发和闭环跟踪。</li><li>50 台服务器未提供业务部门，影响跨部门优先级确认。</li><li>50 台服务器未提供系统等级，P1/P2 优先级需要人工复核。</li></ul></div>
+        <div class="insight-panel metric-insights"><h3>主机指标解读</h3><ul><li>本次未采集主机指标；报告只说明网络或清单证据，不能判断 CPU、内存、磁盘和负载健康。</li></ul></div>
+      </div>
+    </section>
+    <section id="matrix" class="fold-section">
+      <div class="section-head">
+        <h2>服务器矩阵</h2>
+        <p class="section-note">按资产、责任域、健康状态和证据边界集中展示，便于转入工单和复核。</p>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>服务器</th><th>地址</th><th>业务角色</th><th>负责人</th><th>业务部门</th><th>系统等级</th><th>状态</th><th>优先级</th><th>建议处理时限</th><th>证据边界</th></tr></thead>
+          <tbody><tr><td>x`</td><td>172.16.70.2</td><td>IBM_server</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>短信平台</td><td>172.16.70.3</td><td>vmware虚拟机message_win0864</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>新信息门户平台_no14</td><td>172.16.70.4</td><td>vmware虚拟机menhu_centos7</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>站群系统_no4</td><td>172.16.70.6</td><td>H3C_server</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>新短信平台</td><td>172.16.70.8</td><td>灾备机房超融合</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>国资系统_no17</td><td>172.16.70.88</td><td>DELL_server</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>国资系统新</td><td>172.16.70.89</td><td>浪潮新服务器2021.11.24</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>学工系统</td><td>172.16.70.11</td><td>vmware虚拟机studentsys_centos6.5</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>人事系统_no6</td><td>172.16.70.13</td><td>H3C_server</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>ftp服务器</td><td>172.16.70.15</td><td>vmware虚拟机ftp</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>科研系统_no16</td><td>172.16.70.16</td><td>DELL_server</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>后勤财务系统_no10</td><td>172.16.70.17</td><td>DELL_server</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>视窗系统</td><td>172.16.70.18</td><td>vmware虚拟机sc_win864</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>大数据健康码、疫苗、核酸</td><td>172.16.70.19</td><td>vmware虚拟机wg</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>linux测试</td><td>172.16.70.20</td><td>vmware虚拟机test_centos6_64</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>无线认证系统1</td><td>172.16.70.24</td><td>vmware虚拟机wx1</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>无线认证系统2</td><td>172.16.70.25</td><td>vmware虚拟机wx2</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>能耗计量平台</td><td>172.16.70.26</td><td>vmware虚拟机nhjl</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>视频点播系统</td><td>172.16.70.27</td><td>/</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>学生上网认证1</td><td>172.16.70.29</td><td>studentauth</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>学生上网认证2</td><td>172.16.70.30</td><td>守护进程(studentauth2)</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>统一身份认证_no35</td><td>172.16.70.31</td><td>DELL_server</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>学生上网认证3</td><td>172.16.70.32</td><td>(studentauth3)</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>学生体质管理系统（公基）</td><td>172.16.70.34</td><td>vmware虚拟机sport_win0864</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>学生体质管理系统2（公基）</td><td>172.16.70.35</td><td>vmware虚拟机sport2_win0864</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>数据中心系统_31</td><td>172.16.70.37</td><td></td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>院办档案系统_32</td><td>172.16.70.39</td><td>System X3650 M5</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>院办档案系统_45</td><td></td><td>华为服务器</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>学生宿舍APG防代理后台</td><td>172.16.70.40</td><td>vmware虚拟机1card_centos7</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>继续教育_netexam</td><td>172.16.70.41</td><td>vmware虚拟机netexam_win0864</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>一卡通前置机（双网卡）</td><td>172.16.70.42</td><td></td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>日志管理系统_AC</td><td>172.16.70.43</td><td>vmware虚拟机aclog_win0864</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>日志+行为感知_AC学生</td><td>172.16.70.44</td><td>vmware虚拟机aclog_stu_win0864</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>日志管理系统_AF</td><td>172.16.70.45</td><td>vmware虚拟机aflog_win0864</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>日志管理系统_VPN</td><td>172.16.70.46</td><td>vmware虚拟机vpnlog_win0864</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>vmware虚拟化系统</td><td>172.16.70.57</td><td>vmware（IBM）</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>vmware实体机</td><td></td><td></td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>ibm刀箱管理地址</td><td>172.16.70.63</td><td></td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>教务备份</td><td>172.16.70.68</td><td>vmware虚拟机jiaowu_bf_centos7</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>财务服务器新测试_no48</td><td>172.16.70.69</td><td>dell_r540</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>泛微oa系统</td><td>172.16.70.70</td><td>vmware虚拟机oa_fanwei_win0864</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>研究生管理系统</td><td>172.16.70.71</td><td>vmware虚拟机graduate_win0864</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>教务在线考试题库</td><td>172.16.70.74</td><td>vmware虚拟机onlineexam_win0864</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>教务在线考试题库</td><td>172.16.70.75</td><td></td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>琴房监控</td><td>172.16.70.76</td><td>华为</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>一卡通人脸识别</td><td>172.16.70.79</td><td></td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>新开普一卡通_no34</td><td>172.16.70.80</td><td></td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>纪检系统_46</td><td>172.16.70.82</td><td>DELL_server_R730</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>深信服新waf管理地址</td><td>172.16.70.85</td><td></td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr>
+<tr><td>深信服学生网ac管理地址</td><td>172.16.70.90</td><td></td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge warning">预警</span></td><td>P3</td><td>复核确认</td><td>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</td></tr></tbody>
+        </table>
+      </div>
+      <div class="matrix-card-list"><article class="matrix-card warning"><div class="matrix-card-head"><h3>x`</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.2</dd></div><div><dt>业务角色</dt><dd>IBM_server</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>短信平台</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.3</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机message_win0864</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>新信息门户平台_no14</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.4</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机menhu_centos7</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>站群系统_no4</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.6</dd></div><div><dt>业务角色</dt><dd>H3C_server</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>新短信平台</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.8</dd></div><div><dt>业务角色</dt><dd>灾备机房超融合</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>国资系统_no17</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.88</dd></div><div><dt>业务角色</dt><dd>DELL_server</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>国资系统新</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.89</dd></div><div><dt>业务角色</dt><dd>浪潮新服务器2021.11.24</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>学工系统</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.11</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机studentsys_centos6.5</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>人事系统_no6</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.13</dd></div><div><dt>业务角色</dt><dd>H3C_server</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>ftp服务器</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.15</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机ftp</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>科研系统_no16</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.16</dd></div><div><dt>业务角色</dt><dd>DELL_server</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>后勤财务系统_no10</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.17</dd></div><div><dt>业务角色</dt><dd>DELL_server</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>视窗系统</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.18</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机sc_win864</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>大数据健康码、疫苗、核酸</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.19</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机wg</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>linux测试</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.20</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机test_centos6_64</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>无线认证系统1</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.24</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机wx1</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>无线认证系统2</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.25</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机wx2</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>能耗计量平台</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.26</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机nhjl</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>视频点播系统</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.27</dd></div><div><dt>业务角色</dt><dd>/</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>学生上网认证1</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.29</dd></div><div><dt>业务角色</dt><dd>studentauth</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>学生上网认证2</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.30</dd></div><div><dt>业务角色</dt><dd>守护进程(studentauth2)</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>统一身份认证_no35</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.31</dd></div><div><dt>业务角色</dt><dd>DELL_server</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>学生上网认证3</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.32</dd></div><div><dt>业务角色</dt><dd>(studentauth3)</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>学生体质管理系统（公基）</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.34</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机sport_win0864</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>学生体质管理系统2（公基）</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.35</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机sport2_win0864</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>数据中心系统_31</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.37</dd></div><div><dt>业务角色</dt><dd></dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>院办档案系统_32</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.39</dd></div><div><dt>业务角色</dt><dd>System X3650 M5</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>院办档案系统_45</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd></dd></div><div><dt>业务角色</dt><dd>华为服务器</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>学生宿舍APG防代理后台</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.40</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机1card_centos7</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>继续教育_netexam</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.41</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机netexam_win0864</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>一卡通前置机（双网卡）</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.42</dd></div><div><dt>业务角色</dt><dd></dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>日志管理系统_AC</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.43</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机aclog_win0864</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>日志+行为感知_AC学生</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.44</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机aclog_stu_win0864</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>日志管理系统_AF</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.45</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机aflog_win0864</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>日志管理系统_VPN</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.46</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机vpnlog_win0864</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>vmware虚拟化系统</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.57</dd></div><div><dt>业务角色</dt><dd>vmware（IBM）</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>vmware实体机</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd></dd></div><div><dt>业务角色</dt><dd></dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>ibm刀箱管理地址</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.63</dd></div><div><dt>业务角色</dt><dd></dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>教务备份</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.68</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机jiaowu_bf_centos7</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>财务服务器新测试_no48</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.69</dd></div><div><dt>业务角色</dt><dd>dell_r540</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>泛微oa系统</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.70</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机oa_fanwei_win0864</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>研究生管理系统</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.71</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机graduate_win0864</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>教务在线考试题库</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.74</dd></div><div><dt>业务角色</dt><dd>vmware虚拟机onlineexam_win0864</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>教务在线考试题库</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.75</dd></div><div><dt>业务角色</dt><dd></dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>琴房监控</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.76</dd></div><div><dt>业务角色</dt><dd>华为</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>一卡通人脸识别</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.79</dd></div><div><dt>业务角色</dt><dd></dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>新开普一卡通_no34</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.80</dd></div><div><dt>业务角色</dt><dd></dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card healthy"><div class="matrix-card-head"><h3>纪检系统_46</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.82</dd></div><div><dt>业务角色</dt><dd>DELL_server_R730</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>深信服新waf管理地址</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.85</dd></div><div><dt>业务角色</dt><dd></dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article>
+<article class="matrix-card warning"><div class="matrix-card-head"><h3>深信服学生网ac管理地址</h3><span class="badge warning">预警</span></div><dl><div><dt>地址</dt><dd>172.16.70.90</dd></div><div><dt>业务角色</dt><dd></dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>P3</dd></div><div><dt>处理时限</dt><dd>复核确认</dd></div></dl><p>通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。</p></article></div>
+    </section>
+    <section id="findings" class="fold-section">
+      <div class="section-head">
+        <h2>问题与风险</h2>
+        <p class="section-note">只展示需要处理或复核的事项，健康项保留在证据区。</p>
+      </div>
+      <div class="finding-list"><section class="finding-card"><div class="finding-card-head"><h3>x`</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.2:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>短信平台</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.3:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>站群系统_no4</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.6:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>人事系统_no6</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.13:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>ftp服务器</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.15:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>科研系统_no16</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.16:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>视窗系统</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.18:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>大数据健康码、疫苗、核酸</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.19:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>linux测试</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.20:22 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>无线认证系统1</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.24:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>无线认证系统2</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.25:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>能耗计量平台</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.26:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>视频点播系统</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>服务器网络不可达，需复核资产清单</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>学生上网认证1</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.29:22 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>学生体质管理系统（公基）</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.34:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>数据中心系统_31</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.37:22 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>院办档案系统_32</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.39:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>院办档案系统_45</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>缺少服务器地址</span></div><div class="finding-meta"><span>P4</span><span>补齐清单</span><span>needs-review；需复核</span></div><p><b>证据</b>清单未提供可用于 doops 内网探测的有效地址。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>补齐资产清单并复核端口来源，避免将清单缺失误判为运行故障。</p></li><li><div class="finding-title"><strong>预警</strong><span>服务器网络不可达，需复核资产清单</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>继续教育_netexam</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.41:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>一卡通前置机（双网卡）</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>服务器网络不可达，需复核资产清单</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>日志管理系统_AF</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.45:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>vmware实体机</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>缺少服务器地址</span></div><div class="finding-meta"><span>P4</span><span>补齐清单</span><span>needs-review；需复核</span></div><p><b>证据</b>清单未提供可用于 doops 内网探测的有效地址。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>补齐资产清单并复核端口来源，避免将清单缺失误判为运行故障。</p></li><li><div class="finding-title"><strong>预警</strong><span>服务器网络不可达，需复核资产清单</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>ibm刀箱管理地址</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>服务器网络不可达，需复核资产清单</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>财务服务器新测试_no48</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.69:22 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>泛微oa系统</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.70:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>教务在线考试题库</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>服务器网络不可达，需复核资产清单</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>琴房监控</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>管理端口不可达，需复核是否符合安全策略</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>通过 doops 目标 zheyin 对 172.16.70.76:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>一卡通人脸识别</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>服务器网络不可达，需复核资产清单</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>深信服新waf管理地址</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>服务器网络不可达，需复核资产清单</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p></li></ul></section>
+<section class="finding-card"><div class="finding-card-head"><h3>深信服学生网ac管理地址</h3><span class="badge warning">预警</span></div><ul><li><div class="finding-title"><strong>预警</strong><span>服务器网络不可达，需复核资产清单</span></div><div class="finding-meta"><span>P3</span><span>复核确认</span><span>needs-review；需复核</span></div><p><b>证据</b>doops 内网探测未发现 ICMP 或 TCP 可达证据。</p><p><b>影响</b>业务影响未在清单中提供，需由系统负责人确认。</p><p><b>建议</b>核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</p></li></ul></section></div>
+    </section>
+    <section id="action-board" class="fold-section">
+      <div class="section-head">
+        <h2>处置行动板</h2>
+        <p class="section-note">把发现项拆成立即处置、复核确认和补齐证据三类动作。</p>
+      </div>
+      <div class="action-board"><section class="action-track"><h3>立即处置</h3><ul><li>当前无 P1/P2 处置项；保持巡检基线并关注覆盖缺口。</li></ul></section><section class="action-track"><h3>复核确认</h3><ul><li>ftp服务器：管理端口不可达，需复核是否符合安全策略。</li><li>ibm刀箱管理地址：服务器网络不可达，需复核资产清单。</li><li>linux测试：管理端口不可达，需复核是否符合安全策略。</li><li>vmware实体机：服务器网络不可达，需复核资产清单。</li></ul></section><section class="action-track"><h3>补齐证据</h3><ul><li>主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。</li><li>关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。</li><li>50 台服务器未提供负责人，影响工单派发和闭环跟踪。</li><li>50 台服务器未提供业务部门，影响跨部门优先级确认。</li></ul></section></div>
+    </section>
+    <section id="advanced-report" class="fold-section advanced-report">
+      <div class="section-head">
+        <h2>升级分析模块</h2>
+        <p class="section-note">只展示对当前数据有信息增量的增强模块；低信号模块保留在 JSON 中供系统集成。</p>
+      </div>
+      <aside class="advanced-hidden-summary"><strong>已隐藏低信号模块</strong><ul><li>变更观察：基线报告暂无趋势变化</li><li>服务健康：未提供服务状态明细</li><li>容量概览：未提供容量指标明细</li><li>资产分层：系统等级分层只有未提供</li><li>控制核查：控制核查已由质量审计覆盖</li><li>附录索引：附录索引保留在交付清单中</li></ul></aside>
+      <div class="advanced-grid"><article id="decision-summary" class="advanced-card decision-summary"><h3>决策摘要</h3><div class="advanced-payload"><ul class="advanced-list"><li>总体状态：预警</li><li>优先处置：ftp服务器 - 管理端口不可达，需复核是否符合安全策略</li><li>证据可信度：有限 / 58</li></ul></div></article>
+<article id="risk-heatmap" class="advanced-card risk-heatmap"><h3>风险热力</h3><div class="advanced-payload"><ul class="advanced-list"><li><dl class="advanced-kv"><div><dt>priority</dt><dd>P1</dd></div><div><dt>critical</dt><dd>0</dd></div><div><dt>warning</dt><dd>0</dd></div><div><dt>review_required</dt><dd>0</dd></div><div><dt>total</dt><dd>0</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>priority</dt><dd>P2</dd></div><div><dt>critical</dt><dd>0</dd></div><div><dt>warning</dt><dd>0</dd></div><div><dt>review_required</dt><dd>0</dd></div><div><dt>total</dt><dd>0</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>priority</dt><dd>P3</dd></div><div><dt>critical</dt><dd>0</dd></div><div><dt>warning</dt><dd>30</dd></div><div><dt>review_required</dt><dd>30</dd></div><div><dt>total</dt><dd>30</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>priority</dt><dd>P4</dd></div><div><dt>critical</dt><dd>0</dd></div><div><dt>warning</dt><dd>0</dd></div><div><dt>review_required</dt><dd>2</dd></div><div><dt>total</dt><dd>2</dd></div></dl></li></ul></div></article>
+<article id="owner-brief" class="advanced-card owner-brief"><h3>责任人简报</h3><div class="advanced-payload"><dl class="advanced-kv"><div><dt>owners</dt><dd>name：未提供；count：50</dd></div><div><dt>missing_owner</dt><dd>50</dd></div><div><dt>handoff_hint</dt><dd>按负责人派发；负责人缺失时先由信息中心确认归属。</dd></div></dl></div></article>
+<article id="sla-timeline" class="advanced-card sla-timeline"><h3>SLA 时间线</h3><div class="advanced-payload"><ul class="advanced-list"><li><dl class="advanced-kv"><div><dt>priority</dt><dd>P1</dd></div><div><dt>due_time</dt><dd>当日处理</dd></div><div><dt>count</dt><dd>0</dd></div><div><dt>focus</dt><dd>恢复或确认业务影响</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>priority</dt><dd>P2</dd></div><div><dt>due_time</dt><dd>两个工作日内处理</dd></div><div><dt>count</dt><dd>0</dd></div><div><dt>focus</dt><dd>排期修复与责任人确认</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>priority</dt><dd>P3/P4</dd></div><div><dt>due_time</dt><dd>复核确认或补齐清单</dd></div><div><dt>count</dt><dd>32</dd></div><div><dt>focus</dt><dd>补证、复核和下期对比</dd></div></dl></li></ul></div></article>
+<article id="evidence-ladder" class="advanced-card evidence-ladder"><h3>证据阶梯</h3><div class="advanced-payload"><ul class="advanced-list"><li><dl class="advanced-kv"><div><dt>layer</dt><dd>网络探测</dd></div><div><dt>coverage</dt><dd>doops 内网探测</dd></div><div><dt>meaning</dt><dd>判断端口和路径可达性</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>layer</dt><dd>主机指标</dd></div><div><dt>coverage</dt><dd>未提供</dd></div><div><dt>meaning</dt><dd>判断 CPU、内存、磁盘和负载健康</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>layer</dt><dd>服务状态</dd></div><div><dt>coverage</dt><dd>未提供</dd></div><div><dt>meaning</dt><dd>判断进程、数据库和应用服务状态</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>layer</dt><dd>趋势对比</dd></div><div><dt>coverage</dt><dd>本次为基线巡检，暂无趋势对比。</dd></div><div><dt>meaning</dt><dd>识别新增、恢复和持续问题</dd></div></dl></li></ul></div></article>
+<article id="data-quality-panel" class="advanced-card data-quality-panel"><h3>数据质量</h3><div class="advanced-payload"><dl class="advanced-kv"><div><dt>score</dt><dd>0</dd></div><div><dt>missing_fields</dt><dd>负责人：50；业务部门：50；系统等级：50；业务影响：50</dd></div><div><dt>gaps</dt><dd>主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。；关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。；50 台服务器未提供负责人，影响工单派发和闭环跟踪。</dd></div><div><dt>summary</dt><dd>清单数据质量 0 分；缺失项会影响责任派发、优先级和影响面判断。</dd></div></dl></div></article>
+<article id="remediation-roadmap" class="advanced-card remediation-roadmap"><h3>处置路线图</h3><div class="advanced-payload"><ul class="advanced-list"><li><dl class="advanced-kv"><div><dt>phase</dt><dd>今日</dd></div><div><dt>focus</dt><dd>确认 P1/P2 风险和业务影响</dd></div><div><dt>items</dt><dd>当前无 P1/P2，保持复测窗口。</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>phase</dt><dd>两个工作日</dd></div><div><dt>focus</dt><dd>完成修复、复核和工单闭环</dd></div><div><dt>items</dt><dd>ftp服务器：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。；ibm刀箱管理地址：核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。；linux测试：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>phase</dt><dd>下期巡检</dd></div><div><dt>focus</dt><dd>补齐证据并形成趋势对比</dd></div><div><dt>items</dt><dd>主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。；关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。；50 台服务器未提供负责人，影响工单派发和闭环跟踪。</dd></div></dl></li></ul></div></article>
+<article id="business-impact-panel" class="advanced-card business-impact-panel"><h3>业务影响</h3><div class="advanced-payload"><dl class="advanced-kv"><div><dt>core_assets</dt><dd>0</dd></div><div><dt>missing_impact</dt><dd>50</dd></div><div><dt>summary</dt><dd>50 台服务器缺少业务影响说明，需由系统负责人确认。</dd></div></dl></div></article>
+<article id="work-order-actions" class="advanced-card work-order-actions"><h3>工单动作</h3><div class="advanced-payload"><ul class="advanced-list"><li><dl class="advanced-kv"><div><dt>server</dt><dd>ftp服务器</dd></div><div><dt>owner</dt><dd>未提供</dd></div><div><dt>priority</dt><dd>P3</dd></div><div><dt>due_time</dt><dd>复核确认</dd></div><div><dt>content</dt><dd>ftp服务器｜P3｜管理端口不可达，需复核是否符合安全策略｜复核确认｜确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>server</dt><dd>ibm刀箱管理地址</dd></div><div><dt>owner</dt><dd>未提供</dd></div><div><dt>priority</dt><dd>P3</dd></div><div><dt>due_time</dt><dd>复核确认</dd></div><div><dt>content</dt><dd>ibm刀箱管理地址｜P3｜服务器网络不可达，需复核资产清单｜复核确认｜核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>server</dt><dd>linux测试</dd></div><div><dt>owner</dt><dd>未提供</dd></div><div><dt>priority</dt><dd>P3</dd></div><div><dt>due_time</dt><dd>复核确认</dd></div><div><dt>content</dt><dd>linux测试｜P3｜管理端口不可达，需复核是否符合安全策略｜复核确认｜确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>server</dt><dd>vmware实体机</dd></div><div><dt>owner</dt><dd>未提供</dd></div><div><dt>priority</dt><dd>P3</dd></div><div><dt>due_time</dt><dd>复核确认</dd></div><div><dt>content</dt><dd>vmware实体机｜P3｜服务器网络不可达，需复核资产清单｜复核确认｜核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>server</dt><dd>x`</dd></div><div><dt>owner</dt><dd>未提供</dd></div><div><dt>priority</dt><dd>P3</dd></div><div><dt>due_time</dt><dd>复核确认</dd></div><div><dt>content</dt><dd>x`｜P3｜管理端口不可达，需复核是否符合安全策略｜复核确认｜确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>server</dt><dd>一卡通人脸识别</dd></div><div><dt>owner</dt><dd>未提供</dd></div><div><dt>priority</dt><dd>P3</dd></div><div><dt>due_time</dt><dd>复核确认</dd></div><div><dt>content</dt><dd>一卡通人脸识别｜P3｜服务器网络不可达，需复核资产清单｜复核确认｜核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。</dd></div></dl></li></ul></div></article>
+<article id="readability-score" class="advanced-card readability-score"><h3>可读性评分</h3><div class="advanced-payload"><dl class="advanced-kv"><div><dt>score</dt><dd>0</dd></div><div><dt>level</dt><dd>需复核</dd></div><div><dt>signals</dt><dd>结论、风险、责任、证据和附录按阅读顺序组织。；桌面保留矩阵密度，移动端提供卡片视图。；高级模块使用键值和列表版式，不以 JSON 作为正文主视觉。</dd></div></dl></div></article>
+<article id="report-narrative" class="advanced-card report-narrative"><h3>报告叙事</h3><div class="advanced-payload"><ul class="advanced-list"><li>先看总体状态与优先队列，再按证据边界决定是否补采主机指标。</li><li>网络可达性不等同于业务或主机内部健康。</li></ul></div></article>
+<article id="review-questions" class="advanced-card review-questions"><h3>复核问题</h3><div class="advanced-payload"><ul class="advanced-list"><li>采集路径是否由安全策略允许？</li><li>主机只读账号或 SNMPv3 用户是否已部署？</li><li>业务端口清单是否完整？</li></ul></div></article>
+<article id="scope-statement" class="advanced-card scope-statement"><h3>范围声明</h3><div class="advanced-payload"><dl class="advanced-kv"><div><dt>included</dt><dd>50 台服务器、网络/端口证据、已提供的主机指标和服务状态。</dd></div><div><dt>excluded</dt><dd>未授权登录操作、密码读取、破坏性变更、未提供凭证的主机内部状态。</dd></div><div><dt>boundary</dt><dd>网络层检查不能替代主机级持续监控；缺失证据以覆盖缺口呈现。</dd></div></dl></div></article>
+<article id="next-report-plan" class="advanced-card next-report-plan"><h3>下期计划</h3><div class="advanced-payload"><ul class="advanced-list"><li>补齐未覆盖主机指标</li><li>确认责任人和业务等级</li><li>与下期报告进行趋势对比</li></ul></div></article></div>
+    </section>
+    <section id="evidence" class="fold-section">
+      <div class="section-head">
+        <h2>技术证据</h2>
+        <p class="section-note">默认折叠，展开后查看端口、指标、服务状态和采集边界。</p>
+      </div>
+      <div class="evidence-grid"><details>
+  <summary>x` 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>短信平台 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>关闭</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>新信息门户平台_no14 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>22</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>站群系统_no4 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>新短信平台 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>22</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>国资系统_no17 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>国资系统新 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>学工系统 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>22</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>人事系统_no6 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>ftp服务器 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>21</td><td>开放</td><td>1</td><td>根据业务角色推断</td><td>业务端口</td></tr><tr><td>3389</td><td>关闭</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>科研系统_no16 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>后勤财务系统_no10 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>视窗系统 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>大数据健康码、疫苗、核酸 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>关闭</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>linux测试 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>22</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>无线认证系统1 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>关闭</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>无线认证系统2 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>关闭</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>能耗计量平台 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>关闭</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>视频点播系统 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td colspan="5">未声明预期端口。</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>学生上网认证1 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>22</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>学生上网认证2 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>22</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;未提供凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>统一身份认证_no35 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>22</td><td>开放</td><td>1</td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>学生上网认证3 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>22</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;未提供凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>学生体质管理系统（公基） 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>学生体质管理系统2（公基） 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>开放</td><td>38</td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>数据中心系统_31 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>22</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>院办档案系统_32 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>院办档案系统_45 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td colspan="5">未声明预期端口。</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;未提供凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>学生宿舍APG防代理后台 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>22</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>继续教育_netexam 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>一卡通前置机（双网卡） 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td colspan="5">未声明预期端口。</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;未提供凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>日志管理系统_AC 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>开放</td><td>1</td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>日志+行为感知_AC学生 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>日志管理系统_AF 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>关闭</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>日志管理系统_VPN 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>vmware虚拟化系统 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>vmware实体机 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td colspan="5">未声明预期端口。</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>ibm刀箱管理地址 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td colspan="5">未声明预期端口。</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>教务备份 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>22</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>财务服务器新测试_no48 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>22</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;未提供凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>泛微oa系统 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>研究生管理系统 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>教务在线考试题库 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>开放</td><td>1</td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>教务在线考试题库 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td colspan="5">未声明预期端口。</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;未提供凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>琴房监控 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>超时</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;未提供凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>一卡通人脸识别 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td colspan="5">未声明预期端口。</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;未提供凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>新开普一卡通_no34 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>纪检系统_46 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td>3389</td><td>开放</td><td></td><td>根据 Excel 清单操作系统推断</td><td>管理端口</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;未提供凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details>
+<details>
+  <summary>深信服新waf管理地址 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td colspan="5">未声明预期端口。</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;未提供凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details>
+<details>
+  <summary>深信服学生网ac管理地址 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td colspan="5">未声明预期端口。</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-115718&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-115718-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;仅记录凭证引用，未读取真实凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;P3&quot;,
+  &quot;due_time&quot;: &quot;复核确认&quot;
+}</pre>
+</details></div>
+    </section>
+    <section id="appendix" class="fold-section">
+      <h2>附录</h2>
+      <details>
+        <summary>Markdown 报告文本</summary>
+        <pre># 服务器帐户和密码 服务器运行健康报告
+
+- 生成时间：2026-05-14 11:57:55
+- 总体状态：预警
+- 服务器数量：50
+- 严重问题：0
+- 预警问题：32
+- 需复核问题：32
+
+## 管理结论
+
+环境总体具备可检查基础，但存在应排期跟进的预警或需确认事项。
+本次覆盖 50 台服务器；网络探测为doops 内网探测，主机指标为未提供，服务状态为未提供。
+风险概览：严重 0 项，预警 32 项，需复核 32 项；P1 0 项，P2 0 项，P3 30 项。
+证据边界：网络层探测不能替代主机性能、进程、数据库或业务服务状态；未覆盖项需要在后续巡检中补齐。
+本次为基线巡检，暂无趋势对比。
+首要建议：先复核端口来源和业务端口清单，再按优先级推进主机级采集、责任人确认和处置闭环。
+
+## 管理简报
+
+- 本次覆盖 50 台服务器，总体状态为预警。
+- 严重 0 项，预警 32 项，需复核 32 项。
+- 证据可信度为有限，质量分 0 分。
+- 首要动作：ftp服务器 - 管理端口不可达，需复核是否符合安全策略。
+
+- 证据可信度：有限（58 分）
+- 报告质量分：0
+
+## 风险队列
+
+- `P3` ftp服务器：管理端口不可达，需复核是否符合安全策略（复核确认）
+- `P3` ibm刀箱管理地址：服务器网络不可达，需复核资产清单（复核确认）
+- `P3` linux测试：管理端口不可达，需复核是否符合安全策略（复核确认）
+- `P3` vmware实体机：服务器网络不可达，需复核资产清单（复核确认）
+- `P3` x`：管理端口不可达，需复核是否符合安全策略（复核确认）
+- `P3` 一卡通人脸识别：服务器网络不可达，需复核资产清单（复核确认）
+- `P3` 一卡通前置机（双网卡）：服务器网络不可达，需复核资产清单（复核确认）
+- `P3` 人事系统_no6：管理端口不可达，需复核是否符合安全策略（复核确认）
+
+## 覆盖缺口
+
+- 主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。
+- 关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。
+- 50 台服务器未提供负责人，影响工单派发和闭环跟踪。
+- 50 台服务器未提供业务部门，影响跨部门优先级确认。
+- 50 台服务器未提供系统等级，P1/P2 优先级需要人工复核。
+
+## 处置行动板
+
+- 立即处置：当前无 P1/P2 处置项；保持巡检基线并关注覆盖缺口。
+- 复核确认：ftp服务器：管理端口不可达，需复核是否符合安全策略。；ibm刀箱管理地址：服务器网络不可达，需复核资产清单。；linux测试：管理端口不可达，需复核是否符合安全策略。；vmware实体机：服务器网络不可达，需复核资产清单。
+- 补齐证据：主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。；关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。；50 台服务器未提供负责人，影响工单派发和闭环跟踪。；50 台服务器未提供业务部门，影响跨部门优先级确认。
+
+## 检查覆盖范围
+
+
+## 决策摘要
+
+- 总体状态：预警
+- 优先处置：ftp服务器 - 管理端口不可达，需复核是否符合安全策略
+- 证据可信度：有限 / 58
+
+## 责任人与时限
+
+- 责任人概览：owners：name：未提供；count：50
+- 责任人概览：missing_owner：50
+- 责任人概览：handoff_hint：按负责人派发；负责人缺失时先由信息中心确认归属。
+- priority：P1；due_time：当日处理；count：0；focus：恢复或确认业务影响
+- priority：P2；due_time：两个工作日内处理；count：0；focus：排期修复与责任人确认
+- priority：P3/P4；due_time：复核确认或补齐清单；count：32；focus：补证、复核和下期对比
+
+## 证据与数据质量
+
+- layer：网络探测；coverage：doops 内网探测；meaning：判断端口和路径可达性
+- layer：主机指标；coverage：未提供；meaning：判断 CPU、内存、磁盘和负载健康
+- layer：服务状态；coverage：未提供；meaning：判断进程、数据库和应用服务状态
+- layer：趋势对比；coverage：本次为基线巡检，暂无趋势对比。；meaning：识别新增、恢复和持续问题
+- score：0
+- missing_fields：负责人：50；业务部门：50；系统等级：50；业务影响：50
+- gaps：主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。；关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。；50 台服务器未提供负责人，影响工单派发和闭环跟踪。
+- summary：清单数据质量 0 分；缺失项会影响责任派发、优先级和影响面判断。
+
+## 处置路线图
+
+- phase：今日；focus：确认 P1/P2 风险和业务影响；items：当前无 P1/P2，保持复测窗口。
+- phase：两个工作日；focus：完成修复、复核和工单闭环；items：ftp服务器：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。；ibm刀箱管理地址：核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。；linux测试：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+- phase：下期巡检；focus：补齐证据并形成趋势对比；items：主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。；关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。；50 台服务器未提供负责人，影响工单派发和闭环跟踪。
+
+## 复核问题清单
+
+- 采集路径是否由安全策略允许？
+- 主机只读账号或 SNMPv3 用户是否已部署？
+- 业务端口清单是否完整？
+- 网络探测：doops 内网探测
+- 主机指标：未提供
+- 服务状态：未提供
+
+## 趋势对比
+
+- 趋势状态：本次为基线巡检，暂无趋势对比。
+- 新增问题：0
+- 已恢复问题：0
+- 持续问题：0
+- 状态变化服务器：0
+
+## doops 采集通道
+
+- 目标：zheyin
+- Session：server-health-20260514-115718
+- 传输模式：workspace-push
+- 在线状态：在线
+- 忙碌状态：未忙碌或未确认
+- 最近心跳：2026-05-14 03:57:07
+- 采集节点状态：collected
+- 工作区清理：failed
+
+## 服务器矩阵
+
+| 服务器 | 地址 | 业务角色 | 负责人 | 业务部门 | 系统等级 | 状态 | 优先级 | 建议处理时限 | 证据边界 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| x` | 172.16.70.2 | IBM_server | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 短信平台 | 172.16.70.3 | vmware虚拟机message_win0864 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 新信息门户平台_no14 | 172.16.70.4 | vmware虚拟机menhu_centos7 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 站群系统_no4 | 172.16.70.6 | H3C_server | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 新短信平台 | 172.16.70.8 | 灾备机房超融合 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 国资系统_no17 | 172.16.70.88 | DELL_server | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 国资系统新 | 172.16.70.89 | 浪潮新服务器2021.11.24 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 学工系统 | 172.16.70.11 | vmware虚拟机studentsys_centos6.5 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 人事系统_no6 | 172.16.70.13 | H3C_server | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| ftp服务器 | 172.16.70.15 | vmware虚拟机ftp | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 科研系统_no16 | 172.16.70.16 | DELL_server | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 后勤财务系统_no10 | 172.16.70.17 | DELL_server | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 视窗系统 | 172.16.70.18 | vmware虚拟机sc_win864 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 大数据健康码、疫苗、核酸 | 172.16.70.19 | vmware虚拟机wg | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| linux测试 | 172.16.70.20 | vmware虚拟机test_centos6_64 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 无线认证系统1 | 172.16.70.24 | vmware虚拟机wx1 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 无线认证系统2 | 172.16.70.25 | vmware虚拟机wx2 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 能耗计量平台 | 172.16.70.26 | vmware虚拟机nhjl | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 视频点播系统 | 172.16.70.27 | / | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 学生上网认证1 | 172.16.70.29 | studentauth | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 学生上网认证2 | 172.16.70.30 | 守护进程(studentauth2) | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 统一身份认证_no35 | 172.16.70.31 | DELL_server | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 学生上网认证3 | 172.16.70.32 | (studentauth3) | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 学生体质管理系统（公基） | 172.16.70.34 | vmware虚拟机sport_win0864 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 学生体质管理系统2（公基） | 172.16.70.35 | vmware虚拟机sport2_win0864 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 数据中心系统_31 | 172.16.70.37 |  | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 院办档案系统_32 | 172.16.70.39 | System X3650 M5 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 院办档案系统_45 |  | 华为服务器 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 学生宿舍APG防代理后台 | 172.16.70.40 | vmware虚拟机1card_centos7 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 继续教育_netexam | 172.16.70.41 | vmware虚拟机netexam_win0864 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 一卡通前置机（双网卡） | 172.16.70.42 |  | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 日志管理系统_AC | 172.16.70.43 | vmware虚拟机aclog_win0864 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 日志+行为感知_AC学生 | 172.16.70.44 | vmware虚拟机aclog_stu_win0864 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 日志管理系统_AF | 172.16.70.45 | vmware虚拟机aflog_win0864 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 日志管理系统_VPN | 172.16.70.46 | vmware虚拟机vpnlog_win0864 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| vmware虚拟化系统 | 172.16.70.57 | vmware（IBM） | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| vmware实体机 |  |  | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| ibm刀箱管理地址 | 172.16.70.63 |  | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 教务备份 | 172.16.70.68 | vmware虚拟机jiaowu_bf_centos7 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 财务服务器新测试_no48 | 172.16.70.69 | dell_r540 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 泛微oa系统 | 172.16.70.70 | vmware虚拟机oa_fanwei_win0864 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 研究生管理系统 | 172.16.70.71 | vmware虚拟机graduate_win0864 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 教务在线考试题库 | 172.16.70.74 | vmware虚拟机onlineexam_win0864 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 教务在线考试题库 | 172.16.70.75 |  | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 琴房监控 | 172.16.70.76 | 华为 | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 一卡通人脸识别 | 172.16.70.79 |  | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 新开普一卡通_no34 | 172.16.70.80 |  | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 纪检系统_46 | 172.16.70.82 | DELL_server_R730 | 未提供 | 未提供 | 未提供 | 健康 | - | - | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 深信服新waf管理地址 | 172.16.70.85 |  | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+| 深信服学生网ac管理地址 | 172.16.70.90 |  | 未提供 | 未提供 | 未提供 | 预警 | P3 | 复核确认 | 通过 doops 目标 zheyin 从内网只读探测服务器网络与端口可达性；未展示或保存连接令牌。 |
+
+## 问题与风险
+
+- **预警** `x`` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.2:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `短信平台` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.3:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `站群系统_no4` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.6:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `人事系统_no6` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.13:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `ftp服务器` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.15:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `科研系统_no16` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.16:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `视窗系统` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.18:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `大数据健康码、疫苗、核酸` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.19:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `linux测试` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.20:22 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `无线认证系统1` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.24:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `无线认证系统2` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.25:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `能耗计量平台` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.26:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `视频点播系统` 服务器网络不可达，需复核资产清单（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：doops 内网探测未发现 ICMP 或 TCP 可达证据。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。
+  - 下一步：核对资产 IP 和清单地址是否正确。；检查主机电源、虚拟机运行状态、安全组、防火墙和路由 ACL。；从堡垒机或 doops 节点复核网络路径，并联系责任人确认近期变更。；补齐责任人后继续处置。
+- **预警** `学生上网认证1` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.29:22 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `学生体质管理系统（公基）` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.34:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `数据中心系统_31` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.37:22 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `院办档案系统_32` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.39:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `院办档案系统_45` 缺少服务器地址（优先级：P4；时限：补齐清单；证据强度：needs-review；需复核）
+  - 证据：清单未提供可用于 doops 内网探测的有效地址。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：补齐资产清单并复核端口来源，避免将清单缺失误判为运行故障。
+  - 下一步：补齐资产清单字段，包括地址、负责人、业务影响、预期端口和端口来源。；补齐责任人，明确后续复核归属。
+- **预警** `院办档案系统_45` 服务器网络不可达，需复核资产清单（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：doops 内网探测未发现 ICMP 或 TCP 可达证据。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。
+  - 下一步：核对资产 IP 和清单地址是否正确。；检查主机电源、虚拟机运行状态、安全组、防火墙和路由 ACL。；从堡垒机或 doops 节点复核网络路径，并联系责任人确认近期变更。；补齐责任人后继续处置。
+- **预警** `继续教育_netexam` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.41:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `一卡通前置机（双网卡）` 服务器网络不可达，需复核资产清单（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：doops 内网探测未发现 ICMP 或 TCP 可达证据。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。
+  - 下一步：核对资产 IP 和清单地址是否正确。；检查主机电源、虚拟机运行状态、安全组、防火墙和路由 ACL。；从堡垒机或 doops 节点复核网络路径，并联系责任人确认近期变更。；补齐责任人后继续处置。
+- **预警** `日志管理系统_AF` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.45:3389 的 TCP 探测结果为 关闭；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `vmware实体机` 缺少服务器地址（优先级：P4；时限：补齐清单；证据强度：needs-review；需复核）
+  - 证据：清单未提供可用于 doops 内网探测的有效地址。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：补齐资产清单并复核端口来源，避免将清单缺失误判为运行故障。
+  - 下一步：补齐资产清单字段，包括地址、负责人、业务影响、预期端口和端口来源。；补齐责任人，明确后续复核归属。
+- **预警** `vmware实体机` 服务器网络不可达，需复核资产清单（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：doops 内网探测未发现 ICMP 或 TCP 可达证据。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。
+  - 下一步：核对资产 IP 和清单地址是否正确。；检查主机电源、虚拟机运行状态、安全组、防火墙和路由 ACL。；从堡垒机或 doops 节点复核网络路径，并联系责任人确认近期变更。；补齐责任人后继续处置。
+- **预警** `ibm刀箱管理地址` 服务器网络不可达，需复核资产清单（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：doops 内网探测未发现 ICMP 或 TCP 可达证据。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。
+  - 下一步：核对资产 IP 和清单地址是否正确。；检查主机电源、虚拟机运行状态、安全组、防火墙和路由 ACL。；从堡垒机或 doops 节点复核网络路径，并联系责任人确认近期变更。；补齐责任人后继续处置。
+- **预警** `财务服务器新测试_no48` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.69:22 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `泛微oa系统` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.70:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `教务在线考试题库` 服务器网络不可达，需复核资产清单（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：doops 内网探测未发现 ICMP 或 TCP 可达证据。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。
+  - 下一步：核对资产 IP 和清单地址是否正确。；检查主机电源、虚拟机运行状态、安全组、防火墙和路由 ACL。；从堡垒机或 doops 节点复核网络路径，并联系责任人确认近期变更。；补齐责任人后继续处置。
+- **预警** `琴房监控` 管理端口不可达，需复核是否符合安全策略（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：通过 doops 目标 zheyin 对 172.16.70.76:3389 的 TCP 探测结果为 超时；端口来源：根据 Excel 清单操作系统推断；端口用途：管理端口。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：确认是否为安全策略关闭；如需开放，按变更流程复核防火墙、ACL、主机监听和堡垒机访问路径。
+  - 下一步：确认该管理端口是否按安全策略关闭或仅允许堡垒机访问。；如策略允许关闭，请更新资产清单并标记管理端口非业务必需。；如该端口需要开放，请按变更流程检查防火墙、ACL 和主机监听状态。；补齐系统负责人后完成复核闭环。
+- **预警** `一卡通人脸识别` 服务器网络不可达，需复核资产清单（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：doops 内网探测未发现 ICMP 或 TCP 可达证据。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。
+  - 下一步：核对资产 IP 和清单地址是否正确。；检查主机电源、虚拟机运行状态、安全组、防火墙和路由 ACL。；从堡垒机或 doops 节点复核网络路径，并联系责任人确认近期变更。；补齐责任人后继续处置。
+- **预警** `深信服新waf管理地址` 服务器网络不可达，需复核资产清单（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：doops 内网探测未发现 ICMP 或 TCP 可达证据。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。
+  - 下一步：核对资产 IP 和清单地址是否正确。；检查主机电源、虚拟机运行状态、安全组、防火墙和路由 ACL。；从堡垒机或 doops 节点复核网络路径，并联系责任人确认近期变更。；补齐责任人后继续处置。
+- **预警** `深信服学生网ac管理地址` 服务器网络不可达，需复核资产清单（优先级：P3；时限：复核确认；证据强度：needs-review；需复核）
+  - 证据：doops 内网探测未发现 ICMP 或 TCP 可达证据。
+  - 影响：业务影响未在清单中提供，需由系统负责人确认。
+  - 建议：核对资产 IP、检查主机电源或虚拟机状态、检查安全组/防火墙/ACL，并从堡垒机或 doops 节点复核。
+  - 下一步：核对资产 IP 和清单地址是否正确。；检查主机电源、虚拟机运行状态、安全组、防火墙和路由 ACL。；从堡垒机或 doops 节点复核网络路径，并联系责任人确认近期变更。；补齐责任人后继续处置。
+
+## 技术证据
+
+### x`
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 短信平台
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=关闭（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 新信息门户平台_no14
+
+- 网络检查模式：doops 内网探测
+- 端口：22=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 站群系统_no4
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 新短信平台
+
+- 网络检查模式：doops 内网探测
+- 端口：22=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 国资系统_no17
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 国资系统新
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 学工系统
+
+- 网络检查模式：doops 内网探测
+- 端口：22=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 人事系统_no6
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### ftp服务器
+
+- 网络检查模式：doops 内网探测
+- 端口：21=开放（端口来源：根据业务角色推断；用途：业务端口）, 3389=关闭（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 科研系统_no16
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 后勤财务系统_no10
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 视窗系统
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 大数据健康码、疫苗、核酸
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=关闭（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### linux测试
+
+- 网络检查模式：doops 内网探测
+- 端口：22=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 无线认证系统1
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=关闭（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 无线认证系统2
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=关闭（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 能耗计量平台
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=关闭（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 视频点播系统
+
+- 网络检查模式：doops 内网探测
+- 端口：未声明
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 学生上网认证1
+
+- 网络检查模式：doops 内网探测
+- 端口：22=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 学生上网认证2
+
+- 网络检查模式：doops 内网探测
+- 端口：22=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 统一身份认证_no35
+
+- 网络检查模式：doops 内网探测
+- 端口：22=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 学生上网认证3
+
+- 网络检查模式：doops 内网探测
+- 端口：22=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 学生体质管理系统（公基）
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 学生体质管理系统2（公基）
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 数据中心系统_31
+
+- 网络检查模式：doops 内网探测
+- 端口：22=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 院办档案系统_32
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 院办档案系统_45
+
+- 网络检查模式：doops 内网探测
+- 端口：未声明
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 学生宿舍APG防代理后台
+
+- 网络检查模式：doops 内网探测
+- 端口：22=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 继续教育_netexam
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 一卡通前置机（双网卡）
+
+- 网络检查模式：doops 内网探测
+- 端口：未声明
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 日志管理系统_AC
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 日志+行为感知_AC学生
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 日志管理系统_AF
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=关闭（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 日志管理系统_VPN
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### vmware虚拟化系统
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### vmware实体机
+
+- 网络检查模式：doops 内网探测
+- 端口：未声明
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### ibm刀箱管理地址
+
+- 网络检查模式：doops 内网探测
+- 端口：未声明
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 教务备份
+
+- 网络检查模式：doops 内网探测
+- 端口：22=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 财务服务器新测试_no48
+
+- 网络检查模式：doops 内网探测
+- 端口：22=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 泛微oa系统
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 研究生管理系统
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 教务在线考试题库
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 教务在线考试题库
+
+- 网络检查模式：doops 内网探测
+- 端口：未声明
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 琴房监控
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=超时（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 一卡通人脸识别
+
+- 网络检查模式：doops 内网探测
+- 端口：未声明
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 新开普一卡通_no34
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 纪检系统_46
+
+- 网络检查模式：doops 内网探测
+- 端口：3389=开放（端口来源：根据 Excel 清单操作系统推断；用途：管理端口）
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 深信服新waf管理地址
+
+- 网络检查模式：doops 内网探测
+- 端口：未声明
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+
+### 深信服学生网ac管理地址
+
+- 网络检查模式：doops 内网探测
+- 端口：未声明
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-115718；transport=workspace-push；cleanup=failed
+</pre>
+      </details>
+    </section>
+  </main>
+</body>
+</html>

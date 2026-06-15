@@ -1,0 +1,7 @@
+interface:
+  display_name: "翻墙管理"
+  short_description: "翻墙日志查询与处置管理"
+  default_prompt: "Use $翻墙管理 to investigate Zhejiang Conservatory proxy/VPN, SFTP tw_act, 20 上网行为, and firewall log evidence."
+
+policy:
+  allow_implicit_invocation: true

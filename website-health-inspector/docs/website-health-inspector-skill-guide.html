@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Website Health Inspector Skill 新手说明文档</title>
+<meta name="author" content="Kami">
+<meta name="description" content="面向新手的网站健康巡检 Skill 使用说明。">
+<meta name="keywords" content="网站健康巡检, Skill, 报告交付, 质量审计, 新手指南">
+<meta name="generator" content="Kami">
+<style>
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("../fonts/TsangerJinKai02-W04.ttf") format("truetype"),
+         url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W04.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("../fonts/TsangerJinKai02-W05.ttf") format("truetype"),
+         url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W05.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    background: #f5f4ed;
+
+    @top-right {
+      content: string(section-title);
+      font-family: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+      font-size: 8pt;
+      color: #6b6a64;
+    }
+
+    @bottom-center {
+      content: counter(page) "  ·  Website Health Inspector Skill 新手说明文档";
+      font-family: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+      font-size: 9pt;
+      color: #6b6a64;
+    }
+  }
+
+  @page:first {
+    @top-right { content: ""; }
+    @bottom-center { content: ""; }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --parchment: #f5f4ed;
+    --ivory: #faf9f5;
+    --near-black: #141413;
+    --dark-warm: #3d3d3a;
+    --olive: #504e49;
+    --stone: #6b6a64;
+    --brand: #1B365D;
+    --brand-light: #2D5A8A;
+    --border: #e8e6dc;
+    --border-soft: #e5e3d8;
+    --tag-bg: #E4ECF5;
+    --amber-bg: #f2ead7;
+    --green-bg: #e8eee5;
+    --red-bg: #f1e4df;
+    --serif: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", Georgia, serif;
+    --mono: "JetBrains Mono", "SF Mono", Consolas, "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", monospace;
+  }
+
+  html { scroll-behavior: smooth; background: var(--parchment); }
+
+  body {
+    background: var(--parchment);
+    color: var(--near-black);
+    font-family: var(--serif);
+    font-size: 10.5pt;
+    line-height: 1.55;
+    letter-spacing: 0.2pt;
+  }
+
+  @media screen {
+    body {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 36px 42px 52px;
+    }
+  }
+
+  @media screen and (min-width: 1280px) and (max-width: 1540px) {
+    body {
+      padding-left: 220px;
+    }
+  }
+
+  p {
+    margin: 0 0 10pt;
+    color: var(--near-black);
+  }
+
+  a { color: var(--brand); text-decoration-thickness: 0.06em; text-underline-offset: 0.16em; }
+
+  .cover {
+    min-height: 100vh;
+    display: grid;
+    align-content: start;
+    gap: 20pt;
+    break-after: page;
+    padding-top: 12pt;
+  }
+
+  .cover-eyebrow {
+    color: var(--brand);
+    font-size: 10pt;
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    margin-bottom: 12pt;
+  }
+
+  .cover-title {
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 500;
+    line-height: 1.12;
+    color: var(--near-black);
+    margin-bottom: 14pt;
+  }
+
+  .cover-sub {
+    max-width: 760px;
+    color: var(--olive);
+    font-size: 13pt;
+    line-height: 1.55;
+    margin-bottom: 14pt;
+  }
+
+  .cover-meta {
+    color: var(--stone);
+    font-size: 10pt;
+    line-height: 1.6;
+  }
+
+  .cover-intro {
+    max-width: 820px;
+  }
+
+  .guide-image-wrap {
+    background: var(--ivory);
+    border: 0.5pt solid var(--border);
+    border-radius: 8pt;
+    padding: 8pt;
+    margin-top: 8pt;
+    break-inside: avoid;
+  }
+
+  .guide-image {
+    display: block;
+    width: 100%;
+    border-radius: 5pt;
+  }
+
+  .note {
+    color: var(--stone);
+    font-size: 9pt;
+    line-height: 1.45;
+    margin-top: 6pt;
+  }
+
+  .metric-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10pt;
+    margin-top: 8pt;
+  }
+
+  .metric {
+    background: var(--ivory);
+    border: 0.5pt solid var(--border);
+    border-radius: 8pt;
+    padding: 10pt 12pt;
+    min-height: 62pt;
+    break-inside: avoid;
+  }
+
+  .metric-value {
+    display: block;
+    color: var(--brand);
+    font-size: 18pt;
+    font-weight: 500;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .metric-label {
+    display: block;
+    color: var(--olive);
+    font-size: 9pt;
+    line-height: 1.35;
+    margin-top: 3pt;
+  }
+
+  .toc {
+    break-after: page;
+  }
+
+  .side-nav {
+    position: fixed;
+    top: 28px;
+    left: max(18px, calc((100vw - 1180px) / 2 - 180px));
+    width: 156px;
+    background: var(--ivory);
+    border: 0.5pt solid var(--border);
+    border-radius: 8pt;
+    padding: 10pt;
+    z-index: 10;
+    box-shadow: 0 4pt 24pt rgba(0, 0, 0, 0.04);
+  }
+
+  .side-nav-title {
+    color: var(--brand);
+    font-size: 9pt;
+    font-weight: 500;
+    letter-spacing: 0.6pt;
+    text-transform: uppercase;
+    margin-bottom: 6pt;
+  }
+
+  .side-nav a {
+    display: block;
+    color: var(--olive);
+    text-decoration: none;
+    font-size: 9.2pt;
+    line-height: 1.35;
+    padding: 5pt 0;
+    border-top: 0.3pt solid var(--border-soft);
+  }
+
+  .side-nav a:first-of-type {
+    border-top: none;
+  }
+
+  .side-nav a:hover,
+  .side-nav a:focus {
+    color: var(--brand);
+  }
+
+  .toc h2,
+  h1 {
+    font-size: 22pt;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0 0 12pt;
+    border-left: 2.5pt solid var(--brand);
+    border-radius: 1.5pt;
+    padding-left: 8pt;
+    color: var(--near-black);
+    break-after: avoid;
+  }
+
+  .toc-item {
+    display: grid;
+    grid-template-columns: 32pt 1fr auto;
+    gap: 8pt;
+    align-items: baseline;
+    padding: 7pt 0;
+    border-bottom: 0.3pt dotted var(--border);
+    font-size: 11pt;
+  }
+
+  .toc-num { color: var(--brand); font-weight: 500; }
+  .toc-title { color: var(--near-black); }
+  .toc-page { color: var(--stone); font-variant-numeric: tabular-nums; }
+
+  .chapter {
+    break-before: page;
+    padding-top: 4pt;
+  }
+
+  .chapter-num {
+    color: var(--brand);
+    font-size: 10pt;
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    margin-bottom: 6pt;
+  }
+
+  h2 {
+    font-size: 16pt;
+    font-weight: 500;
+    line-height: 1.25;
+    margin: 24pt 0 7pt;
+    color: var(--near-black);
+    break-after: avoid;
+    string-set: section-title content();
+  }
+
+  h3 {
+    font-size: 13pt;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 18pt 0 5pt;
+    color: var(--dark-warm);
+    break-after: avoid;
+  }
+
+  .lead {
+    font-size: 12pt;
+    line-height: 1.55;
+    color: var(--dark-warm);
+    margin-bottom: 14pt;
+  }
+
+  .hl {
+    color: var(--brand);
+    font-weight: 500;
+  }
+
+  strong { font-weight: 500; }
+
+  ul, ol {
+    margin: 6pt 0 10pt;
+    padding-left: 20pt;
+    line-height: 1.55;
+  }
+
+  ul li::marker,
+  ol li::marker {
+    color: var(--brand);
+    font-weight: 500;
+  }
+
+  .exec-summary,
+  .callout,
+  .takeaway,
+  .command-card,
+  .mode-card,
+  .checklist-card {
+    background: var(--ivory);
+    border: 0.5pt solid var(--border);
+    border-radius: 8pt;
+    padding: 14pt 16pt;
+    margin: 12pt 0;
+    break-inside: avoid;
+  }
+
+  .exec-summary {
+    border-left: 1.4pt solid var(--brand);
+  }
+
+  .callout {
+    border-left: 2pt solid var(--brand);
+  }
+
+  .warning {
+    background: var(--amber-bg);
+    border-left-color: #8b6f2f;
+  }
+
+  .danger {
+    background: var(--red-bg);
+    border-left-color: #9a341f;
+  }
+
+  .ok {
+    background: var(--green-bg);
+    border-left-color: #3f6b45;
+  }
+
+  .takeaway-label,
+  .card-label {
+    color: var(--brand);
+    font-size: 9pt;
+    font-weight: 500;
+    letter-spacing: 0.5pt;
+    text-transform: uppercase;
+    margin-bottom: 4pt;
+  }
+
+  .grid-2,
+  .grid-3 {
+    display: grid;
+    gap: 10pt;
+    margin: 10pt 0;
+  }
+
+  .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  .mode-card h3,
+  .checklist-card h3 {
+    margin-top: 0;
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--brand);
+    font-size: 9pt;
+    font-weight: 500;
+    padding: 1pt 6pt;
+    border-radius: 3pt;
+    margin: 0 4pt 4pt 0;
+  }
+
+  .tag-warn { background: #f2ead7; color: #6b4f16; }
+  .tag-safe { background: #e8eee5; color: #355e3b; }
+  .tag-risk { background: #f1e4df; color: #8a3324; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 9pt;
+    background: var(--ivory);
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+    color: var(--dark-warm);
+  }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 9pt;
+    line-height: 1.5;
+    background: var(--ivory);
+    border: 0.5pt solid var(--border);
+    border-radius: 6pt;
+    padding: 10pt 14pt;
+    margin: 10pt 0;
+    white-space: pre-wrap;
+    color: var(--near-black);
+    break-inside: avoid;
+  }
+
+  pre code {
+    background: transparent;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    margin: 12pt 0;
+    break-inside: avoid;
+  }
+
+  th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--dark-warm);
+    padding: 6pt 8pt;
+    border-bottom: 1pt solid var(--border);
+  }
+
+  td {
+    padding: 5pt 8pt;
+    border-bottom: 0.3pt solid var(--border-soft);
+    vertical-align: top;
+  }
+
+  tr:nth-child(even) td { background: var(--ivory); }
+
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8pt;
+    margin: 12pt 0;
+  }
+
+  .flow-step {
+    background: var(--ivory);
+    border: 0.5pt solid var(--border);
+    border-radius: 8pt;
+    padding: 10pt;
+    min-height: 86pt;
+    position: relative;
+    break-inside: avoid;
+  }
+
+  .flow-num {
+    color: var(--brand);
+    font-size: 16pt;
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 5pt;
+  }
+
+  .flow-step p {
+    margin-bottom: 0;
+    color: var(--olive);
+    font-size: 9.2pt;
+    line-height: 1.42;
+  }
+
+  .figure {
+    margin: 14pt 0;
+    break-inside: avoid;
+  }
+
+  .figure img {
+    max-width: 100%;
+    border-radius: 4pt;
+  }
+
+  .caption {
+    color: var(--stone);
+    font-size: 9pt;
+    line-height: 1.45;
+    text-align: center;
+    margin-top: 6pt;
+  }
+
+  .small {
+    color: var(--stone);
+    font-size: 9pt;
+    line-height: 1.45;
+  }
+
+  .appendix-list p {
+    margin-bottom: 6pt;
+  }
+
+  @media (max-width: 820px) {
+    body { padding: 24px 18px 40px; }
+    .grid-2,
+    .grid-3,
+    .metric-row,
+    .flow {
+      grid-template-columns: 1fr;
+    }
+    .cover { min-height: auto; }
+    .side-nav {
+      position: sticky;
+      top: 0;
+      left: auto;
+      width: calc(100% + 36px);
+      margin: -24px -18px 22px;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      border-radius: 0;
+      padding: 10px 18px;
+      overflow-x: auto;
+      white-space: nowrap;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+    }
+    .side-nav-title {
+      display: inline-block;
+      margin-right: 10px;
+      margin-bottom: 0;
+    }
+    .side-nav a {
+      display: inline-block;
+      border-top: none;
+      padding: 5px 8px;
+    }
+    .toc-item { grid-template-columns: 30pt 1fr; }
+    .toc-page { display: none; }
+  }
+
+  @media (min-width: 821px) and (max-width: 1279px) {
+    body {
+      padding-top: 90px;
+    }
+    .side-nav {
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      border-radius: 0;
+      padding: 10px 42px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .side-nav-title {
+      display: inline-block;
+      margin-right: 10px;
+      margin-bottom: 0;
+    }
+    .side-nav a {
+      display: inline-block;
+      border-top: none;
+      padding: 5px 8px;
+    }
+  }
+
+  @media print {
+    .side-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="side-nav" aria-label="章节导航">
+  <div class="side-nav-title">目录导航</div>
+  <a href="#what">01 解决什么问题</a>
+  <a href="#choose-mode">02 选择巡检模式</a>
+  <a href="#flow">03 完整执行流程</a>
+  <a href="#commands">04 命令怎么跑</a>
+  <a href="#quality">05 门禁与交付</a>
+  <a href="#safety">06 安全与误区</a>
+  <a href="#appendix">07 文件和术语</a>
+</nav>
+
+<section class="cover">
+  <div class="cover-intro">
+    <div class="cover-eyebrow">Beginner Manual · Website Health Inspector</div>
+    <div class="cover-title">网站健康巡检 Skill<br>新手说明文档</div>
+    <div class="cover-sub">
+      这份文档把 `website-health-inspector` 拆成新手能照着执行的步骤：先判断该用哪种巡检入口，再运行一键管线或拆分命令，最后检查正式交付包、评分审计、质量门禁和安全边界。
+    </div>
+    <div class="cover-meta">
+      <strong>适用读者</strong>：第一次使用该 Skill 的管理员、运维同学、交付负责人<br>
+      <strong>交付格式</strong>：HTML 说明文档，附 AI 生成导览图<br>
+      <strong>版本日期</strong>：2026.05.15
+    </div>
+  </div>
+
+  <figure class="guide-image-wrap">
+    <img class="guide-image" src="website-health-inspector-guide.png" alt="Website Health Inspector 新手导览图">
+    <figcaption class="note">AI 生成导览图：帮助快速理解三种入口、核心管线、交付包与安全边界。正文命令和规则以本文档为准。</figcaption>
+  </figure>
+
+  <div class="metric-row">
+    <div class="metric">
+      <span class="metric-value">3</span>
+      <span class="metric-label">类巡检入口：临时 URL、管理员深度浏览、Excel 清单。</span>
+    </div>
+    <div class="metric">
+      <span class="metric-value">N+1</span>
+      <span class="metric-label">多站点交付：每站一份报告，再加批次总体报告。</span>
+    </div>
+    <div class="metric">
+      <span class="metric-value">2</span>
+      <span class="metric-label">道门禁：评分合理性复核在前，质量审计在后。</span>
+    </div>
+    <div class="metric">
+      <span class="metric-value">1</span>
+      <span class="metric-label">个正式入口：对外交付优先看 `delivery/final-report.html`。</span>
+    </div>
+  </div>
+</section>
+
+<section class="toc">
+  <h2>目录</h2>
+  <div class="toc-item"><span class="toc-num">01</span><span class="toc-title">这份 Skill 解决什么问题</span><span class="toc-page">03</span></div>
+  <div class="toc-item"><span class="toc-num">02</span><span class="toc-title">一分钟选对巡检模式</span><span class="toc-page">05</span></div>
+  <div class="toc-item"><span class="toc-num">03</span><span class="toc-title">完整执行流程</span><span class="toc-page">07</span></div>
+  <div class="toc-item"><span class="toc-num">04</span><span class="toc-title">命令怎么跑</span><span class="toc-page">09</span></div>
+  <div class="toc-item"><span class="toc-num">05</span><span class="toc-title">报告、评分和质量门禁</span><span class="toc-page">12</span></div>
+  <div class="toc-item"><span class="toc-num">06</span><span class="toc-title">安全边界和常见误区</span><span class="toc-page">15</span></div>
+  <div class="toc-item"><span class="toc-num">07</span><span class="toc-title">附录：文件和术语速查</span><span class="toc-page">18</span></div>
+</section>
+
+<section class="chapter" id="what">
+  <div class="chapter-num">01 · What It Does</div>
+  <h1>这份 Skill 解决什么问题</h1>
+
+  <p class="lead">
+    `website-health-inspector` 是一个面向管理平台管理员的网站健康巡检 Skill。它不是只把页面打开一下，也不是把日志堆进文档；它的目标是把一次巡检整理成<span class="hl">管理人员能读、能复核、能转工单</span>的正式报告。
+  </p>
+
+  <div class="exec-summary">
+    <div class="takeaway-label">一句话理解</div>
+    你给它一个 URL、一组管理员只读凭证，或一份 Excel 资源清单；它把检查对象标准化为 `inventory.normalized.json`，执行页面发现、内容审查、浏览器实测、主机与服务检查等模块，再合并成 `final-report.json`，最后渲染出 HTML、PDF、Markdown、JSON 和质量审计交付包。
+  </div>
+
+  <h2>它适合的场景</h2>
+  <div class="grid-3">
+    <div class="mode-card">
+      <div class="card-label">临时 URL</div>
+      <h3>快速判断公开页面</h3>
+      <p>管理员临时给一个地址，希望知道页面能不能打开、内容是否完整、浏览器访问是否明显异常。</p>
+    </div>
+    <div class="mode-card">
+      <div class="card-label">管理员凭证</div>
+      <h3>复核后台入口</h3>
+      <p>管理员提供账号和密码，希望只读验证登录入口、登录后页面、受保护页面跳转和截图证据链。</p>
+    </div>
+    <div class="mode-card">
+      <div class="card-label">Excel 清单</div>
+      <h3>批量巡检系统</h3>
+      <p>管理员维护多个系统、页面、主机和服务，需要按清单批量巡检，并生成正式交付包。</p>
+    </div>
+  </div>
+
+  <h2>它不适合直接宣称的事情</h2>
+  <div class="callout warning">
+    临时 URL 模式不能证明登录后页面健康；没有主机凭证或服务清单时，不能宣称覆盖数据库、DNS、TLS 深度校验、性能压测或微服务内部健康。带浏览器实测的「打开时间」只是本轮巡检的轻量快照，不等于持续监控或容量压测。
+  </div>
+
+  <h2>核心交付物</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>文件或目录</th>
+        <th>用途</th>
+        <th>新手要记住什么</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>delivery/final-report.html</code></td>
+        <td>正式 HTML 报告入口</td>
+        <td>优先交付它，但要连同整个 <code>delivery/</code> 文件夹发送。</td>
+      </tr>
+      <tr>
+        <td><code>delivery/final-report.pdf</code></td>
+        <td>PDF 归档版本</td>
+        <td>必须由正式 HTML 打印渲染生成，不接受占位 PDF。</td>
+      </tr>
+      <tr>
+        <td><code>final-report.json</code></td>
+        <td>结构化总报告</td>
+        <td>HTML 和图片有争议时，以 JSON 与正文实时数据为准。</td>
+      </tr>
+      <tr>
+        <td><code>score-audit.md/json</code></td>
+        <td>评分合理性复核</td>
+        <td>这是渲染前门禁，低分或疑似重复扣分会阻断正式报告。</td>
+      </tr>
+      <tr>
+        <td><code>quality-audit.md/json</code></td>
+        <td>质量审计</td>
+        <td>这是成稿后门禁，检查模板、导航、敏感信息和交付完整性。</td>
+      </tr>
+      <tr>
+        <td><code>delivery-manifest.md/json</code></td>
+        <td>交付清单</td>
+        <td>用来判断包是否完整、是否 ready to deliver。</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="chapter" id="choose-mode">
+  <div class="chapter-num">02 · Choose The Mode</div>
+  <h1>一分钟选对巡检模式</h1>
+
+  <p class="lead">
+    新手最容易卡住的地方不是命令，而是<span class="hl">选错巡检入口</span>。入口选错，报告就会过度承诺；入口选对，报告会自然写清楚边界、证据和下一步。
+  </p>
+
+  <h2>模式选择表</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>你手里有什么</th>
+        <th>该选什么模式</th>
+        <th>能回答的问题</th>
+        <th>不能回答的问题</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>一个公开 URL</td>
+        <td><span class="tag">临时 URL 快速巡检</span></td>
+        <td>页面是否可访问、内容是否明显缺失、基础浏览器表现如何。</td>
+        <td>登录后页面、主机内部、数据库、微服务内部健康。</td>
+      </tr>
+      <tr>
+        <td>URL + 管理员账号 + 密码</td>
+        <td><span class="tag">管理员深度浏览</span></td>
+        <td>登录入口、登录后页面、受保护页面跳转、截图证据链。</td>
+        <td>除非清单允许，否则不能做删除、审批、提交数据等变更操作。</td>
+      </tr>
+      <tr>
+        <td>一份 Excel 资源清单</td>
+        <td><span class="tag">标准清单巡检</span></td>
+        <td>系统、页面、主机、服务的批量巡检与汇总报告。</td>
+        <td>Excel 没配置的资源不能假装已覆盖。</td>
+      </tr>
+      <tr>
+        <td>多个网站或多个系统</td>
+        <td><span class="tag">多站点 N+1</span></td>
+        <td>每站独立报告 + 一份批次治理总报告。</td>
+        <td>总体报告不能写成单站证据长分析，证据详情应链接到单站报告。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>导读图方式必须先确认</h2>
+  <p>
+    运行正式报告前，必须知道首页导览用哪种方式。可选项是：`GPT/AI 导读图`、`HTML 图文导览`、`复用已有 ai-report-guide.png`、或 `先启用/修复内置 image_gen 后重试`。没有明确选择时，不要让脚本自行降级，也不要默认使用 `.env` 中的 API Key。
+  </p>
+
+  <div class="grid-2">
+    <div class="checklist-card ok">
+      <div class="card-label">可以这样做</div>
+      <h3>用户明确选择 HTML 图文导览</h3>
+      <pre><code>python scripts/run_health_inspection.py --url https://example.com/admin --out runs/adhoc --guide-mode html-guide</code></pre>
+      <p>适合用户不想调用图片接口，或希望先交付可读报告的情况。</p>
+    </div>
+    <div class="checklist-card warning">
+      <div class="card-label">不要这样做</div>
+      <h3>用户没说就默认跳过生图</h3>
+      <p>未确认导览方式时，不能默认复用旧图、默认 HTML 图文导览，也不能默认使用本地 API Key。</p>
+    </div>
+  </div>
+
+  <h2>多站点 N+1 是什么</h2>
+  <p>
+    多站点巡检不是把所有网站塞进一份巨大的单站报告。推荐方式是 N+1：N 个网站各自生成独立 `delivery/final-report.html`，再生成 1 份整体总报告和 `delivery-batch/index.html` 首页索引。整体报告只做批次治理：健康分布、优先处置站点、共性问题族、复测计划和单站入口。
+  </p>
+</section>
+
+<section class="chapter" id="flow">
+  <div class="chapter-num">03 · Inspection Flow</div>
+  <h1>完整执行流程</h1>
+
+  <p class="lead">
+    无论从 URL、凭证还是 Excel 开始，Skill 的核心思路都一样：先把输入变成标准清单，再让每个模块输出结构化子报告，最后合并、审计、渲染和交付。
+  </p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <h3>标准化输入</h3>
+      <p>URL 或 Excel 先转为 `inventory.normalized.json`，这是所有模块的统一入口。</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <h3>执行检查模块</h3>
+      <p>页面发现、内容审查、浏览器实测、主机与服务检查分别产出子报告。</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <h3>合并总报告</h3>
+      <p>`merge_reports.py` 合并子报告，形成 `final-report.json`。</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">4</div>
+      <h3>评分复核</h3>
+      <p>渲染前运行 `audit_score_reasonableness.py`，检查低分、状态冲突和重复扣分。</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">5</div>
+      <h3>渲染交付</h3>
+      <p>生成 HTML、PDF、Markdown、交付清单和质量审计，形成 `delivery/`。</p>
+    </div>
+  </div>
+
+  <h2>为什么要先标准化为清单</h2>
+  <p>
+    `inventory.normalized.json` 是这个 Skill 的「中间语言」。这样做的好处是：URL 快速巡检、Excel 清单和深度浏览都能进入同一条管线；检查模块不用关心输入原来来自哪里；最终报告也能统一表达系统、页面、证据、发现项和边界。
+  </p>
+
+  <h2>模块失败时怎么办</h2>
+  <div class="callout">
+    单个检查模块失败时，不应该悄悄跳过。默认模式会保留已成功模块的结果，并把失败模块写成 `unknown` 或 runtime-failed 子报告；如果使用 `--strict`，任一模块失败会立即停止。`merge`、`render` 和正式交付失败仍然是致命错误。
+  </div>
+
+  <h2>健康评分的口径</h2>
+  <p>
+    健康评分不是机械累加日志。最终评分以 `scripts/scoring_model.py` 的根因聚类为准，同一根因只扣一次；重复页面、重复请求和重复日志只增加证据数量，不应重复扣分。状态也跟随有效扣分模型：100 分且无正扣分簇才是 `healthy`；存在有效扣分但未达到严重条件通常是 `warning`；已确认 critical、confirmed-outage 或总分低于 60 才进入 `critical`。
+  </p>
+</section>
+
+<section class="chapter" id="commands">
+  <div class="chapter-num">04 · Commands</div>
+  <h1>命令怎么跑</h1>
+
+  <p class="lead">
+    新手优先使用一键管线 `run_health_inspection.py`。只有需要定位某个阶段的问题时，再拆分执行导入、检查、合并、评分复核、渲染和质量审计。
+  </p>
+
+  <h2>开始前：进入 Skill 根目录</h2>
+  <pre><code>Set-Location "C:\Users\Administrator\.codex\skills\website-health-inspector"</code></pre>
+
+  <h2>模式一：临时 URL 快速巡检</h2>
+  <div class="command-card">
+    <div class="card-label">推荐命令</div>
+    <pre><code>python scripts/run_health_inspection.py --url https://example.com/admin --out runs/adhoc --guide-mode html-guide</code></pre>
+    <p>适合只检查公开页面。报告中要写清楚：此模式不能证明登录后页面健康，也不能覆盖主机和微服务内部状态。</p>
+  </div>
+
+  <h2>模式二：URL + 管理员账号深度巡检</h2>
+  <p>推荐把密码放进当前进程环境变量，不要写入命令历史、报告或文档。</p>
+  <pre><code>Read-Host "Admin password" -MaskInput | ForEach-Object {
+  [Environment]::SetEnvironmentVariable("WEBSITE_HEALTH_ADMIN_PASSWORD", $_, "Process")
+}
+
+python scripts/run_health_inspection.py `
+  --url https://example.com/admin `
+  --username admin `
+  --password-env WEBSITE_HEALTH_ADMIN_PASSWORD `
+  --out runs/deep `
+  --guide-mode html-guide</code></pre>
+
+  <div class="callout warning">
+    管理员浏览器流程默认只读。没有显式 `allow_mutation=true` 时，不点击删除、审批、发布、重启、提交业务数据、批量修改权限等危险动作。
+  </div>
+
+  <h2>模式三：Excel 资源清单巡检</h2>
+  <p>如果还没有模板，先生成空白模板：</p>
+  <pre><code>python scripts/create_inventory_template.py --out assets/inventory-template.xlsx</code></pre>
+  <p>准备好 Excel 后导入并执行巡检：</p>
+  <pre><code>python scripts/import_inventory_excel.py --excel path\to\inventory.xlsx --out runs/inventory-run
+python scripts/inspect_sites.py --inventory runs/inventory-run/inventory.normalized.json --out runs/inventory-run</code></pre>
+
+  <h2>模式四：多个网站批量巡检</h2>
+  <pre><code>python scripts/run_multi_site_inspection.py --excel path\to\sites.xlsx --out reports/batch --max-workers 5 --guide-mode html-guide</code></pre>
+  <p>交付入口是 `reports/batch/delivery-batch/index.html`。对外发送时，要发送整个 `delivery-batch/` 文件夹。</p>
+
+  <h2>拆分执行：用于排查问题</h2>
+  <pre><code>python scripts/build_adhoc_inventory.py --url https://example.com/admin --out runs/adhoc
+python scripts/discover_site_pages.py --inventory runs/adhoc/inventory.normalized.json --out runs/adhoc --merge
+python scripts/check_content.py --inventory runs/adhoc/inventory.normalized.json --out runs/adhoc
+python scripts/check_deep_browser.py --inventory runs/adhoc/inventory.normalized.json --out runs/adhoc
+python scripts/check_host_services.py --inventory runs/adhoc/inventory.normalized.json --out runs/adhoc
+python scripts/merge_reports.py --in runs/adhoc --out runs/adhoc/final-report.json
+python scripts/audit_score_reasonableness.py --report runs/adhoc/final-report.json --out runs/adhoc --threshold 60
+python scripts/render_report.py --report runs/adhoc/final-report.json --out runs/adhoc --guide-mode html-guide
+python scripts/audit_report_quality.py --run-dir runs/adhoc --iteration 1 --out runs/adhoc/quality-audit.md</code></pre>
+</section>
+
+<section class="chapter" id="quality">
+  <div class="chapter-num">05 · Report Gates</div>
+  <h1>报告、评分和质量门禁</h1>
+
+  <p class="lead">
+    这个 Skill 的价值不只在「跑检查」，更在「不把半成品交出去」。正式报告至少经过两个门禁：渲染前的评分合理性复核，和成稿后的质量审计。
+  </p>
+
+  <h2>评分合理性复核：渲染前门禁</h2>
+  <p>
+    `audit_score_reasonableness.py` 专门检查低分、分数重算不一致、健康状态与评分语义不一致、疑似重复扣分等问题。默认阈值是 60 分。阻断时，只保留 `final-report.json`、`score-audit.json` 和 `score-audit.md`，不要更新正式 `delivery/`。
+  </p>
+  <pre><code>python scripts/audit_score_reasonableness.py --report runs/adhoc/final-report.json --out runs/adhoc --threshold 60</code></pre>
+
+  <div class="grid-2">
+    <div class="checklist-card ok">
+      <div class="card-label">通过时</div>
+      <h3>`status=pass`</h3>
+      <p>可以进入正式 HTML、PDF 和 Markdown 渲染。</p>
+    </div>
+    <div class="checklist-card danger">
+      <div class="card-label">阻断时</div>
+      <h3>`status=blocked`</h3>
+      <p>先人工复核重复扣分、低分原因和状态冲突；不要自动改分或跳过审计。</p>
+    </div>
+  </div>
+
+  <h2>人工确认低分合理</h2>
+  <p>如果确实是严重问题导致低分，人工确认后才能显式继续渲染，并写入批准说明：</p>
+  <pre><code>python scripts/render_report.py `
+  --report runs/adhoc/final-report.json `
+  --out runs/adhoc `
+  --guide-mode html-guide `
+  --score-review-approved `
+  --score-review-note "人工确认低分合理，未发现重复扣分"</code></pre>
+
+  <h2>质量审计：成稿后门禁</h2>
+  <p>
+    `audit_report_quality.py` 检查正式模板、折叠章节、导航锚点、导读图引用、敏感信息、质量审计文件、PDF、交付清单和 `delivery/` 结构。它的状态表示交付物质量，不是网站健康状态来源。
+  </p>
+  <pre><code>python scripts/audit_report_quality.py --run-dir runs/adhoc --iteration 1 --out runs/adhoc/quality-audit.md</code></pre>
+
+  <h2>正式 HTML 必须包含什么</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>组件</th>
+        <th>作用</th>
+        <th>质量审计关注点</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>导览封面</td>
+        <td>AI 导读图或 HTML 图文导览</td>
+        <td>有 `ai-report-guide.png` 或 `html-guide-visual`，且不展示 API Key 或运行失败提示。</td>
+      </tr>
+      <tr>
+        <td>阅读导航</td>
+        <td>帮助管理人员跳到重点章节</td>
+        <td>存在 `report-nav`，滚动时能用 `aria-current` 标记当前章节。</td>
+      </tr>
+      <tr>
+        <td>折叠式证据章节</td>
+        <td>压缩默认阅读长度</td>
+        <td>存在 `fold-section`，技术证据不压过管理结论。</td>
+      </tr>
+      <tr>
+        <td>交付摘要</td>
+        <td>方便转工单、周报和复测任务</td>
+        <td>摘要可复制，且不包含敏感信息。</td>
+      </tr>
+      <tr>
+        <td>性能快照</td>
+        <td>展示本轮浏览器打开时间</td>
+        <td>包含平均打开时间、最慢页面、慢页面数和 TTFB；不写成压测结论。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>交付前最后看这 6 件事</h2>
+  <ol>
+    <li>`delivery/final-report.html` 能打开，第一屏能回答整体是否健康、严重问题和下一步动作。</li>
+    <li>`delivery/final-report.pdf` 非空，且由正式 HTML 打印生成。</li>
+    <li>`final-report.json` 与 HTML 中的状态、评分和数量一致。</li>
+    <li>`score-audit.md/json` 存在，并且已通过或低分已人工批准。</li>
+    <li>`quality-audit.md/json` 存在，质量门禁没有失败。</li>
+    <li>报告、截图、清单和审计文件没有泄露密码、Token、Cookie、私钥或真实 API Key。</li>
+  </ol>
+</section>
+
+<section class="chapter" id="safety">
+  <div class="chapter-num">06 · Safety Boundaries</div>
+  <h1>安全边界和常见误区</h1>
+
+  <p class="lead">
+    网站健康巡检最怕两件事：一是越权操作，二是把自动化边界写成生产故障。新手只要守住下面几条，报告就会稳很多。
+  </p>
+
+  <h2>凭证怎么处理</h2>
+  <div class="grid-2">
+    <div class="checklist-card ok">
+      <div class="card-label">推荐</div>
+      <h3>用环境变量传密码</h3>
+      <p>`--password-env WEBSITE_HEALTH_ADMIN_PASSWORD` 能避免命令历史和报告里出现明文密码。</p>
+    </div>
+    <div class="checklist-card danger">
+      <div class="card-label">禁止</div>
+      <h3>把密钥写进可交付文件</h3>
+      <p>API Key、Token、Cookie、私钥、管理员密码都不能出现在报告正文、日志摘要、交付清单、公开文档或截图说明里。</p>
+    </div>
+  </div>
+
+  <h2>自动化信号怎么写</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>看到的信号</th>
+        <th>新手容易误写</th>
+        <th>推荐写法</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>登录态未确认</td>
+        <td>后台登录失败。</td>
+        <td>自动化巡检未捕获稳定登录态信号，需结合人工登录复测。</td>
+      </tr>
+      <tr>
+        <td>受保护页面跳转</td>
+        <td>权限系统故障。</td>
+        <td>若发生在自动化登录态未确认之后，应先解释为巡检代理会话保持待复核。</td>
+      </tr>
+      <tr>
+        <td>401、403、ERR_ABORTED</td>
+        <td>生产故障已确认。</td>
+        <td>标注证据边界、影响范围、责任角色和下一步复测证据。</td>
+      </tr>
+      <tr>
+        <td>HTTP 文本过短</td>
+        <td>页面内容缺失。</td>
+        <td>对 SPA 优先采信浏览器截图和页面文本；普通 HTTP 文本过短可作为低可信提示。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>报告语言不要空泛</h2>
+  <div class="callout danger">
+    不要把「可能影响部分页面体验或需要后续排查」「请检查」「建议尽快排查」「Review needed」当作最终影响或建议。缺少证据时，写「影响范围尚未确认」，并明确责任角色、要补的复测证据、服务端日志和业务预期。
+  </div>
+
+  <h2>AI 导读图的边界</h2>
+  <p>
+    `ai-report-guide.png` 是阅读辅助，可能滞后于最新 JSON。正式结论永远以 `final-report.json`、HTML 封面实时数据栏和正文为准。最终 HTML 不应该出现 API Key 配置、`--guide-mode`、图片接口失败说明或调试过程提示。
+  </p>
+
+  <h2>只读巡检原则</h2>
+  <p>
+    管理员深度浏览只验证只读路径：登录、打开后台首页、查看页面、读取审计日志或受保护入口。除非清单明确 `allow_mutation=true`，否则不要执行删除、审批、重启、提交业务数据、批量导入、权限变更或触发真实通知的动作。
+  </p>
+</section>
+
+<section class="chapter" id="appendix">
+  <div class="chapter-num">07 · Appendix</div>
+  <h1>附录：文件和术语速查</h1>
+
+  <h2>常见文件速查</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>文件</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><code>SKILL.md</code></td><td>Agent 使用这个 Skill 时首先读取的入口规则。</td></tr>
+      <tr><td><code>docs/quick-start.md</code></td><td>三种巡检模式和常用命令。</td></tr>
+      <tr><td><code>docs/configuration-and-security.md</code></td><td>环境变量、凭证、只读原则和敏感信息边界。</td></tr>
+      <tr><td><code>docs/pipeline-architecture.md</code></td><td>脚本职责、数据流和模块输出契约。</td></tr>
+      <tr><td><code>docs/report-delivery.md</code></td><td>正式报告结构、交付规则和常见问题。</td></tr>
+      <tr><td><code>references/report-writing.md</code></td><td>管理报告写作规范和证据边界表述。</td></tr>
+      <tr><td><code>references/report-design.md</code></td><td>HTML 报告设计规范和第一屏要求。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>术语表</h2>
+  <div class="appendix-list">
+    <p><strong>资源清单</strong>：描述系统、页面、主机、服务、内容检查规则和管理员流程的输入数据。</p>
+    <p><strong>`inventory.normalized.json`</strong>：所有检查模块共同使用的标准化清单。</p>
+    <p><strong>子报告</strong>：单个检查模块输出的结构化 JSON，例如内容审查、浏览器实测或主机服务检查。</p>
+    <p><strong>`final-report.json`</strong>：合并后的结构化总报告，是 HTML 和 PDF 的数据源。</p>
+    <p><strong>评分合理性复核</strong>：正式渲染前检查低分、重复扣分和状态评分冲突的门禁。</p>
+    <p><strong>质量审计</strong>：正式报告生成后检查模板、内容、敏感信息和交付完整性的门禁。</p>
+    <p><strong>N+1 模式</strong>：多站点巡检时，每个站点一份报告，再加一份整体总报告和批次索引。</p>
+  </div>
+
+  <h2>给新手的最短路径</h2>
+  <div class="takeaway">
+    <div class="takeaway-label">Start Here</div>
+    如果只是想先跑通一次，请用临时 URL + HTML 图文导览：进入 Skill 根目录，运行 `python scripts/run_health_inspection.py --url https://example.com/admin --out runs/adhoc --guide-mode html-guide`，完成后打开 `runs/adhoc/delivery/final-report.html`，再看 `quality-audit.md` 和 `delivery-manifest.md` 是否允许交付。
+  </div>
+</section>
+
+</body>
+</html>

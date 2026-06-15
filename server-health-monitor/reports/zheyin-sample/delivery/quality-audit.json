@@ -1,0 +1,55 @@
+{
+  "status": "pass",
+  "checks": [
+    {
+      "name": "final-report.html 文件存在",
+      "status": "pass"
+    },
+    {
+      "name": "final-report.pdf 文件存在",
+      "status": "pass"
+    },
+    {
+      "name": "final-report.md 文件存在",
+      "status": "pass"
+    },
+    {
+      "name": "final-report.json 文件存在",
+      "status": "pass"
+    },
+    {
+      "name": "guide-image-status.json 文件存在",
+      "status": "pass"
+    },
+    {
+      "name": "HTML 正式模板标记 guide-cover",
+      "status": "pass"
+    },
+    {
+      "name": "HTML 正式模板标记 report-nav",
+      "status": "pass"
+    },
+    {
+      "name": "HTML 正式模板标记 fold-section",
+      "status": "pass"
+    },
+    {
+      "name": "报告正文为中文",
+      "status": "pass"
+    },
+    {
+      "name": "表头导览图或导览占位存在",
+      "status": "pass"
+    },
+    {
+      "name": "GPT 导览图文件存在",
+      "status": "pass"
+    },
+    {
+      "name": "敏感信息泄露扫描",
+      "status": "pass",
+      "hits": []
+    }
+  ],
+  "generated_at": "2026-05-13T00:38:40+08:00"
+}

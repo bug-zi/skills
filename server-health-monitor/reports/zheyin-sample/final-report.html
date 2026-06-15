@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zhejiang Conservatory of Music - sample 服务器运行健康报告</title>
+  <style>
+    :root { color-scheme: light; --ink:#172033; --muted:#667085; --line:#d8dee8; --paper:#ffffff; --soft:#f3f6fa; --good:#147a4b; --warn:#a15c00; --bad:#b42318; --unknown:#4b5565; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px/1.55 "Microsoft YaHei", "Noto Sans CJK SC", Arial, Helvetica, sans-serif; color: var(--ink); background: #eef2f6; }
+    .guide-cover { padding: 36px 6vw 30px; background: linear-gradient(135deg, #10243f, #2d5f73); color: white; }
+    .guide-cover p { max-width: 880px; color: #d9e7ef; }
+    .cover-grid { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(320px, 520px); gap: 28px; align-items: center; }
+    .guide-visual { border: 1px solid rgba(255,255,255,.28); border-radius: 8px; overflow: hidden; background: rgba(255,255,255,.08); min-height: 220px; display:flex; align-items:center; justify-content:center; }
+    .guide-visual img { display:block; width:100%; height:auto; }
+    .guide-placeholder { padding: 26px; color: #e9f2f8; }
+    .status-pill { display: inline-block; padding: 5px 10px; border: 1px solid rgba(255,255,255,.5); border-radius: 999px; font-size: 12px; }
+    .report-nav { position: sticky; top: 0; z-index: 2; display: flex; gap: 18px; padding: 10px 6vw; background: rgba(255,255,255,.94); border-bottom: 1px solid var(--line); }
+    .report-nav a { color: var(--ink); text-decoration: none; font-weight: 700; }
+    main { max-width: 1160px; margin: 0 auto; padding: 24px; background: var(--paper); }
+    .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(130px, 1fr)); gap: 12px; margin: 18px 0; }
+    .metric { border: 1px solid var(--line); border-radius: 8px; padding: 14px; background: var(--soft); }
+    .metric b { display:block; font-size: 24px; }
+    .fold-section { border-top: 1px solid var(--line); padding: 22px 0; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border-bottom: 1px solid var(--line); padding: 9px; text-align: left; vertical-align: top; }
+    th { background: var(--soft); }
+    .badge { display: inline-block; min-width: 76px; padding: 3px 8px; border-radius: 999px; text-align: center; color: white; font-size: 12px; }
+    .badge.healthy { background: var(--good); }
+    .badge.warning { background: var(--warn); }
+    .badge.critical { background: var(--bad); }
+    .badge.unknown { background: var(--unknown); }
+    .finding-card { border: 1px solid var(--line); border-radius: 8px; padding: 14px; margin: 10px 0; }
+    details { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin: 10px 0; }
+    summary { cursor: pointer; font-weight: 700; }
+    pre { overflow-x: auto; background: #111827; color: #eef2ff; padding: 12px; border-radius: 8px; }
+    @media print { body { background:white; } .report-nav { position: static; } main { max-width: none; } details { break-inside: avoid; } }
+    @media (max-width: 860px) { .cover-grid { grid-template-columns: 1fr; } .metric-grid { grid-template-columns: repeat(2, minmax(120px, 1fr)); } .report-nav { overflow-x:auto; } }
+  </style>
+</head>
+<body>
+  <header class="guide-cover">
+    <div class="cover-grid">
+      <div>
+        <span class="status-pill">服务器运行健康：??</span>
+        <h1>Zhejiang Conservatory of Music - sample 服务器运行健康报告</h1>
+        <p>这是一份离线验证报告；形成生产结论前，应补充实时网络探测、主机指标或服务状态。</p>
+      </div>
+      <figure class="guide-visual"><img src="./html-assets/guide-image.png" alt="服务器健康报告导览图"></figure>
+    </div>
+  </header>
+  <nav class="report-nav" aria-label="报告导航">
+    <a href="#summary">摘要</a>
+    <a href="#matrix">服务器矩阵</a>
+    <a href="#findings">问题风险</a>
+    <a href="#evidence">技术证据</a>
+    <a href="#appendix">附录</a>
+  </nav>
+  <main>
+    <section id="summary" class="fold-section">
+      <h2>管理摘要</h2>
+      <div class="metric-grid">
+        <div class="metric"><span>服务器数</span><b>3</b></div>
+        <div class="metric"><span>严重问题</span><b>0</b></div>
+        <div class="metric"><span>预警问题</span><b>0</b></div>
+        <div class="metric"><span>生成日期</span><b>2026-05-13</b></div>
+      </div>
+      <p><strong>覆盖范围：</strong>网络探测=??????；主机指标=???；服务状态=???。</p>
+    </section>
+    <section id="matrix" class="fold-section">
+      <h2>服务器矩阵</h2>
+      <table>
+        <thead><tr><th>服务器</th><th>地址</th><th>业务角色</th><th>状态</th><th>证据边界</th></tr></thead>
+        <tbody><tr><td>zheyin-web-01</td><td>192.0.2.10</td><td>portal web</td><td><span class="badge unknown">??</span></td><td>仅离线清单验证；本次未连接服务器。</td></tr>
+<tr><td>zheyin-db-01</td><td>192.0.2.20</td><td>database</td><td><span class="badge unknown">??</span></td><td>仅离线清单验证；本次未连接服务器。</td></tr>
+<tr><td>zheyin-file-01</td><td>192.0.2.30</td><td>file service</td><td><span class="badge unknown">??</span></td><td>仅离线清单验证；本次未连接服务器。</td></tr></tbody>
+      </table>
+    </section>
+    <section id="findings" class="fold-section">
+      <h2>问题与风险</h2>
+      <p>在当前检查范围内未发现严重或预警级问题。</p>
+    </section>
+    <section id="evidence" class="fold-section">
+      <h2>技术证据</h2>
+      <details>
+  <summary>zheyin-web-01 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th></tr></thead><tbody><tr><td>22</td><td>not-tested</td><td></td></tr><tr><td>80</td><td>not-tested</td><td></td></tr><tr><td>443</td><td>not-tested</td><td></td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;credential_status&quot;: &quot;??????????????????&quot;
+}</pre>
+</details>
+<details>
+  <summary>zheyin-db-01 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th></tr></thead><tbody><tr><td>22</td><td>not-tested</td><td></td></tr><tr><td>3306</td><td>not-tested</td><td></td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;credential_status&quot;: &quot;??????????????????&quot;
+}</pre>
+</details>
+<details>
+  <summary>zheyin-file-01 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th></tr></thead><tbody><tr><td>135</td><td>not-tested</td><td></td></tr><tr><td>445</td><td>not-tested</td><td></td></tr><tr><td>5985</td><td>not-tested</td><td></td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;credential_status&quot;: &quot;??????????????????&quot;
+}</pre>
+</details>
+    </section>
+    <section id="appendix" class="fold-section">
+      <h2>附录</h2>
+      <details>
+        <summary>Markdown 报告文本</summary>
+        <pre># Zhejiang Conservatory of Music - sample 服务器运行健康报告
+
+- 生成时间：2026-05-13T00:35:35+08:00
+- 总体状态：??
+- 服务器数量：3
+- 严重问题：0
+- 预警问题：0
+
+## 管理结论
+
+这是一份离线验证报告；形成生产结论前，应补充实时网络探测、主机指标或服务状态。
+
+## 检查覆盖范围
+
+- 网络探测：??????
+- 主机指标：???
+- 服务状态：???
+
+## 服务器矩阵
+
+| 服务器 | 地址 | 业务角色 | 状态 | 证据边界 |
+| --- | --- | --- | --- | --- |
+| zheyin-web-01 | 192.0.2.10 | portal web | ?? | 仅离线清单验证；本次未连接服务器。 |
+| zheyin-db-01 | 192.0.2.20 | database | ?? | 仅离线清单验证；本次未连接服务器。 |
+| zheyin-file-01 | 192.0.2.30 | file service | ?? | 仅离线清单验证；本次未连接服务器。 |
+
+## 问题与风险
+
+在当前检查范围内未发现严重或预警级问题。
+
+## 技术证据
+
+### zheyin-web-01
+
+- 网络检查模式：??????
+- 端口：22=???, 80=???, 443=???
+
+### zheyin-db-01
+
+- 网络检查模式：??????
+- 端口：22=???, 3306=???
+
+### zheyin-file-01
+
+- 网络检查模式：??????
+- 端口：135=???, 445=???, 5985=???
+</pre>
+      </details>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>server-health-monitor 小白使用说明</title>
+  <meta name="description" content="面向初学者的 server-health-monitor skill 详细说明文档，覆盖使用场景、输入清单、doops 巡检、报告交付、证据边界与常见排错。">
+  <meta name="keywords" content="server-health-monitor, doops, 服务器健康巡检, skill说明, 运维报告">
+  <meta name="generator" content="Kami + Codex">
+  <style>
+    @font-face {
+      font-family: "TsangerJinKai02";
+      src: url("C:/Users/Administrator/.agents/skills/kami/assets/fonts/TsangerJinKai02-W04.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "TsangerJinKai02";
+      src: url("C:/Users/Administrator/.agents/skills/kami/assets/fonts/TsangerJinKai02-W05.ttf") format("truetype");
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    :root {
+      --parchment: #f5f4ed;
+      --ivory: #faf9f5;
+      --warm-sand: #e8e6dc;
+      --near-black: #141413;
+      --dark-warm: #3d3d3a;
+      --olive: #504e49;
+      --stone: #6b6a64;
+      --brand: #1b365d;
+      --brand-soft: #eef2f7;
+      --brand-mid: #d0dce9;
+      --border: #e8e6dc;
+      --border-soft: #e5e3d8;
+      --ok: #3d6b4f;
+      --warn: #9a6a12;
+      --danger: #8f3d33;
+      --serif: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", Georgia, serif;
+      --mono: "JetBrains Mono", "SF Mono", Consolas, "TsangerJinKai02", "Source Han Serif SC", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--parchment);
+      color: var(--near-black);
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.72;
+      letter-spacing: 0.02em;
+    }
+    a { color: var(--brand); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .page {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 0 64px;
+    }
+    .guide-figure {
+      margin: 0 0 28px;
+      background: var(--ivory);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 8px 30px rgba(20, 20, 19, 0.05);
+    }
+    .guide-figure svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #faf9f5;
+      border-radius: 6px;
+    }
+    .guide-figure figcaption {
+      margin-top: 10px;
+      color: var(--stone);
+      font-size: 14px;
+      text-align: center;
+    }
+    .hero {
+      padding: 48px 0 38px;
+      border-bottom: 1px solid var(--border);
+    }
+    .eyebrow {
+      color: var(--brand);
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    h1, h2, h3 {
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: 0;
+      margin: 0;
+    }
+    h1 {
+      font-size: clamp(32px, 5vw, 56px);
+      max-width: 980px;
+    }
+    .subtitle {
+      max-width: 780px;
+      margin: 18px 0 0;
+      color: var(--olive);
+      font-size: 20px;
+      line-height: 1.6;
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 38px;
+      align-items: start;
+    }
+    .toc {
+      position: sticky;
+      top: 16px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--ivory);
+      margin-top: 32px;
+    }
+    .toc-title {
+      color: var(--stone);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .toc a {
+      display: block;
+      padding: 7px 0;
+      color: var(--dark-warm);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--border-soft);
+      font-size: 14px;
+    }
+    .toc a:last-child { border-bottom: 0; }
+    main { padding-top: 32px; }
+    section {
+      margin-bottom: 48px;
+      scroll-margin-top: 24px;
+    }
+    h2 {
+      font-size: 28px;
+      border-left: 4px solid var(--brand);
+      padding-left: 12px;
+      margin-bottom: 16px;
+    }
+    h3 {
+      font-size: 21px;
+      color: var(--dark-warm);
+      margin: 26px 0 8px;
+    }
+    p { margin: 0 0 14px; }
+    .lead {
+      color: var(--dark-warm);
+      font-size: 18px;
+      line-height: 1.65;
+    }
+    .hl {
+      color: var(--brand);
+      font-weight: 500;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 18px 0;
+    }
+    .card {
+      background: var(--ivory);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      break-inside: avoid;
+    }
+    .card .num {
+      color: var(--brand);
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 500;
+      margin-bottom: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+    .card .label {
+      color: var(--stone);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .callout {
+      background: var(--ivory);
+      border-left: 4px solid var(--brand);
+      border-radius: 6px;
+      padding: 16px 18px;
+      margin: 18px 0;
+      color: var(--dark-warm);
+    }
+    .warning {
+      border-left-color: var(--warn);
+      background: #faf4e6;
+    }
+    .danger {
+      border-left-color: var(--danger);
+      background: #f8efec;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 15px;
+      background: var(--ivory);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      text-align: left;
+      vertical-align: top;
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    th {
+      color: var(--dark-warm);
+      font-weight: 500;
+      background: #f8f7f0;
+    }
+    tr:last-child td { border-bottom: 0; }
+    code {
+      font-family: var(--mono);
+      font-size: 0.92em;
+      background: var(--ivory);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+    pre {
+      margin: 14px 0 18px;
+      padding: 16px;
+      overflow-x: auto;
+      background: var(--ivory);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      line-height: 1.55;
+      white-space: pre;
+    }
+    pre code {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      font-size: 14px;
+    }
+    ul, ol {
+      margin: 8px 0 18px;
+      padding-left: 24px;
+    }
+    li { margin: 6px 0; }
+    li::marker { color: var(--brand); }
+    .steps {
+      counter-reset: step;
+      display: grid;
+      gap: 12px;
+      margin: 18px 0;
+    }
+    .step {
+      position: relative;
+      padding: 16px 16px 16px 56px;
+      background: var(--ivory);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--brand);
+      color: var(--ivory);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .path-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+    .path {
+      background: var(--ivory);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .path strong {
+      display: block;
+      color: var(--brand);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .small {
+      color: var(--stone);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .footer {
+      color: var(--stone);
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      margin-top: 54px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .page { width: min(100% - 24px, 1120px); }
+      .layout { grid-template-columns: 1fr; gap: 0; }
+      .toc { position: static; margin-top: 20px; }
+      .card-grid, .path-list { grid-template-columns: 1fr; }
+      .hero { padding-top: 28px; }
+      h2 { font-size: 24px; }
+      table { display: block; overflow-x: auto; }
+    }
+
+    @media print {
+      body { font-size: 10.5pt; }
+      .page { width: auto; padding: 0; }
+      .toc { position: static; break-after: page; }
+      .layout { display: block; }
+      .guide-figure, .card, .path, .step, .callout, table { break-inside: avoid; }
+      section { break-inside: auto; }
+      a { color: var(--brand); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <figure class="guide-figure">
+      <svg viewBox="0 0 1400 760" role="img" aria-labelledby="guide-title guide-desc">
+        <title id="guide-title">server-health-monitor 使用导览图</title>
+        <desc id="guide-desc">从用户请求、清单或 doops 目标开始，经过只读采集、证据判断、报告渲染、质量审计，最终形成 HTML、PDF、Markdown、JSON 和批量报告入口。</desc>
+        <defs>
+          <style>
+            .svg-title { font: 500 44px "TsangerJinKai02", "Source Han Serif SC", serif; fill: #141413; }
+            .svg-sub { font: 400 20px "TsangerJinKai02", "Source Han Serif SC", serif; fill: #504e49; }
+            .svg-h { font: 500 23px "TsangerJinKai02", "Source Han Serif SC", serif; fill: #1b365d; }
+            .svg-t { font: 400 18px "TsangerJinKai02", "Source Han Serif SC", serif; fill: #3d3d3a; }
+            .svg-s { font: 400 15px "TsangerJinKai02", "Source Han Serif SC", serif; fill: #6b6a64; }
+          </style>
+        </defs>
+        <rect x="0" y="0" width="1400" height="760" rx="14" fill="#faf9f5"/>
+        <rect x="28" y="28" width="1344" height="704" rx="12" fill="#f5f4ed" stroke="#e8e6dc"/>
+        <text x="66" y="88" class="svg-title">server-health-monitor 小白导览图</text>
+        <text x="68" y="126" class="svg-sub">一句话理解：把“能证明的服务器运行证据”整理成管理者能读懂的中文交付包。</text>
+
+        <rect x="64" y="170" width="260" height="150" rx="12" fill="#faf9f5" stroke="#d0dce9"/>
+        <text x="88" y="212" class="svg-h">1. 先确认入口</text>
+        <text x="88" y="248" class="svg-t">zheyin / hdu 自身节点</text>
+        <text x="88" y="276" class="svg-t">Excel / JSON / CSV 清单</text>
+        <text x="88" y="304" class="svg-s">不清楚时先做只读预检</text>
+
+        <path d="M324 245 H396" stroke="#1b365d" stroke-width="4" fill="none"/>
+        <path d="M384 233 L404 245 L384 257" fill="none" stroke="#1b365d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <rect x="404" y="170" width="260" height="150" rx="12" fill="#faf9f5" stroke="#d0dce9"/>
+        <text x="428" y="212" class="svg-h">2. 只读采集</text>
+        <text x="428" y="248" class="svg-t">doops targets / info</text>
+        <text x="428" y="276" class="svg-t">workspace exec 采指标</text>
+        <text x="428" y="304" class="svg-s">默认不碰 SSH / WinRM / SNMP</text>
+
+        <path d="M664 245 H736" stroke="#1b365d" stroke-width="4" fill="none"/>
+        <path d="M724 233 L744 245 L724 257" fill="none" stroke="#1b365d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <rect x="744" y="170" width="260" height="150" rx="12" fill="#faf9f5" stroke="#d0dce9"/>
+        <text x="768" y="212" class="svg-h">3. 判断证据边界</text>
+        <text x="768" y="248" class="svg-t">主机指标 / 端口可达</text>
+        <text x="768" y="276" class="svg-t">进程 / 服务 / 趋势</text>
+        <text x="768" y="304" class="svg-s">没采到就写明“未采集”</text>
+
+        <path d="M1004 245 H1076" stroke="#1b365d" stroke-width="4" fill="none"/>
+        <path d="M1064 233 L1084 245 L1064 257" fill="none" stroke="#1b365d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <rect x="1084" y="170" width="252" height="150" rx="12" fill="#faf9f5" stroke="#d0dce9"/>
+        <text x="1108" y="212" class="svg-h">4. 生成交付包</text>
+        <text x="1108" y="248" class="svg-t">HTML / PDF / MD / JSON</text>
+        <text x="1108" y="276" class="svg-t">质量审计 + 交付清单</text>
+        <text x="1108" y="304" class="svg-s">多服务器走 N+1 入口</text>
+
+        <rect x="64" y="382" width="390" height="210" rx="12" fill="#faf9f5" stroke="#e8e6dc"/>
+        <text x="92" y="426" class="svg-h">默认最快路径</text>
+        <text x="92" y="464" class="svg-t">浙音 / 杭电请求：先看 doops 节点自身</text>
+        <text x="92" y="496" class="svg-t">采集 CPU、内存、磁盘、负载、进程、服务</text>
+        <text x="92" y="528" class="svg-t">不要求用户提供服务器账号或 Excel 密码</text>
+        <rect x="92" y="550" width="205" height="30" rx="15" fill="#eef2f7"/>
+        <text x="112" y="571" class="svg-s" fill="#1b365d">覆盖标签：doops-self-collected</text>
+
+        <rect x="506" y="382" width="390" height="210" rx="12" fill="#faf9f5" stroke="#e8e6dc"/>
+        <text x="534" y="426" class="svg-h">清单扩展路径</text>
+        <text x="534" y="464" class="svg-t">有 Excel / JSON 清单时，先分层分类</text>
+        <text x="534" y="496" class="svg-t">网络探测只能证明可达性，不等于主机健康</text>
+        <text x="534" y="528" class="svg-t">深度指标需要用户明确要求并具备授权</text>
+        <rect x="534" y="550" width="188" height="30" rx="15" fill="#eef2f7"/>
+        <text x="554" y="571" class="svg-s" fill="#1b365d">输出：active / inactive / monitorable</text>
+
+        <rect x="948" y="382" width="388" height="210" rx="12" fill="#faf9f5" stroke="#e8e6dc"/>
+        <text x="976" y="426" class="svg-h">交付时看这几个文件</text>
+        <text x="976" y="464" class="svg-t">单次：delivery/final-report.html</text>
+        <text x="976" y="496" class="svg-t">批量：delivery-batch/index.html</text>
+        <text x="976" y="528" class="svg-t">审计：quality-audit.md 与 manifest.md</text>
+        <rect x="976" y="550" width="208" height="30" rx="15" fill="#eef2f7"/>
+        <text x="996" y="571" class="svg-s" fill="#1b365d">先打开入口页，不进原生目录</text>
+
+        <path d="M194 320 V354 Q194 366 206 366 H1136 Q1148 366 1148 354 V332" stroke="#d0dce9" stroke-width="3" fill="none"/>
+        <path d="M1136 342 L1148 330 L1160 342" fill="none" stroke="#d0dce9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <rect x="68" y="650" width="1264" height="44" rx="8" fill="#eef2f7"/>
+        <text x="92" y="679" class="svg-t" fill="#1b365d">小白记忆口诀：先问“采集对象是谁”，再看“证据从哪里来”，最后确认“报告有没有把边界说清”。</text>
+      </svg>
+      <figcaption>AI 生成导览图：用一张图串起入口、采集、判断、交付和证据边界。</figcaption>
+    </figure>
+
+    <header class="hero">
+      <div class="eyebrow">SERVER HEALTH MONITOR / BEGINNER GUIDE</div>
+      <h1>server-health-monitor 小白使用说明</h1>
+      <p class="subtitle">这份文档面向第一次接触该 skill 的使用者：不假设你懂 doops、SNMP、WinRM 或报告交付目录，只按“什么时候用、怎么准备、运行什么、结果怎么看、哪些不能误判”讲清楚。</p>
+      <div class="meta-row">
+        <span class="tag">中文说明</span>
+        <span class="tag">只读巡检</span>
+        <span class="tag">管理报告</span>
+        <span class="tag">证据边界优先</span>
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav class="toc" aria-label="目录">
+        <div class="toc-title">目录</div>
+        <a href="#what">01 这是什么</a>
+        <a href="#when">02 什么时候用</a>
+        <a href="#mental-model">03 先记住的模型</a>
+        <a href="#quickstart">04 最常用跑法</a>
+        <a href="#inventory">05 输入清单怎么准备</a>
+        <a href="#coverage">06 证据边界怎么看</a>
+        <a href="#outputs">07 交付物在哪里</a>
+        <a href="#quality">08 质量与安全规则</a>
+        <a href="#troubleshooting">09 常见问题</a>
+        <a href="#checklist">10 交付前清单</a>
+      </nav>
+
+      <main>
+        <section id="what">
+          <h2>01 这是什么</h2>
+          <p class="lead"><span class="hl">server-health-monitor</span> 是一份用于服务器运行健康巡检的 Codex skill。它的目标不是“随便扫一眼服务器”，而是把授权范围内能采集到的证据，整理成中文、可审计、能交给管理人员阅读的正式报告。</p>
+          <div class="card-grid">
+            <div class="card">
+              <div class="num">1</div>
+              <div class="label">核心定位</div>
+              <p>只读巡检：默认不改配置、不安装组件、不登录登出、不做破坏性操作。</p>
+            </div>
+            <div class="card">
+              <div class="num">2</div>
+              <div class="label">主要对象</div>
+              <p>浙音 zheyin、杭电 hdu 的 doops 托管节点，以及用户提供的服务器清单。</p>
+            </div>
+            <div class="card">
+              <div class="num">3</div>
+              <div class="label">最终产物</div>
+              <p>HTML、PDF、Markdown、JSON、质量审计和交付清单，而不是一段临时命令输出。</p>
+            </div>
+          </div>
+          <div class="callout">
+            对小白来说，最重要的一句话是：这份 skill 不是“万能监控系统”，它是“证据型巡检报告生成器”。能证明什么，就写什么；没采集到什么，也必须写清楚。
+          </div>
+        </section>
+
+        <section id="when">
+          <h2>02 什么时候用</h2>
+          <p>当用户提供服务器清单、主机列表、运维资产表、doops 目标，或直接说“帮我看浙音/杭电服务器运行状态”时，就适合使用这份 skill。</p>
+          <table>
+            <thead>
+              <tr>
+                <th>用户说法</th>
+                <th>你应该理解成</th>
+                <th>默认处理方式</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>“检查浙音服务器状态” / “zheyin 巡检”</td>
+                <td>先看 zheyin doops 节点自身健康</td>
+                <td>走 doops-only 自身节点路径，不要先要 SSH 密码</td>
+              </tr>
+              <tr>
+                <td>“检查杭电 hdu 状态”</td>
+                <td>先看 hdu doops 节点自身健康</td>
+                <td>同样走 doops-only 自身节点路径</td>
+              </tr>
+              <tr>
+                <td>“这是服务器 Excel，帮我巡检”</td>
+                <td>用户提供了普通服务器资产清单</td>
+                <td>先导入清单，可做网络探测；深度主机指标需明确授权</td>
+              </tr>
+              <tr>
+                <td>“只看哪些还在用，哪些能监控”</td>
+                <td>需要清单分层分类</td>
+                <td>使用 <code>--classify-inventory</code> 生成 active / inactive / monitorable 分组</td>
+              </tr>
+              <tr>
+                <td>“和上次报告对比”</td>
+                <td>需要趋势比较</td>
+                <td>给 runner 加 <code>--previous-report</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="mental-model">
+          <h2>03 先记住的模型</h2>
+          <p>这份 skill 的工作流可以拆成五个动作：<span class="hl">定对象、采证据、判边界、出报告、做审计</span>。</p>
+          <div class="steps">
+            <div class="step">
+              <h3>定对象</h3>
+              <p>先确认要检查的是 doops 节点自身，还是 Excel / JSON / CSV 里的一批普通服务器。对象不同，证据含义完全不同。</p>
+            </div>
+            <div class="step">
+              <h3>采证据</h3>
+              <p>默认使用 doops 的 <code>targets</code>、<code>info</code>、workspace <code>exec</code>、<code>read</code>、<code>clean</code>。对于 zheyin/hdu 自身节点，不需要 SSH、WinRM 或 SNMPv3。</p>
+            </div>
+            <div class="step">
+              <h3>判边界</h3>
+              <p>CPU、内存、磁盘、负载、进程、服务是主机级证据；端口探测只是网络可达性证据。报告必须把这两类证据分开。</p>
+            </div>
+            <div class="step">
+              <h3>出报告</h3>
+              <p>正式报告必须是中文，并且要有 HTML、PDF、Markdown、JSON、导览图状态、质量审计和交付清单。</p>
+            </div>
+            <div class="step">
+              <h3>做审计</h3>
+              <p>交付前检查质量审计和文本完整性，尤其看是否有乱码、英文标题、敏感信息、空导览图和证据边界缺失。</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="quickstart">
+          <h2>04 最常用跑法</h2>
+          <p>以下命令假设你在 skill 根目录：<code>C:\Users\Administrator\.codex\skills\server-health-monitor</code>。PowerShell 里先设置 doops 网关兼容开关，再运行采集与报告生成。</p>
+
+          <h3>浙音 zheyin 自身节点健康巡检</h3>
+          <pre><code>$env:DOOPS_ALLOW_INSECURE_GATEWAY='1'
+python scripts/collect_doops_inventory.py --environment zheyin --out reports/zheyin-self-node/inventory.json
+python scripts/run_server_health_monitor.py --inventory reports/zheyin-self-node/inventory.json --out reports/zheyin-self-node</code></pre>
+          <p>这条路径会采集 zheyin doops 节点自身的 CPU、内存、磁盘、负载、在线状态、主要进程和关键服务。它不能证明 Excel 清单里所有普通业务服务器的主机健康。</p>
+
+          <h3>杭电 hdu 自身节点健康巡检</h3>
+          <pre><code>$env:DOOPS_ALLOW_INSECURE_GATEWAY='1'
+python scripts/collect_doops_inventory.py --environment hdu --out reports/hdu-self-node/inventory.json
+python scripts/run_server_health_monitor.py --inventory reports/hdu-self-node/inventory.json --out reports/hdu-self-node</code></pre>
+
+          <h3>先做 doops 预检</h3>
+          <pre><code>$env:DOOPS_ALLOW_INSECURE_GATEWAY='1'
+python scripts/collect_doops_inventory.py --preflight --environment zheyin
+python scripts/collect_doops_inventory.py --preflight --environment hdu</code></pre>
+          <p>预检只看 doops CLI、目标、网关和简短诊断，不运行远端采集。预检失败时应停止，不要编造主机指标。</p>
+
+          <h3>用脱敏样例跑离线演示</h3>
+          <pre><code>python scripts/run_server_health_monitor.py --inventory assets/samples/zheyin-inventory.example.json --out reports/zheyin-sample --offline</code></pre>
+          <p>离线样例适合看报告长什么样，但不能当成真实服务器状态。</p>
+
+          <h3>从 Excel 清单做网络探测</h3>
+          <pre><code>python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --limit 30 --out reports/zheyin-excel/inventory.json
+python scripts/run_server_health_monitor.py --inventory reports/zheyin-excel/inventory.json --out reports/zheyin-excel</code></pre>
+          <p>这会从 doops 所在网络视角探测清单中的地址和端口。注意：网络探测不能替代 CPU、内存、磁盘等主机指标。</p>
+
+          <h3>有授权时采集普通服务器主机指标</h3>
+          <pre><code>python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --host-metrics-profile zheyin-monitor --limit 30 --out reports/zheyin-excel-hostmetrics/inventory.json
+python scripts/run_server_health_monitor.py --inventory reports/zheyin-excel-hostmetrics/inventory.json --out reports/zheyin-excel-hostmetrics</code></pre>
+          <p>这是扩展路径，不是 zheyin/hdu 默认路径。它依赖 doops 采集节点上已经准备好的只读监控账号或配置，不应该从 Excel 中直接抄密码。</p>
+        </section>
+
+        <section id="inventory">
+          <h2>05 输入清单怎么准备</h2>
+          <p>这份 skill 支持 JSON、CSV/TSV 和 Excel。小白最容易混淆的是“清单字段”和“真实证据”：清单里的字段只是声明，只有采集到的观察结果才是运行证据。</p>
+
+          <h3>最小 JSON 结构</h3>
+          <pre><code>{
+  "environment": {
+    "name": "示例环境",
+    "inspection_window": "2026-05-15 10:00-11:00"
+  },
+  "servers": [
+    {
+      "name": "web-01",
+      "address": "10.0.0.10",
+      "os_type": "linux",
+      "role": "web",
+      "business_system": "统一门户",
+      "ports": [22, 443]
+    }
+  ]
+}</code></pre>
+
+          <h3>常用字段说明</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>字段</th>
+                <th>新手理解</th>
+                <th>注意事项</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>name</code></td>
+                <td>服务器显示名称</td>
+                <td>必填，报告矩阵会用它识别对象</td>
+              </tr>
+              <tr>
+                <td><code>address</code></td>
+                <td>IP 或主机名</td>
+                <td>做 live 检查时通常需要</td>
+              </tr>
+              <tr>
+                <td><code>doops_target</code></td>
+                <td>doops 目标名</td>
+                <td>doops 采集时优先级最高</td>
+              </tr>
+              <tr>
+                <td><code>os_type</code></td>
+                <td>系统类型</td>
+                <td>可填 <code>linux</code>、<code>windows</code> 或 <code>unknown</code></td>
+              </tr>
+              <tr>
+                <td><code>role</code></td>
+                <td>业务角色</td>
+                <td>比如 web、database、file service，用于理解影响</td>
+              </tr>
+              <tr>
+                <td><code>lifecycle_status</code></td>
+                <td>是否还在使用</td>
+                <td>配合 <code>--classify-inventory</code> 做活跃/停用分组</td>
+              </tr>
+              <tr>
+                <td><code>ports</code> / <code>port_obligations</code></td>
+                <td>应该检查的端口</td>
+                <td>显式业务端口不可达比推断的管理端口不可达更严重</td>
+              </tr>
+              <tr>
+                <td><code>metrics</code></td>
+                <td>CPU、内存、磁盘等观测指标</td>
+                <td>如果是外部填入，要能说明来源</td>
+              </tr>
+              <tr>
+                <td><code>collection_errors</code></td>
+                <td>采集失败原因</td>
+                <td>只能写脱敏类型，不写密码、Token 或原始 stderr</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout warning">
+            Excel 资产表里可能有账号、密码、负责人、部门等字段。正式报告不展示长期缺失或敏感字段；凭据必须转成脱敏引用，不得写进报告、JSON、Markdown 或聊天内容。
+          </div>
+
+          <h3>清单分类会生成什么</h3>
+          <p>当使用 <code>--classify-inventory</code> 时，采集器会先把全部记录分成仍在使用和停用，再把仍在使用的服务器分成可监控和不可监控，并在 <code>inventory.json</code> 旁边写出四个 CSV：</p>
+          <ul>
+            <li><code>inventory-active-servers.csv</code>：仍在使用的服务器。</li>
+            <li><code>inventory-inactive-servers.csv</code>：停用或不再使用的服务器。</li>
+            <li><code>inventory-monitorable-servers.csv</code>：成功采集 CPU/内存等主机指标的服务器。</li>
+            <li><code>inventory-unmonitorable-servers.csv</code>：当前无法采集主机指标，需要补授权、补地址或复核的服务器。</li>
+          </ul>
+        </section>
+
+        <section id="coverage">
+          <h2>06 证据边界怎么看</h2>
+          <p>健康报告最怕“证据过度解读”。这份 skill 明确要求：缺什么证据，就写什么边界，不能把网络可达说成主机健康，也不能把 doops 节点自身健康说成全部业务服务器健康。</p>
+          <table>
+            <thead>
+              <tr>
+                <th>覆盖标签</th>
+                <th>说明</th>
+                <th>不能误解成</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>doops-self-collected</code></td>
+                <td>直接从 doops 目标节点自身采到 CPU、内存、磁盘、负载、进程、服务。</td>
+                <td>不能说 Excel 里所有普通服务器都被采了主机指标。</td>
+              </tr>
+              <tr>
+                <td><code>doops-network-probe</code></td>
+                <td>从 doops 内网视角探测地址或端口是否可达。</td>
+                <td>不能说数据库、应用进程或磁盘一定健康。</td>
+              </tr>
+              <tr>
+                <td><code>ssh-collected</code> / <code>winrm-collected</code></td>
+                <td>通过只读 SSH 或 WinRM 采集普通服务器主机指标。</td>
+                <td>不能暴露账号、密钥、命令行参数或原始失败日志。</td>
+              </tr>
+              <tr>
+                <td><code>snmp-collected</code></td>
+                <td>通过 SNMPv3 采集 CPU、内存、磁盘、在线时长等指标。</td>
+                <td>通常不能等价为服务和进程状态完整可见。</td>
+              </tr>
+              <tr>
+                <td><code>partial-host-metrics</code></td>
+                <td>主机指标只采到一部分，或部分服务器失败。</td>
+                <td>不能把失败项当作健康；应写“无法监测”与脱敏失败类型。</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout danger">
+            对 zheyin/hdu 的默认自身节点检查，不要主动要求用户提供服务器 IP、SSH 密码、WinRM 密码或 SNMPv3 密钥。doops 已经是采集通道。只有用户明确给普通服务器清单并要求深度采集时，才进入 SSH/WinRM/SNMPv3 扩展路径。
+          </div>
+        </section>
+
+        <section id="outputs">
+          <h2>07 交付物在哪里</h2>
+          <p>报告不是只交一个 PDF。正式交付包必须能被人阅读、复核、归档和机器处理。</p>
+          <div class="path-list">
+            <div class="path">
+              <strong>单次巡检入口</strong>
+              <p><code>delivery/final-report.html</code> 是优先打开的 HTML 报告。PDF、Markdown、JSON、导览图状态、质量审计和交付清单都在同一个 <code>delivery/</code> 目录。</p>
+            </div>
+            <div class="path">
+              <strong>批量巡检入口</strong>
+              <p><code>delivery-batch/index.html</code> 是批量报告首页；<code>delivery-batch/servers/index.html</code> 是单服务器报告索引。不要让用户直接进 <code>delivery-batch/servers/</code> 原生目录找文件。</p>
+            </div>
+          </div>
+
+          <h3>单次报告必须包含</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>文件</th>
+                <th>作用</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>delivery/final-report.html</code></td><td>正式可读 HTML 报告。</td></tr>
+              <tr><td><code>delivery/final-report.pdf</code></td><td>便于发送、归档和打印的 PDF。</td></tr>
+              <tr><td><code>delivery/final-report.md</code></td><td>精简 Markdown 版本，便于复制和系统归档。</td></tr>
+              <tr><td><code>delivery/final-report.json</code></td><td>结构化证据和高级报告模块，便于程序复核。</td></tr>
+              <tr><td><code>delivery/guide-image-status.json</code></td><td>记录导览图是 AI 生成、复用还是 HTML/CSS 备用。</td></tr>
+              <tr><td><code>delivery/quality-audit.md</code></td><td>人类可读的质量审计结果。</td></tr>
+              <tr><td><code>delivery/delivery-manifest.md</code></td><td>交付清单和入口说明。</td></tr>
+            </tbody>
+          </table>
+
+          <h3>管理人员最先看哪几块</h3>
+          <ol>
+            <li>管理结论：当前是否健康、风险等级、需要谁处理。</li>
+            <li>核心指标：CPU、内存、磁盘、负载、进程覆盖情况。</li>
+            <li>关键服务：服务状态是否采到，未采集要写清楚。</li>
+            <li>服务器矩阵：每台服务器的状态、优先级、处理时限和证据边界。</li>
+            <li>问题与建议：证据、业务影响、处置建议和建议时限。</li>
+            <li>趋势与边界：是否有上一期对比，本次无法证明什么。</li>
+          </ol>
+        </section>
+
+        <section id="quality">
+          <h2>08 质量与安全规则</h2>
+          <p>这份 skill 的质量要求很硬：正式报告必须中文、必须有导览图、必须有质量审计、必须保护秘密、必须把证据边界写明。</p>
+
+          <h3>中文与可读性</h3>
+          <ul>
+            <li>HTML、PDF、Markdown、导航、表头、管理结论和证据解释都必须使用中文。</li>
+            <li>不要出现 <code>Management Summary</code>、<code>Findings</code>、<code>Technical Evidence</code> 这类英文正式标题。</li>
+            <li>不得出现乱码、连续问号、Unicode replacement character 或明显 mojibake 片段。</li>
+          </ul>
+
+          <h3>导览图规则</h3>
+          <ul>
+            <li>报告表头必须有 GPT/AI 导览图，或经过用户确认后的中文 HTML/CSS 备用导览图。</li>
+            <li>导览图区域不能留空，失败原因只写进 <code>guide-image-status.json</code>，不要写进正式报告正文。</li>
+            <li>当覆盖类型是 <code>doops-self-collected</code> 时，导览图必须明确这是 doops 节点自身状态监测，不能暗示已覆盖其他普通业务服务器。</li>
+          </ul>
+
+          <h3>敏感信息</h3>
+          <ul>
+            <li>不要打印、保存或报告真实密码、Token、Cookie、私钥、API Key、网关密钥或 doops 凭据。</li>
+            <li>SNMPv3、WinRM、SSH 的密钥和密码只能留在授权采集节点的本地秘密文件或环境中，不能写进清单或报告。</li>
+            <li>失败日志只保留脱敏类型，比如 <code>ssh-auth-or-command-failed</code>、<code>snmp-timeout</code>、<code>invalid-address</code>。</li>
+          </ul>
+        </section>
+
+        <section id="troubleshooting">
+          <h2>09 常见问题</h2>
+          <h3>预检失败怎么办</h3>
+          <p>先看 <code>--preflight</code> 的脱敏 JSON，确认 doops CLI、目标名、网关和 <code>targets</code> 状态。预检失败时停止，不要继续跑 <code>exec</code>，更不要编造 CPU 或内存数据。</p>
+
+          <h3>报告生成时提示没有 AI 导览图怎么办</h3>
+          <p>默认 <code>auto</code> 模式不能静默降级到 HTML/CSS。如果没有可用的内置 AI 生图能力或本地 API Key，需要询问用户是否提供 API Key，或是否明确接受 HTML/CSS 备用导览图。确认后再用相应模式重跑。</p>
+
+          <h3>Excel 里有密码，能直接用吗</h3>
+          <p>默认不能。Excel 密码字段应被脱敏处理。普通服务器深度指标建议使用 doops 采集节点上预先准备的只读 monitor 配置，而不是把 Excel 密码写进输出。</p>
+
+          <h3>端口不通就是严重故障吗</h3>
+          <p>不一定。显式声明的业务或服务端口不可达可以是严重证据；从操作系统或 Excel 推断出来的 SSH/RDP 管理端口不可达，更常见是预警和需复核，因为它可能被堡垒机、防火墙策略故意限制。</p>
+
+          <h3>为什么批量报告还要生成单服务器索引</h3>
+          <p>因为正式交付要给读者一个设计过的入口。<code>delivery-batch/index.html</code> 看总体，<code>delivery-batch/servers/index.html</code> 找单台服务器，避免用户直接打开原生目录。</p>
+
+          <h3>没有上一期报告怎么办</h3>
+          <p>报告应写明“本次为基线巡检，暂无趋势对比”。不要假装有新增、恢复或持续问题。</p>
+        </section>
+
+        <section id="checklist">
+          <h2>10 交付前清单</h2>
+          <p>每次准备交付前，用下面这张表快速复核。它比“看起来正常”可靠得多。</p>
+          <table>
+            <thead>
+              <tr>
+                <th>检查项</th>
+                <th>通过标准</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>报告入口</td>
+                <td>单次有 <code>delivery/final-report.html</code>；批量有 <code>delivery-batch/index.html</code> 和 <code>delivery-batch/servers/index.html</code>。</td>
+              </tr>
+              <tr>
+                <td>交付完整性</td>
+                <td>HTML、PDF、Markdown、JSON、guide status、quality audit、manifest 都存在。</td>
+              </tr>
+              <tr>
+                <td>中文质量</td>
+                <td>正式报告标题、导航、表头、结论均为中文，无乱码和英文正式模块标题。</td>
+              </tr>
+              <tr>
+                <td>证据边界</td>
+                <td>清楚说明采集对象、覆盖标签、未采集项和不能证明的范围。</td>
+              </tr>
+              <tr>
+                <td>敏感信息</td>
+                <td>没有真实密码、Token、Cookie、API Key、私钥、SNMP 密钥或原始凭据日志。</td>
+              </tr>
+              <tr>
+                <td>质量审计</td>
+                <td><code>quality-audit.json</code> 的关键检查为 pass，<code>quality-audit.md</code> 可读。</td>
+              </tr>
+              <tr>
+                <td>最终说法</td>
+                <td>不把网络探测当主机健康，不把 doops 自身节点健康当所有业务服务器健康。</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout">
+            新手最稳的交付顺序：先打开 HTML 看报告正文，再看 PDF 是否存在，再看 <code>quality-audit.md</code>，最后用 <code>delivery-manifest.md</code> 对照所有入口是否齐全。
+          </div>
+        </section>
+
+        <section id="glossary">
+          <h2>附录：小白术语表</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>术语</th>
+                <th>白话解释</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>doops</td>
+                <td>一种受控的远端执行和采集通道，用来替代直接 SSH 登录的入口。</td>
+              </tr>
+              <tr>
+                <td>自身节点</td>
+                <td>这里指 zheyin 或 hdu 的 doops 节点本机，而不是 Excel 清单里的所有服务器。</td>
+              </tr>
+              <tr>
+                <td>主机指标</td>
+                <td>CPU、内存、磁盘、负载、在线时长、进程和服务等能说明机器运行状态的数据。</td>
+              </tr>
+              <tr>
+                <td>网络探测</td>
+                <td>从某个网络位置看 IP 或端口能不能连上。它只能说明可达性，不能说明应用一定正常。</td>
+              </tr>
+              <tr>
+                <td>N+1 交付</td>
+                <td>一份总体报告，加 N 份单服务器报告，并提供索引入口。</td>
+              </tr>
+              <tr>
+                <td>证据边界</td>
+                <td>本次巡检能证明什么、不能证明什么。运维报告必须把它写清楚。</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <footer class="footer">
+          <p>资料依据：<code>SKILL.md</code>、<code>references/doops-monitoring.md</code>、<code>references/inventory-schema.md</code>、<code>references/report-quality.md</code>。本文档为 server-health-monitor skill 的中文入门说明，不替代具体项目授权、变更审批或安全制度。</p>
+        </footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

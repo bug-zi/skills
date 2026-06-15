@@ -1,0 +1,1948 @@
+{
+  "probe_target": "zheyin",
+  "session": "server-health-20260514-120828",
+  "collected_at": "2026-05-14T12:09:06+08:00",
+  "server_count": 50,
+  "chunks": [
+    {
+      "target": "zheyin",
+      "session": "server-health-20260514-120828-probe-01",
+      "collected_at": "2026-05-14T12:08:34+08:00",
+      "targets_returncode": 0,
+      "targets_stdout_excerpt": "CLUSTER            INSTANCE           BUSY     LAST_SEEN               \n----------------------------------------------------------------------------\ndoops-114          vm-114             false    2026-05-14T04:08:07Z    \ndoops-235          hdu-235            false    2026-05-14T04:08:07Z    \ndoops-89           master-node        false    2026-05-14T04:08:21Z    \ndoops-jm           jm-228             false    2026-05-14T04:08:07Z    \ndoops-oilan        edu-coder          false    2026-05-14T04:08:12Z    \ndoops-zheyin       node-239           false    2026-05-14T04:08:10Z    \n",
+      "targets_stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+      "doops_gateway": {
+        "targets": [
+          {
+            "cluster": "doops-114",
+            "instance": "vm-114",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:07Z"
+          },
+          {
+            "cluster": "doops-235",
+            "instance": "hdu-235",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:07Z"
+          },
+          {
+            "cluster": "doops-89",
+            "instance": "master-node",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:21Z"
+          },
+          {
+            "cluster": "doops-jm",
+            "instance": "jm-228",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:07Z"
+          },
+          {
+            "cluster": "doops-oilan",
+            "instance": "edu-coder",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:12Z"
+          },
+          {
+            "cluster": "doops-zheyin",
+            "instance": "node-239",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:10Z"
+          }
+        ],
+        "target_online": true,
+        "target_busy": false,
+        "last_seen": "2026-05-14T04:08:07Z",
+        "last_seen_age_seconds": 27,
+        "gateway_mode_detected": true,
+        "raw_excerpt_redacted": "CLUSTER            INSTANCE           BUSY     LAST_SEEN               \n----------------------------------------------------------------------------\ndoops-114          vm-114             false    2026-05-14T04:08:07Z    \ndoops-235          hdu-235            false    2026-05-14T04:08:07Z    \ndoops-89           master-node        false    2026-05-14T04:08:21Z    \ndoops-jm           jm-228             false    2026-05-14T04:08:07Z    \ndoops-oilan        edu-coder          false    2026-05-14T04:08:12Z    \ndoops-zheyin       node-239           false    2026-05-14T04:08:10Z    \n"
+      },
+      "target_online": true,
+      "target_busy": false,
+      "last_seen_age_seconds": 27,
+      "gateway_mode_detected": true,
+      "collector_info_status": "collected",
+      "collector_info": {
+        "returncode": 0,
+        "stdout_excerpt": " [93m[TARGETING] [0m Server: zheyin (http://106.54.197.139:42222 -> doops-zheyin/node-239), Use: Zheyin\n--- System Info ---\nLinux cluster-node0014.172.16.50.239 5.15.0-168-generic #178-Ubuntu SMP Fri Jan 9 19:05:03 UTC 2026 x86_64 GNU/Linux\n--- Uptime ---\n 04:08:35 up 96 days, 18:38,  0 user,  load average: 3.22, 2.61, 1.56\n--- Memory ---\n               total        used        free      shared  buff/cache   available\n内存：        515574       15309       81127          44      422544      500264\n交换：             0           0           0\n--- Disk ---\n文件系统        大小  已用  可用 已用% 挂载点\noverlay         879G  613G  221G   74% /\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 586
+      },
+      "probe_target": "zheyin",
+      "server_count": 21,
+      "transport_mode": "workspace-push",
+      "remote_result_path": "/root/ws/server-health-20260514-120828-probe-01/server-health/result.json",
+      "cleanup_status": "failed",
+      "push": {
+        "returncode": 0,
+        "stdout_excerpt": "🧊 正在构建本地隔离快照（大型仓库首次扫描可能较慢）...\n📦 本地隔离快照整理完成: 3 个文件\n🌉 通过 doops-gateway 分块上传至远端工作区: /root/ws/server-health-20260514-120828-probe-01 (zheyin)\n⏳ 已上传分块 1 (2676 bytes)\n✅ 同步完成 🎯 远端工作区已就绪: /root/ws/server-health-20260514-120828-probe-01 @ b7f748678884\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 701
+      },
+      "exec": {
+        "returncode": 0,
+        "stdout_excerpt": "\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"error\": \"ConnectionRefusedError\",\n          \"latency_ms\": null,\n          \"port\": 3389,\n          \"status\": \"closed\"\n        }\n      ],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.27\",\n      \"index\": 19,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.29\",\n      \"index\": 20,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"latency_ms\": null,\n          \"port\": 22,\n          \"status\": \"timeout\"\n        }\n      ],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.30\",\n      \"index\": 21,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"latency_ms\": 0,\n          \"port\": 22,\n          \"status\": \"open\"\n        }\n      ],\n      \"reachable\": true\n    }\n  ]\n}\n__SERVER_HEALTH_JSON_END__\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 9817
+      },
+      "read": {
+        "returncode": 0,
+        "stdout_excerpt": "lable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"error\": \"ConnectionRefusedError\",\n          \"latency_ms\": null,\n          \"port\": 3389,\n          \"status\": \"closed\"\n        }\n      ],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.27\",\n      \"index\": 19,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.29\",\n      \"index\": 20,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"latency_ms\": null,\n          \"port\": 22,\n          \"status\": \"timeout\"\n        }\n      ],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.30\",\n      \"index\": 21,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"latency_ms\": 0,\n          \"port\": 22,\n          \"status\": \"open\"\n        }\n      ],\n      \"reachable\": true\n    }\n  ]\n}\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 561
+      },
+      "result_source": "doops-read",
+      "remote_evidence": {
+        "remote_collector_status": 0
+      },
+      "remote_log_excerpt": " [93m[TARGETING] [0m Server: zheyin (http://106.54.197.139:42222 -> doops-zheyin/node-239), Use: Zheyin\n\n",
+      "clean": {
+        "returncode": 1,
+        "stdout_excerpt": "🗑️  清理远端工作区与源仓库: /root/ws/server-health-20260514-120828-probe-01, /tmp/repos/server-health-20260514-120828-probe-01.git\nError: 清理失败: remote error: Unknown tool over WS: doops_clean_workspace\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 552
+      },
+      "remote_payload": {
+        "checked_at": "2026-05-14T04:08:44+0000",
+        "probe_hostname": "cluster-node0014.172.16.50.239",
+        "probe_target": "zheyin",
+        "servers": [
+          {
+            "address": "172.16.70.2",
+            "index": 1,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 3389,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.3",
+            "index": 2,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "error": "OSError",
+                "latency_ms": null,
+                "port": 3389,
+                "status": "closed"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.4",
+            "index": 3,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 22,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.6",
+            "index": 4,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 3389,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.8",
+            "index": 5,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 22,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.88",
+            "index": 6,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 3389,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.89",
+            "index": 7,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 3389,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.11",
+            "index": 8,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 22,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.13",
+            "index": 9,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 3389,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.15",
+            "index": 10,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 21,
+                "port": 21,
+                "status": "open"
+              },
+              {
+                "error": "ConnectionRefusedError",
+                "latency_ms": null,
+                "port": 3389,
+                "status": "closed"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.16",
+            "index": 11,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 3389,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.17",
+            "index": 12,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 3389,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.18",
+            "index": 13,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 3389,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.19",
+            "index": 14,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "error": "OSError",
+                "latency_ms": null,
+                "port": 3389,
+                "status": "closed"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.20",
+            "index": 15,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 22,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.24",
+            "index": 16,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "error": "ConnectionRefusedError",
+                "latency_ms": null,
+                "port": 3389,
+                "status": "closed"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.25",
+            "index": 17,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "error": "ConnectionRefusedError",
+                "latency_ms": null,
+                "port": 3389,
+                "status": "closed"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.26",
+            "index": 18,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "error": "ConnectionRefusedError",
+                "latency_ms": null,
+                "port": 3389,
+                "status": "closed"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.27",
+            "index": 19,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.29",
+            "index": 20,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 22,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.30",
+            "index": 21,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 22,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          }
+        ]
+      }
+    },
+    {
+      "target": "zheyin",
+      "session": "server-health-20260514-120828-probe-02",
+      "collected_at": "2026-05-14T12:08:48+08:00",
+      "targets_returncode": 0,
+      "targets_stdout_excerpt": "CLUSTER            INSTANCE           BUSY     LAST_SEEN               \n----------------------------------------------------------------------------\ndoops-114          vm-114             false    2026-05-14T04:08:37Z    \ndoops-235          hdu-235            false    2026-05-14T04:08:37Z    \ndoops-89           master-node        false    2026-05-14T04:08:21Z    \ndoops-jm           jm-228             false    2026-05-14T04:08:37Z    \ndoops-oilan        edu-coder          false    2026-05-14T04:08:41Z    \ndoops-zheyin       node-239           false    2026-05-14T04:08:47Z    \n",
+      "targets_stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+      "doops_gateway": {
+        "targets": [
+          {
+            "cluster": "doops-114",
+            "instance": "vm-114",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:37Z"
+          },
+          {
+            "cluster": "doops-235",
+            "instance": "hdu-235",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:37Z"
+          },
+          {
+            "cluster": "doops-89",
+            "instance": "master-node",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:21Z"
+          },
+          {
+            "cluster": "doops-jm",
+            "instance": "jm-228",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:37Z"
+          },
+          {
+            "cluster": "doops-oilan",
+            "instance": "edu-coder",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:41Z"
+          },
+          {
+            "cluster": "doops-zheyin",
+            "instance": "node-239",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:47Z"
+          }
+        ],
+        "target_online": true,
+        "target_busy": false,
+        "last_seen": "2026-05-14T04:08:37Z",
+        "last_seen_age_seconds": 11,
+        "gateway_mode_detected": true,
+        "raw_excerpt_redacted": "CLUSTER            INSTANCE           BUSY     LAST_SEEN               \n----------------------------------------------------------------------------\ndoops-114          vm-114             false    2026-05-14T04:08:37Z    \ndoops-235          hdu-235            false    2026-05-14T04:08:37Z    \ndoops-89           master-node        false    2026-05-14T04:08:21Z    \ndoops-jm           jm-228             false    2026-05-14T04:08:37Z    \ndoops-oilan        edu-coder          false    2026-05-14T04:08:41Z    \ndoops-zheyin       node-239           false    2026-05-14T04:08:47Z    \n"
+      },
+      "target_online": true,
+      "target_busy": false,
+      "last_seen_age_seconds": 11,
+      "gateway_mode_detected": true,
+      "collector_info_status": "collected",
+      "collector_info": {
+        "returncode": 0,
+        "stdout_excerpt": " [93m[TARGETING] [0m Server: zheyin (http://106.54.197.139:42222 -> doops-zheyin/node-239), Use: Zheyin\n--- System Info ---\nLinux cluster-node0014.172.16.50.239 5.15.0-168-generic #178-Ubuntu SMP Fri Jan 9 19:05:03 UTC 2026 x86_64 GNU/Linux\n--- Uptime ---\n 04:08:48 up 96 days, 18:38,  0 user,  load average: 2.51, 2.48, 1.54\n--- Memory ---\n               total        used        free      shared  buff/cache   available\n内存：        515574       15313       81123          44      422544      500260\n交换：             0           0           0\n--- Disk ---\n文件系统        大小  已用  可用 已用% 挂载点\noverlay         879G  613G  221G   74% /\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 582
+      },
+      "probe_target": "zheyin",
+      "server_count": 19,
+      "transport_mode": "workspace-push",
+      "remote_result_path": "/root/ws/server-health-20260514-120828-probe-02/server-health/result.json",
+      "cleanup_status": "failed",
+      "push": {
+        "returncode": 0,
+        "stdout_excerpt": "🧊 正在构建本地隔离快照（大型仓库首次扫描可能较慢）...\n📦 本地隔离快照整理完成: 3 个文件\n🌉 通过 doops-gateway 分块上传至远端工作区: /root/ws/server-health-20260514-120828-probe-02 (zheyin)\n⏳ 已上传分块 1 (2753 bytes)\n✅ 同步完成 🎯 远端工作区已就绪: /root/ws/server-health-20260514-120828-probe-02 @ f50870d9487b\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 670
+      },
+      "exec": {
+        "returncode": 0,
+        "stdout_excerpt": "  }\n      ],\n      \"reachable\": true\n    },\n    {\n      \"address\": \"\",\n      \"index\": 37,\n      \"ping\": {\n        \"error\": \"invalid-address\",\n        \"latency_ms\": null,\n        \"status\": \"skipped\"\n      },\n      \"ports\": [],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.63\",\n      \"index\": 38,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.68\",\n      \"index\": 39,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"latency_ms\": 0,\n          \"port\": 22,\n          \"status\": \"open\"\n        }\n      ],\n      \"reachable\": true\n    },\n    {\n      \"address\": \"172.16.70.69\",\n      \"index\": 40,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"latency_ms\": null,\n          \"port\": 22,\n          \"status\": \"timeout\"\n        }\n      ],\n      \"reachable\": false\n    }\n  ]\n}\n__SERVER_HEALTH_JSON_END__\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 7344
+      },
+      "read": {
+        "returncode": 0,
+        "stdout_excerpt": "    \"status\": \"open\"\n        }\n      ],\n      \"reachable\": true\n    },\n    {\n      \"address\": \"\",\n      \"index\": 37,\n      \"ping\": {\n        \"error\": \"invalid-address\",\n        \"latency_ms\": null,\n        \"status\": \"skipped\"\n      },\n      \"ports\": [],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.63\",\n      \"index\": 38,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.68\",\n      \"index\": 39,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"latency_ms\": 0,\n          \"port\": 22,\n          \"status\": \"open\"\n        }\n      ],\n      \"reachable\": true\n    },\n    {\n      \"address\": \"172.16.70.69\",\n      \"index\": 40,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"latency_ms\": null,\n          \"port\": 22,\n          \"status\": \"timeout\"\n        }\n      ],\n      \"reachable\": false\n    }\n  ]\n}\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 560
+      },
+      "result_source": "doops-read",
+      "remote_evidence": {
+        "remote_collector_status": 0
+      },
+      "remote_log_excerpt": " [93m[TARGETING] [0m Server: zheyin (http://106.54.197.139:42222 -> doops-zheyin/node-239), Use: Zheyin\n\n",
+      "clean": {
+        "returncode": 1,
+        "stdout_excerpt": "🗑️  清理远端工作区与源仓库: /root/ws/server-health-20260514-120828-probe-02, /tmp/repos/server-health-20260514-120828-probe-02.git\nError: 清理失败: remote error: Unknown tool over WS: doops_clean_workspace\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 550
+      },
+      "remote_payload": {
+        "checked_at": "2026-05-14T04:08:56+0000",
+        "probe_hostname": "cluster-node0014.172.16.50.239",
+        "probe_target": "zheyin",
+        "servers": [
+          {
+            "address": "172.16.70.31",
+            "index": 22,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 1,
+                "port": 22,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.32",
+            "index": 23,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 22,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.34",
+            "index": 24,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 3389,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.35",
+            "index": 25,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 2,
+                "port": 3389,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.37",
+            "index": 26,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 22,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.39",
+            "index": 27,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 3389,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "",
+            "index": 28,
+            "ping": {
+              "error": "invalid-address",
+              "latency_ms": null,
+              "status": "skipped"
+            },
+            "ports": [],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.40",
+            "index": 29,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 22,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.41",
+            "index": 30,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 3389,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.42",
+            "index": 31,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.43",
+            "index": 32,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 3389,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.44",
+            "index": 33,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 38,
+                "port": 3389,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.45",
+            "index": 34,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "error": "ConnectionRefusedError",
+                "latency_ms": null,
+                "port": 3389,
+                "status": "closed"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.46",
+            "index": 35,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 3389,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.57",
+            "index": 36,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 3389,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "",
+            "index": 37,
+            "ping": {
+              "error": "invalid-address",
+              "latency_ms": null,
+              "status": "skipped"
+            },
+            "ports": [],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.63",
+            "index": 38,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.68",
+            "index": 39,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 22,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.69",
+            "index": 40,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 22,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          }
+        ]
+      }
+    },
+    {
+      "target": "zheyin",
+      "session": "server-health-20260514-120828-probe-03",
+      "collected_at": "2026-05-14T12:09:00+08:00",
+      "targets_returncode": 0,
+      "targets_stdout_excerpt": "CLUSTER            INSTANCE           BUSY     LAST_SEEN               \n----------------------------------------------------------------------------\ndoops-114          vm-114             false    2026-05-14T04:08:37Z    \ndoops-235          hdu-235            false    2026-05-14T04:08:37Z    \ndoops-89           master-node        false    2026-05-14T04:08:51Z    \ndoops-jm           jm-228             false    2026-05-14T04:08:37Z    \ndoops-oilan        edu-coder          false    2026-05-14T04:08:41Z    \ndoops-zheyin       node-239           false    2026-05-14T04:08:59Z    \n",
+      "targets_stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+      "doops_gateway": {
+        "targets": [
+          {
+            "cluster": "doops-114",
+            "instance": "vm-114",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:37Z"
+          },
+          {
+            "cluster": "doops-235",
+            "instance": "hdu-235",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:37Z"
+          },
+          {
+            "cluster": "doops-89",
+            "instance": "master-node",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:51Z"
+          },
+          {
+            "cluster": "doops-jm",
+            "instance": "jm-228",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:37Z"
+          },
+          {
+            "cluster": "doops-oilan",
+            "instance": "edu-coder",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:41Z"
+          },
+          {
+            "cluster": "doops-zheyin",
+            "instance": "node-239",
+            "busy": false,
+            "last_seen": "2026-05-14T04:08:59Z"
+          }
+        ],
+        "target_online": true,
+        "target_busy": false,
+        "last_seen": "2026-05-14T04:08:37Z",
+        "last_seen_age_seconds": 23,
+        "gateway_mode_detected": true,
+        "raw_excerpt_redacted": "CLUSTER            INSTANCE           BUSY     LAST_SEEN               \n----------------------------------------------------------------------------\ndoops-114          vm-114             false    2026-05-14T04:08:37Z    \ndoops-235          hdu-235            false    2026-05-14T04:08:37Z    \ndoops-89           master-node        false    2026-05-14T04:08:51Z    \ndoops-jm           jm-228             false    2026-05-14T04:08:37Z    \ndoops-oilan        edu-coder          false    2026-05-14T04:08:41Z    \ndoops-zheyin       node-239           false    2026-05-14T04:08:59Z    \n"
+      },
+      "target_online": true,
+      "target_busy": false,
+      "last_seen_age_seconds": 23,
+      "gateway_mode_detected": true,
+      "collector_info_status": "collected",
+      "collector_info": {
+        "returncode": 0,
+        "stdout_excerpt": " [93m[TARGETING] [0m Server: zheyin (http://106.54.197.139:42222 -> doops-zheyin/node-239), Use: Zheyin\n--- System Info ---\nLinux cluster-node0014.172.16.50.239 5.15.0-168-generic #178-Ubuntu SMP Fri Jan 9 19:05:03 UTC 2026 x86_64 GNU/Linux\n--- Uptime ---\n 04:09:00 up 96 days, 18:39,  0 user,  load average: 2.12, 2.40, 1.52\n--- Memory ---\n               total        used        free      shared  buff/cache   available\n内存：        515574       15319       81116          44      422544      500254\n交换：             0           0           0\n--- Disk ---\n文件系统        大小  已用  可用 已用% 挂载点\noverlay         879G  613G  221G   74% /\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 587
+      },
+      "probe_target": "zheyin",
+      "server_count": 10,
+      "transport_mode": "workspace-push",
+      "remote_result_path": "/root/ws/server-health-20260514-120828-probe-03/server-health/result.json",
+      "cleanup_status": "failed",
+      "push": {
+        "returncode": 0,
+        "stdout_excerpt": "🧊 正在构建本地隔离快照（大型仓库首次扫描可能较慢）...\n📦 本地隔离快照整理完成: 3 个文件\n🌉 通过 doops-gateway 分块上传至远端工作区: /root/ws/server-health-20260514-120828-probe-03 (zheyin)\n⏳ 已上传分块 1 (2454 bytes)\n✅ 同步完成 🎯 远端工作区已就绪: /root/ws/server-health-20260514-120828-probe-03 @ 9d903edde884\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 662
+      },
+      "exec": {
+        "returncode": 0,
+        "stdout_excerpt": "  \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.80\",\n      \"index\": 47,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"latency_ms\": 0,\n          \"port\": 3389,\n          \"status\": \"open\"\n        }\n      ],\n      \"reachable\": true\n    },\n    {\n      \"address\": \"172.16.70.82\",\n      \"index\": 48,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"latency_ms\": 0,\n          \"port\": 3389,\n          \"status\": \"open\"\n        }\n      ],\n      \"reachable\": true\n    },\n    {\n      \"address\": \"172.16.70.85\",\n      \"index\": 49,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.90\",\n      \"index\": 50,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [],\n      \"reachable\": false\n    }\n  ]\n}\n__SERVER_HEALTH_JSON_END__\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 3421
+      },
+      "read": {
+        "returncode": 0,
+        "stdout_excerpt": " },\n      \"ports\": [],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.80\",\n      \"index\": 47,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"latency_ms\": 0,\n          \"port\": 3389,\n          \"status\": \"open\"\n        }\n      ],\n      \"reachable\": true\n    },\n    {\n      \"address\": \"172.16.70.82\",\n      \"index\": 48,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [\n        {\n          \"latency_ms\": 0,\n          \"port\": 3389,\n          \"status\": \"open\"\n        }\n      ],\n      \"reachable\": true\n    },\n    {\n      \"address\": \"172.16.70.85\",\n      \"index\": 49,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [],\n      \"reachable\": false\n    },\n    {\n      \"address\": \"172.16.70.90\",\n      \"index\": 50,\n      \"ping\": {\n        \"error\": \"ping-unavailable\",\n        \"latency_ms\": null,\n        \"status\": \"not-available\"\n      },\n      \"ports\": [],\n      \"reachable\": false\n    }\n  ]\n}\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 473
+      },
+      "result_source": "doops-read",
+      "remote_evidence": {
+        "remote_collector_status": 0
+      },
+      "remote_log_excerpt": " [93m[TARGETING] [0m Server: zheyin (http://106.54.197.139:42222 -> doops-zheyin/node-239), Use: Zheyin\n\n",
+      "clean": {
+        "returncode": 1,
+        "stdout_excerpt": "🗑️  清理远端工作区与源仓库: /root/ws/server-health-20260514-120828-probe-03, /tmp/repos/server-health-20260514-120828-probe-03.git\nError: 清理失败: remote error: Unknown tool over WS: doops_clean_workspace\n",
+        "stderr_excerpt": "w s l :   \\ufffdhKm0R  l o c a l h o s t   \\ufffdN tM\\ufffdn  \\ufffdFO*g\\\\ufffd\\ufffdP0R  W S L  0N A T   !j _ N\\ufffdv  W S L   \nN/e c  l o c a l h o s t   \\ufffdN t 0\n \n ",
+        "duration_ms": 543
+      },
+      "remote_payload": {
+        "checked_at": "2026-05-14T04:09:04+0000",
+        "probe_hostname": "cluster-node0014.172.16.50.239",
+        "probe_target": "zheyin",
+        "servers": [
+          {
+            "address": "172.16.70.70",
+            "index": 41,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 3389,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.71",
+            "index": 42,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 3389,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.74",
+            "index": 43,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 1,
+                "port": 3389,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.75",
+            "index": 44,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.76",
+            "index": 45,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": null,
+                "port": 3389,
+                "status": "timeout"
+              }
+            ],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.79",
+            "index": 46,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.80",
+            "index": 47,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 3389,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.82",
+            "index": 48,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [
+              {
+                "latency_ms": 0,
+                "port": 3389,
+                "status": "open"
+              }
+            ],
+            "reachable": true
+          },
+          {
+            "address": "172.16.70.85",
+            "index": 49,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [],
+            "reachable": false
+          },
+          {
+            "address": "172.16.70.90",
+            "index": 50,
+            "ping": {
+              "error": "ping-unavailable",
+              "latency_ms": null,
+              "status": "not-available"
+            },
+            "ports": [],
+            "reachable": false
+          }
+        ]
+      }
+    }
+  ],
+  "remote_payload": {
+    "probe_target": "zheyin",
+    "checked_at": "2026-05-14T12:09:06+08:00",
+    "servers": [
+      {
+        "address": "172.16.70.2",
+        "index": 1,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.3",
+        "index": 2,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "error": "OSError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.4",
+        "index": 3,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.6",
+        "index": 4,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.8",
+        "index": 5,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.88",
+        "index": 6,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.89",
+        "index": 7,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.11",
+        "index": 8,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.13",
+        "index": 9,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.15",
+        "index": 10,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 21,
+            "port": 21,
+            "status": "open"
+          },
+          {
+            "error": "ConnectionRefusedError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.16",
+        "index": 11,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.17",
+        "index": 12,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.18",
+        "index": 13,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.19",
+        "index": 14,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "error": "OSError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.20",
+        "index": 15,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 22,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.24",
+        "index": 16,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "error": "ConnectionRefusedError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.25",
+        "index": 17,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "error": "ConnectionRefusedError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.26",
+        "index": 18,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "error": "ConnectionRefusedError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.27",
+        "index": 19,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.29",
+        "index": 20,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 22,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.30",
+        "index": 21,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.31",
+        "index": 22,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 1,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.32",
+        "index": 23,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.34",
+        "index": 24,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.35",
+        "index": 25,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 2,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.37",
+        "index": 26,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 22,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.39",
+        "index": 27,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "",
+        "index": 28,
+        "ping": {
+          "error": "invalid-address",
+          "latency_ms": null,
+          "status": "skipped"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.40",
+        "index": 29,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.41",
+        "index": 30,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.42",
+        "index": 31,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.43",
+        "index": 32,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.44",
+        "index": 33,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 38,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.45",
+        "index": 34,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "error": "ConnectionRefusedError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.46",
+        "index": 35,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.57",
+        "index": 36,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "",
+        "index": 37,
+        "ping": {
+          "error": "invalid-address",
+          "latency_ms": null,
+          "status": "skipped"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.63",
+        "index": 38,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.68",
+        "index": 39,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.69",
+        "index": 40,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 22,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.70",
+        "index": 41,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.71",
+        "index": 42,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.74",
+        "index": 43,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 1,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.75",
+        "index": 44,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.76",
+        "index": 45,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.79",
+        "index": 46,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.80",
+        "index": 47,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.82",
+        "index": 48,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      {
+        "address": "172.16.70.85",
+        "index": 49,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      {
+        "address": "172.16.70.90",
+        "index": 50,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      }
+    ]
+  }
+}

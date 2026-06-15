@@ -1,0 +1,59 @@
+{
+  "environment": {
+    "name": "Zhejiang Conservatory of Music - sample",
+    "owner": "Information Center",
+    "inspection_window": "2026-05-12 09:00-10:00 Asia/Shanghai",
+    "notes": "Desensitized sample inventory for skill validation. Replace addresses and credential references before real use."
+  },
+  "servers": [
+    {
+      "name": "zheyin-web-01",
+      "address": "192.0.2.10",
+      "os_type": "linux",
+      "role": "portal web",
+      "owner": "web operations",
+      "ports": [22, 80, 443],
+      "auth_ref": "env:ZHEYIN_WEB01_SSH_PASSWORD",
+      "collect": {
+        "ssh": false,
+        "network": true
+      }
+    },
+    {
+      "name": "zheyin-db-01",
+      "address": "192.0.2.20",
+      "os_type": "linux",
+      "role": "database",
+      "owner": "database operations",
+      "ports": [22, 3306],
+      "auth_ref": "env:ZHEYIN_DB01_SSH_PASSWORD",
+      "collect": {
+        "ssh": false,
+        "network": true
+      }
+    },
+    {
+      "name": "zheyin-file-01",
+      "address": "192.0.2.30",
+      "os_type": "windows",
+      "role": "file service",
+      "owner": "infrastructure operations",
+      "ports": [135, 445, 5985],
+      "auth_ref": "env:ZHEYIN_FILE01_WINRM_PASSWORD",
+      "collect": {
+        "winrm": false,
+        "network": true
+      }
+    }
+  ],
+  "thresholds": {
+    "cpu_warning_percent": 75,
+    "cpu_critical_percent": 90,
+    "memory_warning_percent": 80,
+    "memory_critical_percent": 92,
+    "disk_warning_percent": 80,
+    "disk_critical_percent": 90,
+    "load_warning_per_core": 1.5,
+    "load_critical_per_core": 2.5
+  }
+}

@@ -1,0 +1,473 @@
+{
+  "report_kind": "server-health-batch",
+  "environment": {
+    "name": "服务器帐户和密码",
+    "inspection_window": "2026-05-14T11:57:55+08:00",
+    "notes": "Excel inventory imported with credential values redacted. Read-only network evidence collected from doops target zheyin for 50 server(s)."
+  },
+  "entrypoints": {
+    "index": "index.html",
+    "overall_html": "overall/final-report.html",
+    "overall_pdf": "overall/final-report.pdf"
+  },
+  "counts": {
+    "healthy": 20,
+    "warning": 30,
+    "critical": 0,
+    "unknown": 0,
+    "total": 50
+  },
+  "servers": [
+    {
+      "index": 1,
+      "name": "x`",
+      "role": "IBM_server",
+      "status": "warning",
+      "report": "servers/001-x/delivery/final-report.html",
+      "pdf": "servers/001-x/delivery/final-report.pdf",
+      "json": "servers/001-x/delivery/final-report.json"
+    },
+    {
+      "index": 2,
+      "name": "短信平台",
+      "role": "vmware虚拟机message_win0864",
+      "status": "warning",
+      "report": "servers/002-短信平台/delivery/final-report.html",
+      "pdf": "servers/002-短信平台/delivery/final-report.pdf",
+      "json": "servers/002-短信平台/delivery/final-report.json"
+    },
+    {
+      "index": 3,
+      "name": "新信息门户平台_no14",
+      "role": "vmware虚拟机menhu_centos7",
+      "status": "healthy",
+      "report": "servers/003-新信息门户平台-no14/delivery/final-report.html",
+      "pdf": "servers/003-新信息门户平台-no14/delivery/final-report.pdf",
+      "json": "servers/003-新信息门户平台-no14/delivery/final-report.json"
+    },
+    {
+      "index": 4,
+      "name": "站群系统_no4",
+      "role": "H3C_server",
+      "status": "warning",
+      "report": "servers/004-站群系统-no4/delivery/final-report.html",
+      "pdf": "servers/004-站群系统-no4/delivery/final-report.pdf",
+      "json": "servers/004-站群系统-no4/delivery/final-report.json"
+    },
+    {
+      "index": 5,
+      "name": "新短信平台",
+      "role": "灾备机房超融合",
+      "status": "healthy",
+      "report": "servers/005-新短信平台/delivery/final-report.html",
+      "pdf": "servers/005-新短信平台/delivery/final-report.pdf",
+      "json": "servers/005-新短信平台/delivery/final-report.json"
+    },
+    {
+      "index": 6,
+      "name": "国资系统_no17",
+      "role": "DELL_server",
+      "status": "healthy",
+      "report": "servers/006-国资系统-no17/delivery/final-report.html",
+      "pdf": "servers/006-国资系统-no17/delivery/final-report.pdf",
+      "json": "servers/006-国资系统-no17/delivery/final-report.json"
+    },
+    {
+      "index": 7,
+      "name": "国资系统新",
+      "role": "浪潮新服务器2021.11.24",
+      "status": "healthy",
+      "report": "servers/007-国资系统新/delivery/final-report.html",
+      "pdf": "servers/007-国资系统新/delivery/final-report.pdf",
+      "json": "servers/007-国资系统新/delivery/final-report.json"
+    },
+    {
+      "index": 8,
+      "name": "学工系统",
+      "role": "vmware虚拟机studentsys_centos6.5",
+      "status": "healthy",
+      "report": "servers/008-学工系统/delivery/final-report.html",
+      "pdf": "servers/008-学工系统/delivery/final-report.pdf",
+      "json": "servers/008-学工系统/delivery/final-report.json"
+    },
+    {
+      "index": 9,
+      "name": "人事系统_no6",
+      "role": "H3C_server",
+      "status": "warning",
+      "report": "servers/009-人事系统-no6/delivery/final-report.html",
+      "pdf": "servers/009-人事系统-no6/delivery/final-report.pdf",
+      "json": "servers/009-人事系统-no6/delivery/final-report.json"
+    },
+    {
+      "index": 10,
+      "name": "ftp服务器",
+      "role": "vmware虚拟机ftp",
+      "status": "warning",
+      "report": "servers/010-ftp服务器/delivery/final-report.html",
+      "pdf": "servers/010-ftp服务器/delivery/final-report.pdf",
+      "json": "servers/010-ftp服务器/delivery/final-report.json"
+    },
+    {
+      "index": 11,
+      "name": "科研系统_no16",
+      "role": "DELL_server",
+      "status": "warning",
+      "report": "servers/011-科研系统-no16/delivery/final-report.html",
+      "pdf": "servers/011-科研系统-no16/delivery/final-report.pdf",
+      "json": "servers/011-科研系统-no16/delivery/final-report.json"
+    },
+    {
+      "index": 12,
+      "name": "后勤财务系统_no10",
+      "role": "DELL_server",
+      "status": "healthy",
+      "report": "servers/012-后勤财务系统-no10/delivery/final-report.html",
+      "pdf": "servers/012-后勤财务系统-no10/delivery/final-report.pdf",
+      "json": "servers/012-后勤财务系统-no10/delivery/final-report.json"
+    },
+    {
+      "index": 13,
+      "name": "视窗系统",
+      "role": "vmware虚拟机sc_win864",
+      "status": "warning",
+      "report": "servers/013-视窗系统/delivery/final-report.html",
+      "pdf": "servers/013-视窗系统/delivery/final-report.pdf",
+      "json": "servers/013-视窗系统/delivery/final-report.json"
+    },
+    {
+      "index": 14,
+      "name": "大数据健康码、疫苗、核酸",
+      "role": "vmware虚拟机wg",
+      "status": "warning",
+      "report": "servers/014-大数据健康码-疫苗-核酸/delivery/final-report.html",
+      "pdf": "servers/014-大数据健康码-疫苗-核酸/delivery/final-report.pdf",
+      "json": "servers/014-大数据健康码-疫苗-核酸/delivery/final-report.json"
+    },
+    {
+      "index": 15,
+      "name": "linux测试",
+      "role": "vmware虚拟机test_centos6_64",
+      "status": "warning",
+      "report": "servers/015-linux测试/delivery/final-report.html",
+      "pdf": "servers/015-linux测试/delivery/final-report.pdf",
+      "json": "servers/015-linux测试/delivery/final-report.json"
+    },
+    {
+      "index": 16,
+      "name": "无线认证系统1",
+      "role": "vmware虚拟机wx1",
+      "status": "warning",
+      "report": "servers/016-无线认证系统1/delivery/final-report.html",
+      "pdf": "servers/016-无线认证系统1/delivery/final-report.pdf",
+      "json": "servers/016-无线认证系统1/delivery/final-report.json"
+    },
+    {
+      "index": 17,
+      "name": "无线认证系统2",
+      "role": "vmware虚拟机wx2",
+      "status": "warning",
+      "report": "servers/017-无线认证系统2/delivery/final-report.html",
+      "pdf": "servers/017-无线认证系统2/delivery/final-report.pdf",
+      "json": "servers/017-无线认证系统2/delivery/final-report.json"
+    },
+    {
+      "index": 18,
+      "name": "能耗计量平台",
+      "role": "vmware虚拟机nhjl",
+      "status": "warning",
+      "report": "servers/018-能耗计量平台/delivery/final-report.html",
+      "pdf": "servers/018-能耗计量平台/delivery/final-report.pdf",
+      "json": "servers/018-能耗计量平台/delivery/final-report.json"
+    },
+    {
+      "index": 19,
+      "name": "视频点播系统",
+      "role": "/",
+      "status": "warning",
+      "report": "servers/019-视频点播系统/delivery/final-report.html",
+      "pdf": "servers/019-视频点播系统/delivery/final-report.pdf",
+      "json": "servers/019-视频点播系统/delivery/final-report.json"
+    },
+    {
+      "index": 20,
+      "name": "学生上网认证1",
+      "role": "studentauth",
+      "status": "warning",
+      "report": "servers/020-学生上网认证1/delivery/final-report.html",
+      "pdf": "servers/020-学生上网认证1/delivery/final-report.pdf",
+      "json": "servers/020-学生上网认证1/delivery/final-report.json"
+    },
+    {
+      "index": 21,
+      "name": "学生上网认证2",
+      "role": "守护进程(studentauth2)",
+      "status": "healthy",
+      "report": "servers/021-学生上网认证2/delivery/final-report.html",
+      "pdf": "servers/021-学生上网认证2/delivery/final-report.pdf",
+      "json": "servers/021-学生上网认证2/delivery/final-report.json"
+    },
+    {
+      "index": 22,
+      "name": "统一身份认证_no35",
+      "role": "DELL_server",
+      "status": "healthy",
+      "report": "servers/022-统一身份认证-no35/delivery/final-report.html",
+      "pdf": "servers/022-统一身份认证-no35/delivery/final-report.pdf",
+      "json": "servers/022-统一身份认证-no35/delivery/final-report.json"
+    },
+    {
+      "index": 23,
+      "name": "学生上网认证3",
+      "role": "(studentauth3)",
+      "status": "healthy",
+      "report": "servers/023-学生上网认证3/delivery/final-report.html",
+      "pdf": "servers/023-学生上网认证3/delivery/final-report.pdf",
+      "json": "servers/023-学生上网认证3/delivery/final-report.json"
+    },
+    {
+      "index": 24,
+      "name": "学生体质管理系统（公基）",
+      "role": "vmware虚拟机sport_win0864",
+      "status": "warning",
+      "report": "servers/024-学生体质管理系统-公基/delivery/final-report.html",
+      "pdf": "servers/024-学生体质管理系统-公基/delivery/final-report.pdf",
+      "json": "servers/024-学生体质管理系统-公基/delivery/final-report.json"
+    },
+    {
+      "index": 25,
+      "name": "学生体质管理系统2（公基）",
+      "role": "vmware虚拟机sport2_win0864",
+      "status": "healthy",
+      "report": "servers/025-学生体质管理系统2-公基/delivery/final-report.html",
+      "pdf": "servers/025-学生体质管理系统2-公基/delivery/final-report.pdf",
+      "json": "servers/025-学生体质管理系统2-公基/delivery/final-report.json"
+    },
+    {
+      "index": 26,
+      "name": "数据中心系统_31",
+      "role": "",
+      "status": "warning",
+      "report": "servers/026-数据中心系统-31/delivery/final-report.html",
+      "pdf": "servers/026-数据中心系统-31/delivery/final-report.pdf",
+      "json": "servers/026-数据中心系统-31/delivery/final-report.json"
+    },
+    {
+      "index": 27,
+      "name": "院办档案系统_32",
+      "role": "System X3650 M5",
+      "status": "warning",
+      "report": "servers/027-院办档案系统-32/delivery/final-report.html",
+      "pdf": "servers/027-院办档案系统-32/delivery/final-report.pdf",
+      "json": "servers/027-院办档案系统-32/delivery/final-report.json"
+    },
+    {
+      "index": 28,
+      "name": "院办档案系统_45",
+      "role": "华为服务器",
+      "status": "warning",
+      "report": "servers/028-院办档案系统-45/delivery/final-report.html",
+      "pdf": "servers/028-院办档案系统-45/delivery/final-report.pdf",
+      "json": "servers/028-院办档案系统-45/delivery/final-report.json"
+    },
+    {
+      "index": 29,
+      "name": "学生宿舍APG防代理后台",
+      "role": "vmware虚拟机1card_centos7",
+      "status": "healthy",
+      "report": "servers/029-学生宿舍apg防代理后台/delivery/final-report.html",
+      "pdf": "servers/029-学生宿舍apg防代理后台/delivery/final-report.pdf",
+      "json": "servers/029-学生宿舍apg防代理后台/delivery/final-report.json"
+    },
+    {
+      "index": 30,
+      "name": "继续教育_netexam",
+      "role": "vmware虚拟机netexam_win0864",
+      "status": "warning",
+      "report": "servers/030-继续教育-netexam/delivery/final-report.html",
+      "pdf": "servers/030-继续教育-netexam/delivery/final-report.pdf",
+      "json": "servers/030-继续教育-netexam/delivery/final-report.json"
+    },
+    {
+      "index": 31,
+      "name": "一卡通前置机（双网卡）",
+      "role": "",
+      "status": "warning",
+      "report": "servers/031-一卡通前置机-双网卡/delivery/final-report.html",
+      "pdf": "servers/031-一卡通前置机-双网卡/delivery/final-report.pdf",
+      "json": "servers/031-一卡通前置机-双网卡/delivery/final-report.json"
+    },
+    {
+      "index": 32,
+      "name": "日志管理系统_AC",
+      "role": "vmware虚拟机aclog_win0864",
+      "status": "healthy",
+      "report": "servers/032-日志管理系统-ac/delivery/final-report.html",
+      "pdf": "servers/032-日志管理系统-ac/delivery/final-report.pdf",
+      "json": "servers/032-日志管理系统-ac/delivery/final-report.json"
+    },
+    {
+      "index": 33,
+      "name": "日志+行为感知_AC学生",
+      "role": "vmware虚拟机aclog_stu_win0864",
+      "status": "healthy",
+      "report": "servers/033-日志-行为感知-ac学生/delivery/final-report.html",
+      "pdf": "servers/033-日志-行为感知-ac学生/delivery/final-report.pdf",
+      "json": "servers/033-日志-行为感知-ac学生/delivery/final-report.json"
+    },
+    {
+      "index": 34,
+      "name": "日志管理系统_AF",
+      "role": "vmware虚拟机aflog_win0864",
+      "status": "warning",
+      "report": "servers/034-日志管理系统-af/delivery/final-report.html",
+      "pdf": "servers/034-日志管理系统-af/delivery/final-report.pdf",
+      "json": "servers/034-日志管理系统-af/delivery/final-report.json"
+    },
+    {
+      "index": 35,
+      "name": "日志管理系统_VPN",
+      "role": "vmware虚拟机vpnlog_win0864",
+      "status": "healthy",
+      "report": "servers/035-日志管理系统-vpn/delivery/final-report.html",
+      "pdf": "servers/035-日志管理系统-vpn/delivery/final-report.pdf",
+      "json": "servers/035-日志管理系统-vpn/delivery/final-report.json"
+    },
+    {
+      "index": 36,
+      "name": "vmware虚拟化系统",
+      "role": "vmware（IBM）",
+      "status": "healthy",
+      "report": "servers/036-vmware虚拟化系统/delivery/final-report.html",
+      "pdf": "servers/036-vmware虚拟化系统/delivery/final-report.pdf",
+      "json": "servers/036-vmware虚拟化系统/delivery/final-report.json"
+    },
+    {
+      "index": 37,
+      "name": "vmware实体机",
+      "role": "",
+      "status": "warning",
+      "report": "servers/037-vmware实体机/delivery/final-report.html",
+      "pdf": "servers/037-vmware实体机/delivery/final-report.pdf",
+      "json": "servers/037-vmware实体机/delivery/final-report.json"
+    },
+    {
+      "index": 38,
+      "name": "ibm刀箱管理地址",
+      "role": "",
+      "status": "warning",
+      "report": "servers/038-ibm刀箱管理地址/delivery/final-report.html",
+      "pdf": "servers/038-ibm刀箱管理地址/delivery/final-report.pdf",
+      "json": "servers/038-ibm刀箱管理地址/delivery/final-report.json"
+    },
+    {
+      "index": 39,
+      "name": "教务备份",
+      "role": "vmware虚拟机jiaowu_bf_centos7",
+      "status": "healthy",
+      "report": "servers/039-教务备份/delivery/final-report.html",
+      "pdf": "servers/039-教务备份/delivery/final-report.pdf",
+      "json": "servers/039-教务备份/delivery/final-report.json"
+    },
+    {
+      "index": 40,
+      "name": "财务服务器新测试_no48",
+      "role": "dell_r540",
+      "status": "warning",
+      "report": "servers/040-财务服务器新测试-no48/delivery/final-report.html",
+      "pdf": "servers/040-财务服务器新测试-no48/delivery/final-report.pdf",
+      "json": "servers/040-财务服务器新测试-no48/delivery/final-report.json"
+    },
+    {
+      "index": 41,
+      "name": "泛微oa系统",
+      "role": "vmware虚拟机oa_fanwei_win0864",
+      "status": "warning",
+      "report": "servers/041-泛微oa系统/delivery/final-report.html",
+      "pdf": "servers/041-泛微oa系统/delivery/final-report.pdf",
+      "json": "servers/041-泛微oa系统/delivery/final-report.json"
+    },
+    {
+      "index": 42,
+      "name": "研究生管理系统",
+      "role": "vmware虚拟机graduate_win0864",
+      "status": "healthy",
+      "report": "servers/042-研究生管理系统/delivery/final-report.html",
+      "pdf": "servers/042-研究生管理系统/delivery/final-report.pdf",
+      "json": "servers/042-研究生管理系统/delivery/final-report.json"
+    },
+    {
+      "index": 43,
+      "name": "教务在线考试题库",
+      "role": "vmware虚拟机onlineexam_win0864",
+      "status": "healthy",
+      "report": "servers/043-教务在线考试题库/delivery/final-report.html",
+      "pdf": "servers/043-教务在线考试题库/delivery/final-report.pdf",
+      "json": "servers/043-教务在线考试题库/delivery/final-report.json"
+    },
+    {
+      "index": 44,
+      "name": "教务在线考试题库",
+      "role": "",
+      "status": "warning",
+      "report": "servers/044-教务在线考试题库/delivery/final-report.html",
+      "pdf": "servers/044-教务在线考试题库/delivery/final-report.pdf",
+      "json": "servers/044-教务在线考试题库/delivery/final-report.json"
+    },
+    {
+      "index": 45,
+      "name": "琴房监控",
+      "role": "华为",
+      "status": "warning",
+      "report": "servers/045-琴房监控/delivery/final-report.html",
+      "pdf": "servers/045-琴房监控/delivery/final-report.pdf",
+      "json": "servers/045-琴房监控/delivery/final-report.json"
+    },
+    {
+      "index": 46,
+      "name": "一卡通人脸识别",
+      "role": "",
+      "status": "warning",
+      "report": "servers/046-一卡通人脸识别/delivery/final-report.html",
+      "pdf": "servers/046-一卡通人脸识别/delivery/final-report.pdf",
+      "json": "servers/046-一卡通人脸识别/delivery/final-report.json"
+    },
+    {
+      "index": 47,
+      "name": "新开普一卡通_no34",
+      "role": "",
+      "status": "healthy",
+      "report": "servers/047-新开普一卡通-no34/delivery/final-report.html",
+      "pdf": "servers/047-新开普一卡通-no34/delivery/final-report.pdf",
+      "json": "servers/047-新开普一卡通-no34/delivery/final-report.json"
+    },
+    {
+      "index": 48,
+      "name": "纪检系统_46",
+      "role": "DELL_server_R730",
+      "status": "healthy",
+      "report": "servers/048-纪检系统-46/delivery/final-report.html",
+      "pdf": "servers/048-纪检系统-46/delivery/final-report.pdf",
+      "json": "servers/048-纪检系统-46/delivery/final-report.json"
+    },
+    {
+      "index": 49,
+      "name": "深信服新waf管理地址",
+      "role": "",
+      "status": "warning",
+      "report": "servers/049-深信服新waf管理地址/delivery/final-report.html",
+      "pdf": "servers/049-深信服新waf管理地址/delivery/final-report.pdf",
+      "json": "servers/049-深信服新waf管理地址/delivery/final-report.json"
+    },
+    {
+      "index": 50,
+      "name": "深信服学生网ac管理地址",
+      "role": "",
+      "status": "warning",
+      "report": "servers/050-深信服学生网ac管理地址/delivery/final-report.html",
+      "pdf": "servers/050-深信服学生网ac管理地址/delivery/final-report.pdf",
+      "json": "servers/050-深信服学生网ac管理地址/delivery/final-report.json"
+    }
+  ],
+  "generated_at": "2026-05-14T11:58:03+08:00"
+}

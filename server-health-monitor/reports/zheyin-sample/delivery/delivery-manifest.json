@@ -1,0 +1,10 @@
+{
+  "entrypoints": {
+    "html": "delivery/final-report.html",
+    "pdf": "delivery/final-report.pdf",
+    "markdown": "delivery/final-report.md",
+    "json": "delivery/final-report.json"
+  },
+  "quality_status": "pass",
+  "generated_at": "2026-05-13T00:38:40+08:00"
+}

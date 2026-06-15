@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>视频点播系统 单服务器运行健康报告 服务器运行健康报告</title>
+  <style>
+    :root { color-scheme: light; --ink:#172033; --muted:#667085; --line:#d8dee8; --paper:#ffffff; --soft:#f5f7fb; --good:#147a4b; --warn:#a15c00; --bad:#b42318; --unknown:#4b5565; --accent:#1f6f8b; --gold:#b7791f; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font: 14px/1.6 "Microsoft YaHei", "Noto Sans CJK SC", Arial, Helvetica, sans-serif; color: var(--ink); background: #eef2f6; }
+    .guide-cover { padding: 34px 6vw 30px; background: linear-gradient(135deg, #10243f, #24546c 58%, #41635f); color: white; }
+    .cover-grid { display: grid; grid-template-columns: minmax(320px, 1.05fr) minmax(360px, .95fr); gap: 28px; align-items: stretch; max-width: 1280px; margin: 0 auto; }
+    .cover-copy { display:flex; flex-direction:column; gap: 16px; min-width: 0; }
+    .cover-copy h1 { margin: 0; font-size: clamp(28px, 4vw, 46px); line-height: 1.12; letter-spacing: 0; }
+    .cover-kicker { display:flex; flex-wrap:wrap; align-items:center; gap: 10px; }
+    .generated-at { color:#c7d9e4; font-size: 13px; }
+    .conclusion-panel { border: 1px solid rgba(255,255,255,.26); border-radius: 8px; padding: 16px 18px; background: rgba(255,255,255,.10); box-shadow: inset 0 1px 0 rgba(255,255,255,.12); }
+    .conclusion-panel p { margin: 0 0 8px; max-width: 900px; color: #edf6fb; }
+    .conclusion-panel p:last-child { margin-bottom: 0; }
+    .cover-stats { display:grid; grid-template-columns: repeat(4, minmax(86px, 1fr)); gap: 10px; }
+    .cover-stat { border: 1px solid rgba(255,255,255,.22); border-radius: 8px; padding: 10px 12px; background: rgba(255,255,255,.08); }
+    .cover-stat span { display:block; color:#c7d9e4; font-size: 12px; }
+    .cover-stat b { display:block; font-size: 22px; line-height: 1.2; }
+    .guide-visual { border: 1px solid rgba(255,255,255,.28); border-radius: 8px; overflow: hidden; background: rgba(255,255,255,.08); min-height: 220px; display:flex; align-items:center; justify-content:center; }
+    .guide-visual img { display:block; width:100%; height:auto; }
+    .html-guide-visual { padding: 16px; }
+    .guide-map { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; color: #e9f2f8; }
+    .guide-map-head { grid-column: 1 / -1; display:flex; align-items:center; justify-content:space-between; gap: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,.28); }
+    .guide-map-head span { font-weight: 700; }
+    .guide-map-head strong { padding: 3px 9px; border-radius: 999px; background: rgba(255,255,255,.16); }
+    .guide-flow { grid-column: 1 / -1; display:grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .guide-flow span { height: 5px; border-radius: 999px; background: linear-gradient(90deg, #69d2c7, #f4c95d); opacity: .92; }
+    .guide-node { min-height: 58px; border: 1px solid rgba(255,255,255,.24); border-radius: 8px; padding: 10px; background: rgba(255,255,255,.10); }
+    .guide-node small { display:block; color: #b8d4e3; margin-bottom: 4px; }
+    .guide-node b { font-size: 13px; }
+    .guide-node.primary { background: rgba(105,210,199,.16); }
+    .guide-node.risk { background: rgba(244,201,93,.16); }
+    .guide-node.action { background: rgba(255,255,255,.14); }
+    .status-pill { display: inline-block; padding: 5px 10px; border: 1px solid rgba(255,255,255,.5); border-radius: 999px; font-size: 12px; }
+    .report-nav { position: sticky; top: 0; z-index: 2; display: flex; gap: 8px; padding: 10px 6vw; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); box-shadow: 0 8px 22px rgba(16,36,63,.06); }
+    .report-nav a { color: var(--ink); text-decoration: none; font-weight: 700; padding: 6px 10px; border-radius: 8px; }
+    .report-nav a:hover { background: var(--soft); }
+    main.executive-layout { max-width: 1280px; margin: 0 auto; padding: 24px 20px 46px; background: var(--paper); }
+    .section-head { display:flex; justify-content:space-between; align-items:flex-end; gap: 18px; margin-bottom: 14px; }
+    .section-head h2 { margin: 0; font-size: 22px; }
+    .section-note { margin: 0; color: var(--muted); max-width: 620px; }
+    .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: 12px; margin: 18px 0; }
+    .metric { border: 1px solid var(--line); border-radius: 8px; padding: 14px; background: var(--soft); }
+    .metric span { color: var(--muted); }
+    .metric b { display:block; font-size: 28px; line-height: 1.15; }
+    .metric.critical b { color: var(--bad); }
+    .metric.warning b { color: var(--warn); }
+    .metric.review b { color: var(--accent); }
+    .coverage-strip, .trend-strip { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .trend-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .strip-item { border: 1px solid var(--line); border-radius: 8px; padding: 12px; background: #fff; }
+    .strip-item span { display:block; color: var(--muted); font-size: 12px; }
+    .strip-item b { display:block; margin-top: 2px; }
+    .fold-section { border-top: 1px solid var(--line); padding: 28px 0; }
+    .insight-grid { display:grid; grid-template-columns: minmax(0,1.1fr) minmax(280px,.9fr); gap: 14px; margin-top: 16px; }
+    .insight-panel, .score-panel, .reading-map, .action-track, .risk-item { border:1px solid var(--line); border-radius:8px; background:#fff; box-shadow:0 8px 22px rgba(16,36,63,.05); }
+    .insight-panel { padding:16px; }
+    .insight-panel h3, .score-panel h3, .action-track h3 { margin:0 0 10px; font-size:16px; }
+    .insight-panel ul, .score-panel ul, .reading-map ol, .action-track ul { margin:0; padding-left:20px; }
+    .score-panel { padding:16px; display:grid; gap:12px; }
+    .score-duo { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; }
+    .score-duo div { border:1px solid var(--line); border-radius:8px; padding:12px; background:var(--soft); }
+    .score-duo span { display:block; color:var(--muted); font-size:12px; }
+    .score-duo b { display:block; font-size:28px; line-height:1.1; }
+    .reading-map { padding:14px 16px; margin-top:14px; }
+    .reading-map li { margin:6px 0; }
+    .reading-map span { color:var(--muted); margin-left:8px; }
+    .mobile-summary-card { display:none; border:1px solid var(--line); border-radius:8px; padding:14px; margin-top:14px; background:#fbfdff; }
+    .mobile-summary-card b { display:block; font-size:22px; }
+    .risk-queue { display:grid; gap:12px; }
+    .risk-item { padding:14px 16px; border-left:4px solid var(--unknown); }
+    .risk-item.critical { border-left-color:var(--bad); }
+    .risk-item.warning { border-left-color:var(--warn); }
+    .risk-item.info { border-left-color:var(--accent); }
+    .risk-item-head { display:flex; flex-wrap:wrap; gap:8px; align-items:center; color:var(--muted); }
+    .risk-item-head span { padding:2px 8px; border-radius:999px; color:white; background:var(--accent); font-size:12px; }
+    .risk-item-head strong { color:var(--ink); }
+    .risk-item-head em { font-style:normal; }
+    .risk-item h3 { margin:8px 0; font-size:17px; }
+    .risk-item p { margin:6px 0; color:#334155; }
+    .risk-item p b { display:inline-block; min-width:42px; color:var(--ink); }
+    .risk-meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    .risk-meta span { padding:3px 8px; border-radius:999px; background:#eef4fb; color:#334155; font-size:12px; }
+    .evidence-confidence, .coverage-gaps, .metric-insights, .quality-scorecard, .print-summary { margin-top:14px; }
+    .evidence-confidence { border-top:1px solid var(--line); padding-top:12px; }
+    .quality-scorecard { border:1px solid var(--line); border-radius:8px; padding:14px; background:linear-gradient(180deg,#ffffff,#f7fbff); }
+    .quality-meter { height:10px; border-radius:999px; background:#e5eaf1; overflow:hidden; margin:8px 0 10px; }
+    .quality-meter span { display:block; height:100%; width:67%; background:linear-gradient(90deg,var(--accent),#69d2c7); }
+    .action-board { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; }
+    .action-track { padding:14px; }
+    .advanced-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; }
+    .advanced-card { border:1px solid var(--line); border-radius:8px; padding:14px; background:#fff; box-shadow:0 8px 22px rgba(16,36,63,.05); }
+    .advanced-card h3 { margin:0 0 8px; font-size:15px; }
+    .advanced-payload { color:#334155; }
+    .advanced-hidden-summary { margin-bottom:12px; border:1px dashed var(--line); border-radius:8px; padding:12px 14px; background:#fbfdff; color:#475467; }
+    .advanced-hidden-summary strong { display:block; margin-bottom:6px; color:var(--ink); }
+    .advanced-hidden-summary ul { margin:0; padding-left:18px; columns:2; }
+    .advanced-list { margin:0; padding-left:18px; display:grid; gap:8px; }
+    .advanced-kv { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:8px; margin:0; }
+    .advanced-kv div { min-width:0; border:1px solid var(--line); border-radius:8px; padding:8px 9px; background:#f7fbff; }
+    .advanced-kv dt { color:var(--muted); font-size:12px; }
+    .advanced-kv dd { margin:2px 0 0; word-break:break-word; }
+    .print-summary { display:none; border:1px solid var(--line); border-radius:8px; padding:12px; background:#fff; }
+    .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    table { width: 100%; min-width: 980px; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid var(--line); padding: 10px 11px; text-align: left; vertical-align: top; }
+    th { position: sticky; top: 0; background: #edf3f9; font-size: 12px; color: #334155; z-index: 1; }
+    tbody tr:nth-child(even) { background: #fafcff; }
+    tbody tr:hover { background: #f2f7fc; }
+    .matrix-card-list { display: none; }
+    .matrix-card { border: 1px solid var(--line); border-left: 4px solid var(--unknown); border-radius: 8px; padding: 13px 14px; background: #fff; box-shadow: 0 8px 18px rgba(16,36,63,.05); }
+    .matrix-card.healthy { border-left-color: var(--good); }
+    .matrix-card.warning { border-left-color: var(--warn); }
+    .matrix-card.critical { border-left-color: var(--bad); }
+    .matrix-card-head { display:flex; align-items:flex-start; justify-content:space-between; gap: 10px; margin-bottom: 10px; }
+    .matrix-card h3 { margin: 0; font-size: 16px; line-height: 1.35; }
+    .matrix-card dl { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; margin: 0; }
+    .matrix-card dl div { min-width: 0; }
+    .matrix-card dt { color: var(--muted); font-size: 12px; }
+    .matrix-card dd { margin: 1px 0 0; word-break: break-word; }
+    .matrix-card p { margin: 10px 0 0; padding-top: 10px; border-top: 1px solid var(--line); color: #334155; }
+    .badge { display: inline-block; min-width: 76px; padding: 3px 8px; border-radius: 999px; text-align: center; color: white; font-size: 12px; }
+    .badge.healthy { background: var(--good); }
+    .badge.warning { background: var(--warn); }
+    .badge.critical { background: var(--bad); }
+    .badge.unknown { background: var(--unknown); }
+    .finding-list { display:grid; gap: 12px; }
+    .finding-card { border: 1px solid var(--line); border-radius: 8px; padding: 16px; background: #fff; box-shadow: 0 8px 22px rgba(16,36,63,.05); }
+    .finding-card-head { display:flex; align-items:center; justify-content:space-between; gap: 12px; margin-bottom: 8px; }
+    .finding-card h3 { margin: 0; font-size: 18px; }
+    .finding-card ul { list-style:none; padding:0; margin:0; display:grid; gap: 10px; }
+    .finding-card li { border-top: 1px solid var(--line); padding-top: 10px; }
+    .finding-title { display:flex; align-items:center; gap: 10px; font-weight: 700; }
+    .finding-title strong { color: var(--bad); }
+    .finding-meta { display:flex; flex-wrap:wrap; gap: 8px; margin: 8px 0; }
+    .finding-meta span { padding: 3px 8px; border-radius: 999px; background: #eef4fb; color:#334155; font-size: 12px; }
+    .finding-card p { margin: 6px 0; color: #334155; }
+    .finding-card p b { display:inline-block; min-width: 42px; color: var(--ink); }
+    .empty-state { border: 1px dashed var(--line); border-radius: 8px; padding: 18px; background: #fbfdff; color: var(--muted); }
+    .evidence-grid { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    details { border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin: 0; background: #fff; }
+    summary { cursor: pointer; font-weight: 700; }
+    pre { overflow-x: auto; background: #111827; color: #eef2ff; padding: 12px; border-radius: 8px; }
+    @media print { body { background:white; } .report-nav { position: static; box-shadow:none; } main.executive-layout { max-width: none; padding: 0; } .guide-cover { background:#10243f; } .table-scroll { overflow: visible; } details, .risk-item, .action-track { break-inside: avoid; } .print-summary { display:block; } }
+    @media (max-width: 980px) { .cover-grid, .insight-grid, .action-board, .advanced-grid { grid-template-columns: 1fr; } .metric-grid, .coverage-strip, .trend-strip, .evidence-grid, .cover-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .report-nav { overflow-x:auto; } .section-head { display:block; } }
+    @media (max-width: 720px) { .table-scroll { display:none; } .matrix-card-list { display:grid; gap: 10px; } }
+    @media (max-width: 620px) { main.executive-layout { padding: 18px 12px 34px; } .metric-grid, .coverage-strip, .trend-strip, .evidence-grid, .cover-stats, .matrix-card dl, .score-duo, .advanced-kv { grid-template-columns: 1fr; } .advanced-hidden-summary ul { columns:1; } .mobile-summary-card { display:block; } .cover-copy h1 { font-size: 28px; } }
+  </style>
+</head>
+<body>
+  <header class="guide-cover">
+    <div class="cover-grid">
+      <div class="cover-copy">
+        <div class="cover-kicker">
+          <span class="status-pill">服务器运行健康：健康</span>
+          <span class="generated-at">生成时间：2026-05-14 12:09:10</span>
+        </div>
+        <h1>视频点播系统 单服务器运行健康报告 服务器运行健康报告</h1>
+        <div class="conclusion-panel"><p>在本次检查范围内，未发现严重或预警级服务器运行健康证据。</p>
+<p>本次覆盖 1 台服务器；网络探测为实时 TCP 探测，主机指标为未提供，服务状态为未提供。</p>
+<p>风险概览：严重 0 项，预警 0 项，需复核 1 项；P1 0 项，P2 0 项，P3 0 项。</p>
+<p>证据边界：网络层探测不能替代主机性能、进程、数据库或业务服务状态；未覆盖项需要在后续巡检中补齐。</p>
+<p>本次为基线巡检，暂无趋势对比。</p>
+<p>首要建议：先复核端口来源和业务端口清单，再按优先级推进主机级采集、责任人确认和处置闭环。</p></div>
+        <div class="cover-stats">
+          <div class="cover-stat"><span>服务器</span><b>1</b></div>
+          <div class="cover-stat"><span>严重</span><b>0</b></div>
+          <div class="cover-stat"><span>预警</span><b>0</b></div>
+          <div class="cover-stat"><span>需复核</span><b>1</b></div>
+        </div>
+      </div>
+      <div class="guide-visual html-guide-visual" id="guide-visual" aria-label="服务器健康报告导览图">
+      <div class="guide-map">
+        <div class="guide-map-head">
+          <span>报告导览</span>
+          <strong>健康</strong>
+        </div>
+        <div class="guide-flow" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <div class="guide-node primary">
+          <small>覆盖对象</small>
+          <b>1 台服务器</b>
+        </div>
+        <div class="guide-node">
+          <small>网络探测</small>
+          <b>实时 TCP 探测</b>
+        </div>
+        <div class="guide-node">
+          <small>主机指标</small>
+          <b>未提供</b>
+        </div>
+        <div class="guide-node">
+          <small>服务状态</small>
+          <b>未提供</b>
+        </div>
+        <div class="guide-node risk">
+          <small>风险概览</small>
+          <b>严重 0 项 · 预警 0 项 · 需复核 1 项</b>
+        </div>
+        <div class="guide-node action">
+          <small>处置路径</small>
+          <b>证据复核 · 优先修复 · 回归验证</b>
+        </div>
+      </div>
+    </div>
+    </div>
+  </header>
+  <nav class="report-nav" aria-label="报告导航">
+    <a href="#summary">摘要</a>
+    <a href="#brief">简报</a>
+    <a href="#risk-queue">风险队列</a>
+    <a href="#matrix">服务器矩阵</a>
+    <a href="#findings">问题风险</a>
+    <a href="#action-board">处置行动</a>
+    <a href="#evidence">技术证据</a>
+    <a href="#appendix">附录</a>
+  </nav>
+  <main class="executive-layout">
+    <section id="summary" class="fold-section">
+      <div class="section-head">
+        <h2>管理摘要</h2>
+        <p class="section-note">用于快速判断本批次风险规模、证据覆盖和趋势变化。</p>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><span>服务器数</span><b>1</b></div>
+        <div class="metric critical"><span>严重问题</span><b>0</b></div>
+        <div class="metric warning"><span>预警问题</span><b>0</b></div>
+        <div class="metric review"><span>需复核</span><b>1</b></div>
+      </div>
+      <div class="coverage-strip">
+        <div class="strip-item"><span>网络探测</span><b>实时 TCP 探测</b></div>
+        <div class="strip-item"><span>主机指标</span><b>未提供</b></div>
+        <div class="strip-item"><span>服务状态</span><b>未提供</b></div>
+      </div>
+      <div class="trend-strip">
+        <div class="strip-item"><span>趋势状态</span><b>本次为基线巡检，暂无趋势对比。</b></div>
+        <div class="strip-item"><span>新增问题</span><b>0</b></div>
+        <div class="strip-item"><span>已恢复问题</span><b>0</b></div>
+        <div class="strip-item"><span>持续问题</span><b>0</b></div>
+      </div>
+      <div class="mobile-summary-card">
+        <span>移动端速览</span>
+        <b>健康 · 质量分 67</b>
+        <p>本次覆盖 1 台服务器，总体状态为健康。</p>
+      </div>
+    </section>
+    
+    
+    <section id="brief" class="fold-section executive-brief">
+      <div class="section-head">
+        <h2>管理简报</h2>
+        <p class="section-note">把结论、可信度、阅读路径和质量分放在一屏内，适合管理层先读。</p>
+      </div>
+      <div class="insight-grid">
+        <div class="insight-panel">
+          <h3>核心判断</h3>
+          <ul><li>本次覆盖 1 台服务器，总体状态为健康。</li><li>严重 0 项，预警 0 项，需复核 1 项。</li><li>证据可信度为中，质量分 67 分。</li><li>首要动作：全部服务器 - 当前检查范围内未形成处置队列。</li></ul>
+          <div class="reading-map">
+            <h3>阅读地图</h3>
+            <ol><li><strong>管理简报</strong><span>先读结论、证据可信度和质量分。</span></li><li><strong>风险队列</strong><span>按优先级找到最需要处理的服务器。</span></li><li><strong>覆盖缺口</strong><span>确认哪些结论还不能由本次证据支撑。</span></li><li><strong>处置行动板</strong><span>把发现项转成工单、复核和补采动作。</span></li><li><strong>技术证据</strong><span>展开查看端口、指标、服务和采集边界。</span></li></ol>
+          </div>
+        </div>
+        <aside class="score-panel">
+          <div class="score-duo">
+            <div class="evidence-confidence"><span>证据可信度</span><b>67</b><p>中</p></div>
+            <div class="quality-scorecard"><span>报告质量分</span><b>67</b><div class="quality-meter"><span></span></div></div>
+          </div>
+          <h3>可信度依据</h3>
+          <ul><li>网络探测：实时 TCP 探测。</li><li>缺少主机指标，性能和容量判断受限。</li><li>缺少服务状态，应用层健康需要另行确认。</li><li>存在需要人工复核的发现项。</li></ul>
+        </aside>
+      </div>
+      <div class="print-summary">
+        打印摘要：总体状态 健康，质量分 67，证据可信度 67。
+      </div>
+    </section>
+    <section id="risk-queue" class="fold-section">
+      <div class="section-head">
+        <h2>风险队列</h2>
+        <p class="section-note">按优先级和证据强度排序，先处理 P1/P2，再处理需复核项。</p>
+      </div>
+      <div class="risk-queue"><article class="risk-item info"><div class="risk-item-head"><span>观察</span><strong>全部服务器</strong><em>按计划复测</em></div><h3>当前检查范围内未形成处置队列</h3><p>未发现严重或预警级运行健康问题；仍需按证据边界补齐未覆盖项。</p><p><b>建议</b>保留本次报告作为基线，下一轮巡检继续对比趋势。</p><div class="risk-meta"><span>信息</span><span>baseline</span><span>无需额外复核</span></div></article></div>
+    </section>
+    <section id="coverage-gaps" class="fold-section coverage-gaps">
+      <div class="section-head">
+        <h2>覆盖缺口</h2>
+        <p class="section-note">说明哪些结论还缺证据支撑，避免把网络可达性误读成完整健康。</p>
+      </div>
+      <div class="insight-grid">
+        <div class="insight-panel"><h3>缺口清单</h3><ul><li>主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。</li><li>关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。</li><li>1 台服务器未提供负责人，影响工单派发和闭环跟踪。</li><li>1 台服务器未提供业务部门，影响跨部门优先级确认。</li><li>1 台服务器未提供系统等级，P1/P2 优先级需要人工复核。</li></ul></div>
+        <div class="insight-panel metric-insights"><h3>主机指标解读</h3><ul><li>本次未采集主机指标；报告只说明网络或清单证据，不能判断 CPU、内存、磁盘和负载健康。</li></ul></div>
+      </div>
+    </section>
+    <section id="matrix" class="fold-section">
+      <div class="section-head">
+        <h2>服务器矩阵</h2>
+        <p class="section-note">按资产、责任域、健康状态和证据边界集中展示，便于转入工单和复核。</p>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>服务器</th><th>地址</th><th>业务角色</th><th>负责人</th><th>业务部门</th><th>系统等级</th><th>状态</th><th>优先级</th><th>建议处理时限</th><th>证据边界</th></tr></thead>
+          <tbody><tr><td>视频点播系统</td><td>172.16.70.27</td><td>/</td><td>未提供</td><td>未提供</td><td>未提供</td><td><span class="badge healthy">健康</span></td><td>-</td><td>-</td><td>仅网络层检查；除非清单已提供指标，否则不代表主机内部状态。</td></tr></tbody>
+        </table>
+      </div>
+      <div class="matrix-card-list"><article class="matrix-card healthy"><div class="matrix-card-head"><h3>视频点播系统</h3><span class="badge healthy">健康</span></div><dl><div><dt>地址</dt><dd>172.16.70.27</dd></div><div><dt>业务角色</dt><dd>/</dd></div><div><dt>负责人</dt><dd>未提供</dd></div><div><dt>业务部门</dt><dd>未提供</dd></div><div><dt>系统等级</dt><dd>未提供</dd></div><div><dt>优先级</dt><dd>-</dd></div><div><dt>处理时限</dt><dd>-</dd></div></dl><p>仅网络层检查；除非清单已提供指标，否则不代表主机内部状态。</p></article></div>
+    </section>
+    <section id="findings" class="fold-section">
+      <div class="section-head">
+        <h2>问题与风险</h2>
+        <p class="section-note">只展示需要处理或复核的事项，健康项保留在证据区。</p>
+      </div>
+      <div class="finding-list"><p class="empty-state">在当前检查范围内未发现严重或预警级问题。</p></div>
+    </section>
+    <section id="action-board" class="fold-section">
+      <div class="section-head">
+        <h2>处置行动板</h2>
+        <p class="section-note">把发现项拆成立即处置、复核确认和补齐证据三类动作。</p>
+      </div>
+      <div class="action-board"><section class="action-track"><h3>立即处置</h3><ul><li>当前无 P1/P2 处置项；保持巡检基线并关注覆盖缺口。</li></ul></section><section class="action-track"><h3>复核确认</h3><ul><li>未形成单独复核队列；按证据边界复核关键资产即可。</li></ul></section><section class="action-track"><h3>补齐证据</h3><ul><li>主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。</li><li>关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。</li><li>1 台服务器未提供负责人，影响工单派发和闭环跟踪。</li><li>1 台服务器未提供业务部门，影响跨部门优先级确认。</li></ul></section></div>
+    </section>
+    <section id="advanced-report" class="fold-section advanced-report">
+      <div class="section-head">
+        <h2>升级分析模块</h2>
+        <p class="section-note">只展示对当前数据有信息增量的增强模块；低信号模块保留在 JSON 中供系统集成。</p>
+      </div>
+      <aside class="advanced-hidden-summary"><strong>已隐藏低信号模块</strong><ul><li>风险热力：无 P1-P4 风险项，热力表全为 0</li><li>SLA 时间线：无处置时限项</li><li>变更观察：基线报告暂无趋势变化</li><li>服务健康：未提供服务状态明细</li><li>容量概览：未提供容量指标明细</li><li>资产分层：系统等级分层只有未提供</li><li>控制核查：控制核查已由质量审计覆盖</li><li>工单动作：无实际工单动作</li><li>附录索引：附录索引保留在交付清单中</li></ul></aside>
+      <div class="advanced-grid"><article id="decision-summary" class="advanced-card decision-summary"><h3>决策摘要</h3><div class="advanced-payload"><ul class="advanced-list"><li>总体状态：健康</li><li>优先处置：全部服务器 - 当前检查范围内未形成处置队列</li><li>证据可信度：中 / 67</li></ul></div></article>
+<article id="owner-brief" class="advanced-card owner-brief"><h3>责任人简报</h3><div class="advanced-payload"><dl class="advanced-kv"><div><dt>owners</dt><dd>name：未提供；count：1</dd></div><div><dt>missing_owner</dt><dd>1</dd></div><div><dt>handoff_hint</dt><dd>按负责人派发；负责人缺失时先由信息中心确认归属。</dd></div></dl></div></article>
+<article id="evidence-ladder" class="advanced-card evidence-ladder"><h3>证据阶梯</h3><div class="advanced-payload"><ul class="advanced-list"><li><dl class="advanced-kv"><div><dt>layer</dt><dd>网络探测</dd></div><div><dt>coverage</dt><dd>实时 TCP 探测</dd></div><div><dt>meaning</dt><dd>判断端口和路径可达性</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>layer</dt><dd>主机指标</dd></div><div><dt>coverage</dt><dd>未提供</dd></div><div><dt>meaning</dt><dd>判断 CPU、内存、磁盘和负载健康</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>layer</dt><dd>服务状态</dd></div><div><dt>coverage</dt><dd>未提供</dd></div><div><dt>meaning</dt><dd>判断进程、数据库和应用服务状态</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>layer</dt><dd>趋势对比</dd></div><div><dt>coverage</dt><dd>本次为基线巡检，暂无趋势对比。</dd></div><div><dt>meaning</dt><dd>识别新增、恢复和持续问题</dd></div></dl></li></ul></div></article>
+<article id="data-quality-panel" class="advanced-card data-quality-panel"><h3>数据质量</h3><div class="advanced-payload"><dl class="advanced-kv"><div><dt>score</dt><dd>75</dd></div><div><dt>missing_fields</dt><dd>负责人：1；业务部门：1；系统等级：1；业务影响：1</dd></div><div><dt>gaps</dt><dd>主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。；关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。；1 台服务器未提供负责人，影响工单派发和闭环跟踪。</dd></div><div><dt>summary</dt><dd>清单数据质量 75 分；缺失项会影响责任派发、优先级和影响面判断。</dd></div></dl></div></article>
+<article id="remediation-roadmap" class="advanced-card remediation-roadmap"><h3>处置路线图</h3><div class="advanced-payload"><ul class="advanced-list"><li><dl class="advanced-kv"><div><dt>phase</dt><dd>今日</dd></div><div><dt>focus</dt><dd>确认 P1/P2 风险和业务影响</dd></div><div><dt>items</dt><dd>当前无 P1/P2，保持复测窗口。</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>phase</dt><dd>两个工作日</dd></div><div><dt>focus</dt><dd>完成修复、复核和工单闭环</dd></div><div><dt>items</dt><dd>全部服务器：保留本次报告作为基线，下一轮巡检继续对比趋势。</dd></div></dl></li><li><dl class="advanced-kv"><div><dt>phase</dt><dd>下期巡检</dd></div><div><dt>focus</dt><dd>补齐证据并形成趋势对比</dd></div><div><dt>items</dt><dd>主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。；关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。；1 台服务器未提供负责人，影响工单派发和闭环跟踪。</dd></div></dl></li></ul></div></article>
+<article id="business-impact-panel" class="advanced-card business-impact-panel"><h3>业务影响</h3><div class="advanced-payload"><dl class="advanced-kv"><div><dt>core_assets</dt><dd>0</dd></div><div><dt>missing_impact</dt><dd>1</dd></div><div><dt>summary</dt><dd>1 台服务器缺少业务影响说明，需由系统负责人确认。</dd></div></dl></div></article>
+<article id="readability-score" class="advanced-card readability-score"><h3>可读性评分</h3><div class="advanced-payload"><dl class="advanced-kv"><div><dt>score</dt><dd>67</dd></div><div><dt>level</dt><dd>需复核</dd></div><div><dt>signals</dt><dd>结论、风险、责任、证据和附录按阅读顺序组织。；桌面保留矩阵密度，移动端提供卡片视图。；高级模块使用键值和列表版式，不以 JSON 作为正文主视觉。</dd></div></dl></div></article>
+<article id="report-narrative" class="advanced-card report-narrative"><h3>报告叙事</h3><div class="advanced-payload"><ul class="advanced-list"><li>先看总体状态与优先队列，再按证据边界决定是否补采主机指标。</li><li>网络可达性不等同于业务或主机内部健康。</li></ul></div></article>
+<article id="review-questions" class="advanced-card review-questions"><h3>复核问题</h3><div class="advanced-payload"><ul class="advanced-list"><li>采集路径是否由安全策略允许？</li><li>doops 目标与服务器清单是否存在可直接采集映射？</li><li>业务端口清单是否完整？</li></ul></div></article>
+<article id="scope-statement" class="advanced-card scope-statement"><h3>范围声明</h3><div class="advanced-payload"><dl class="advanced-kv"><div><dt>included</dt><dd>1 台服务器、网络/端口证据、已提供的主机指标和服务状态。</dd></div><div><dt>excluded</dt><dd>未授权登录操作、密码读取、破坏性变更、未提供凭证的主机内部状态。</dd></div><div><dt>boundary</dt><dd>网络层检查不能替代主机级持续监控；缺失证据以覆盖缺口呈现。</dd></div></dl></div></article>
+<article id="next-report-plan" class="advanced-card next-report-plan"><h3>下期计划</h3><div class="advanced-payload"><ul class="advanced-list"><li>补齐未覆盖主机指标</li><li>确认责任人和业务等级</li><li>与下期报告进行趋势对比</li></ul></div></article></div>
+    </section>
+    <section id="evidence" class="fold-section">
+      <div class="section-head">
+        <h2>技术证据</h2>
+        <p class="section-note">默认折叠，展开后查看端口、指标、服务状态和采集边界。</p>
+      </div>
+      <div class="evidence-grid"><details>
+  <summary>视频点播系统 证据</summary>
+  <table><thead><tr><th>端口</th><th>状态</th><th>延迟毫秒</th><th>端口来源</th><th>端口用途</th></tr></thead><tbody><tr><td colspan="5">未声明预期端口。</td></tr></tbody></table>
+  <pre>{
+  &quot;metrics&quot;: {},
+  &quot;services&quot;: [],
+  &quot;collection_errors&quot;: [],
+  &quot;collection_trace&quot;: {
+    &quot;doops_target&quot;: &quot;zheyin&quot;,
+    &quot;session&quot;: &quot;server-health-20260514-120828&quot;,
+    &quot;transport_mode&quot;: &quot;workspace-push&quot;,
+    &quot;remote_result_path&quot;: &quot;/root/ws/server-health-20260514-120828-probe-01/server-health/result.json&quot;,
+    &quot;cleanup_status&quot;: &quot;failed&quot;
+  },
+  &quot;application_observation&quot;: [],
+  &quot;collection_scope&quot;: &quot;服务器健康证据&quot;,
+  &quot;credential_boundary&quot;: &quot;按证据边界说明&quot;,
+  &quot;credential_status&quot;: &quot;未提供凭证&quot;,
+  &quot;owner&quot;: &quot;未提供&quot;,
+  &quot;department&quot;: &quot;未提供&quot;,
+  &quot;priority&quot;: &quot;&quot;,
+  &quot;due_time&quot;: &quot;&quot;
+}</pre>
+</details></div>
+    </section>
+    <section id="appendix" class="fold-section">
+      <h2>附录</h2>
+      <details>
+        <summary>Markdown 报告文本</summary>
+        <pre># 视频点播系统 单服务器运行健康报告 服务器运行健康报告
+
+- 生成时间：2026-05-14 12:09:10
+- 总体状态：健康
+- 服务器数量：1
+- 严重问题：0
+- 预警问题：0
+- 需复核问题：1
+
+## 管理结论
+
+在本次检查范围内，未发现严重或预警级服务器运行健康证据。
+本次覆盖 1 台服务器；网络探测为实时 TCP 探测，主机指标为未提供，服务状态为未提供。
+风险概览：严重 0 项，预警 0 项，需复核 1 项；P1 0 项，P2 0 项，P3 0 项。
+证据边界：网络层探测不能替代主机性能、进程、数据库或业务服务状态；未覆盖项需要在后续巡检中补齐。
+本次为基线巡检，暂无趋势对比。
+首要建议：先复核端口来源和业务端口清单，再按优先级推进主机级采集、责任人确认和处置闭环。
+
+## 管理简报
+
+- 本次覆盖 1 台服务器，总体状态为健康。
+- 严重 0 项，预警 0 项，需复核 1 项。
+- 证据可信度为中，质量分 67 分。
+- 首要动作：全部服务器 - 当前检查范围内未形成处置队列。
+
+- 证据可信度：中（67 分）
+- 报告质量分：67
+
+## 风险队列
+
+- `观察` 全部服务器：当前检查范围内未形成处置队列（按计划复测）
+
+## 覆盖缺口
+
+- 主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。
+- 关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。
+- 1 台服务器未提供负责人，影响工单派发和闭环跟踪。
+- 1 台服务器未提供业务部门，影响跨部门优先级确认。
+- 1 台服务器未提供系统等级，P1/P2 优先级需要人工复核。
+
+## 处置行动板
+
+- 立即处置：当前无 P1/P2 处置项；保持巡检基线并关注覆盖缺口。
+- 复核确认：未形成单独复核队列；按证据边界复核关键资产即可。
+- 补齐证据：主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。；关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。；1 台服务器未提供负责人，影响工单派发和闭环跟踪。；1 台服务器未提供业务部门，影响跨部门优先级确认。
+
+## 检查覆盖范围
+
+
+## 决策摘要
+
+- 总体状态：健康
+- 优先处置：全部服务器 - 当前检查范围内未形成处置队列
+- 证据可信度：中 / 67
+
+## 责任人与时限
+
+- 责任人概览：owners：name：未提供；count：1
+- 责任人概览：missing_owner：1
+- 责任人概览：handoff_hint：按负责人派发；负责人缺失时先由信息中心确认归属。
+- priority：P1；due_time：当日处理；count：0；focus：恢复或确认业务影响
+- priority：P2；due_time：两个工作日内处理；count：0；focus：排期修复与责任人确认
+- priority：P3/P4；due_time：复核确认或补齐清单；count：0；focus：补证、复核和下期对比
+
+## 证据与数据质量
+
+- layer：网络探测；coverage：实时 TCP 探测；meaning：判断端口和路径可达性
+- layer：主机指标；coverage：未提供；meaning：判断 CPU、内存、磁盘和负载健康
+- layer：服务状态；coverage：未提供；meaning：判断进程、数据库和应用服务状态
+- layer：趋势对比；coverage：本次为基线巡检，暂无趋势对比。；meaning：识别新增、恢复和持续问题
+- score：75
+- missing_fields：负责人：1；业务部门：1；系统等级：1；业务影响：1
+- gaps：主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。；关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。；1 台服务器未提供负责人，影响工单派发和闭环跟踪。
+- summary：清单数据质量 75 分；缺失项会影响责任派发、优先级和影响面判断。
+
+## 处置路线图
+
+- phase：今日；focus：确认 P1/P2 风险和业务影响；items：当前无 P1/P2，保持复测窗口。
+- phase：两个工作日；focus：完成修复、复核和工单闭环；items：全部服务器：保留本次报告作为基线，下一轮巡检继续对比趋势。
+- phase：下期巡检；focus：补齐证据并形成趋势对比；items：主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。；关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。；1 台服务器未提供负责人，影响工单派发和闭环跟踪。
+
+## 复核问题清单
+
+- 采集路径是否由安全策略允许？
+- doops 目标与服务器清单是否存在可直接采集映射？
+- 业务端口清单是否完整？
+- 网络探测：实时 TCP 探测
+- 主机指标：未提供
+- 服务状态：未提供
+
+## 趋势对比
+
+- 趋势状态：本次为基线巡检，暂无趋势对比。
+- 新增问题：0
+- 已恢复问题：0
+- 持续问题：0
+- 状态变化服务器：0
+
+## 服务器矩阵
+
+| 服务器 | 地址 | 业务角色 | 负责人 | 业务部门 | 系统等级 | 状态 | 优先级 | 建议处理时限 | 证据边界 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 视频点播系统 | 172.16.70.27 | / | 未提供 | 未提供 | 未提供 | 健康 | - | - | 仅网络层检查；除非清单已提供指标，否则不代表主机内部状态。 |
+
+## 问题与风险
+
+在当前检查范围内未发现严重或预警级问题。
+
+## 技术证据
+
+### 视频点播系统
+
+- 网络检查模式：实时 TCP 探测
+- 端口：未声明
+- 负责人：未提供
+- 业务部门：未提供
+- doops 采集轨迹：target=zheyin；session=server-health-20260514-120828；transport=workspace-push；cleanup=failed
+</pre>
+      </details>
+    </section>
+  </main>
+</body>
+</html>

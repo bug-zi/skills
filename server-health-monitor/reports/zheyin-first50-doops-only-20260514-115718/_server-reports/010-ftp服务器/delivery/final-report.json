@@ -1,0 +1,511 @@
+{
+  "report_kind": "server-health",
+  "generated_at": "2026-05-14T11:57:57+08:00",
+  "environment": {
+    "name": "ftp服务器 单服务器运行健康报告",
+    "owner": "",
+    "inspection_window": "2026-05-14T11:57:55+08:00",
+    "notes": "从 服务器帐户和密码 总巡检中拆分生成。"
+  },
+  "summary": {
+    "overall_status": "healthy",
+    "server_count": 1,
+    "status_counts": {
+      "healthy": 1,
+      "warning": 0,
+      "critical": 0,
+      "unknown": 0
+    },
+    "critical_findings": 0,
+    "warning_findings": 0,
+    "review_required_findings": 1,
+    "priority_counts": {
+      "P1": 0,
+      "P2": 0,
+      "P3": 0,
+      "P4": 0
+    },
+    "coverage": {
+      "network": "live-tcp-probe",
+      "host_metrics": "not-supplied",
+      "services": "not-supplied"
+    },
+    "trend": {
+      "mode": "baseline",
+      "summary": "本次为基线巡检，暂无趋势对比。",
+      "new_findings": 0,
+      "resolved_findings": 0,
+      "persistent_findings": 0,
+      "status_changed_servers": 0
+    },
+    "doops_channel": {},
+    "ai_review": {},
+    "management_summary": "在本次检查范围内，未发现严重或预警级服务器运行健康证据。\n本次覆盖 1 台服务器；网络探测为实时 TCP 探测，主机指标为未提供，服务状态为未提供。\n风险概览：严重 0 项，预警 0 项，需复核 1 项；P1 0 项，P2 0 项，P3 0 项。\n证据边界：网络层探测不能替代主机性能、进程、数据库或业务服务状态；未覆盖项需要在后续巡检中补齐。\n本次为基线巡检，暂无趋势对比。\n首要建议：先复核端口来源和业务端口清单，再按优先级推进主机级采集、责任人确认和处置闭环。",
+    "report_insights": {
+      "executive_brief": [
+        "本次覆盖 1 台服务器，总体状态为健康。",
+        "严重 0 项，预警 0 项，需复核 1 项。",
+        "证据可信度为中，质量分 67 分。",
+        "首要动作：全部服务器 - 当前检查范围内未形成处置队列。"
+      ],
+      "risk_queue": [
+        {
+          "server": "全部服务器",
+          "address": "",
+          "severity": "info",
+          "severity_label": "信息",
+          "priority": "观察",
+          "due_time": "按计划复测",
+          "title": "当前检查范围内未形成处置队列",
+          "evidence": "未发现严重或预警级运行健康问题；仍需按证据边界补齐未覆盖项。",
+          "recommendation": "保留本次报告作为基线，下一轮巡检继续对比趋势。",
+          "review_required": false,
+          "evidence_strength": "baseline"
+        }
+      ],
+      "evidence_confidence": {
+        "score": 67,
+        "level": "中",
+        "reasons": [
+          "网络探测：实时 TCP 探测。",
+          "缺少主机指标，性能和容量判断受限。",
+          "缺少服务状态，应用层健康需要另行确认。",
+          "存在需要人工复核的发现项。"
+        ]
+      },
+      "coverage_gaps": [
+        "主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。",
+        "关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。",
+        "1 台服务器未提供负责人，影响工单派发和闭环跟踪。",
+        "1 台服务器未提供业务部门，影响跨部门优先级确认。",
+        "1 台服务器未提供系统等级，P1/P2 优先级需要人工复核。"
+      ],
+      "metric_insights": [
+        "本次未采集主机指标；报告只说明网络或清单证据，不能判断 CPU、内存、磁盘和负载健康。"
+      ],
+      "action_board": [
+        {
+          "track": "立即处置",
+          "items": [
+            "当前无 P1/P2 处置项；保持巡检基线并关注覆盖缺口。"
+          ]
+        },
+        {
+          "track": "复核确认",
+          "items": [
+            "未形成单独复核队列；按证据边界复核关键资产即可。"
+          ]
+        },
+        {
+          "track": "补齐证据",
+          "items": [
+            "主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。",
+            "关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。",
+            "1 台服务器未提供负责人，影响工单派发和闭环跟踪。",
+            "1 台服务器未提供业务部门，影响跨部门优先级确认。"
+          ]
+        }
+      ],
+      "reading_map": [
+        {
+          "section": "管理简报",
+          "purpose": "先读结论、证据可信度和质量分。"
+        },
+        {
+          "section": "风险队列",
+          "purpose": "按优先级找到最需要处理的服务器。"
+        },
+        {
+          "section": "覆盖缺口",
+          "purpose": "确认哪些结论还不能由本次证据支撑。"
+        },
+        {
+          "section": "处置行动板",
+          "purpose": "把发现项转成工单、复核和补采动作。"
+        },
+        {
+          "section": "技术证据",
+          "purpose": "展开查看端口、指标、服务和采集边界。"
+        }
+      ],
+      "quality_score": 67,
+      "advanced": {
+        "decision_summary": [
+          "总体状态：健康",
+          "优先处置：全部服务器 - 当前检查范围内未形成处置队列",
+          "证据可信度：中 / 67"
+        ],
+        "risk_heatmap": [
+          {
+            "priority": "P1",
+            "critical": 0,
+            "warning": 0,
+            "review_required": 0,
+            "total": 0
+          },
+          {
+            "priority": "P2",
+            "critical": 0,
+            "warning": 0,
+            "review_required": 0,
+            "total": 0
+          },
+          {
+            "priority": "P3",
+            "critical": 0,
+            "warning": 0,
+            "review_required": 0,
+            "total": 0
+          },
+          {
+            "priority": "P4",
+            "critical": 0,
+            "warning": 0,
+            "review_required": 1,
+            "total": 0
+          }
+        ],
+        "owner_brief": {
+          "owners": [
+            {
+              "name": "未提供",
+              "count": 1
+            }
+          ],
+          "missing_owner": 1,
+          "handoff_hint": "按负责人派发；负责人缺失时先由信息中心确认归属。"
+        },
+        "sla_timeline": [
+          {
+            "priority": "P1",
+            "due_time": "当日处理",
+            "count": 0,
+            "focus": "恢复或确认业务影响"
+          },
+          {
+            "priority": "P2",
+            "due_time": "两个工作日内处理",
+            "count": 0,
+            "focus": "排期修复与责任人确认"
+          },
+          {
+            "priority": "P3/P4",
+            "due_time": "复核确认或补齐清单",
+            "count": 0,
+            "focus": "补证、复核和下期对比"
+          }
+        ],
+        "evidence_ladder": [
+          {
+            "layer": "网络探测",
+            "coverage": "实时 TCP 探测",
+            "meaning": "判断端口和路径可达性"
+          },
+          {
+            "layer": "主机指标",
+            "coverage": "未提供",
+            "meaning": "判断 CPU、内存、磁盘和负载健康"
+          },
+          {
+            "layer": "服务状态",
+            "coverage": "未提供",
+            "meaning": "判断进程、数据库和应用服务状态"
+          },
+          {
+            "layer": "趋势对比",
+            "coverage": "本次为基线巡检，暂无趋势对比。",
+            "meaning": "识别新增、恢复和持续问题"
+          }
+        ],
+        "data_quality": {
+          "score": 75,
+          "missing_fields": {
+            "负责人": 1,
+            "业务部门": 1,
+            "系统等级": 1,
+            "业务影响": 1,
+            "预期端口": 1
+          },
+          "gaps": [
+            "主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。",
+            "关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。",
+            "1 台服务器未提供负责人，影响工单派发和闭环跟踪。",
+            "1 台服务器未提供业务部门，影响跨部门优先级确认。",
+            "1 台服务器未提供系统等级，P1/P2 优先级需要人工复核。"
+          ],
+          "summary": "清单数据质量 75 分；缺失项会影响责任派发、优先级和影响面判断。"
+        },
+        "remediation_roadmap": [
+          {
+            "phase": "今日",
+            "focus": "确认 P1/P2 风险和业务影响",
+            "items": [
+              "当前无 P1/P2，保持复测窗口。"
+            ]
+          },
+          {
+            "phase": "两个工作日",
+            "focus": "完成修复、复核和工单闭环",
+            "items": [
+              "全部服务器：保留本次报告作为基线，下一轮巡检继续对比趋势。"
+            ]
+          },
+          {
+            "phase": "下期巡检",
+            "focus": "补齐证据并形成趋势对比",
+            "items": [
+              "主机 CPU、内存、磁盘等指标未完全覆盖，容量和性能判断需要补采。",
+              "关键服务状态未完全覆盖，进程、数据库和应用健康仍需责任人确认。",
+              "1 台服务器未提供负责人，影响工单派发和闭环跟踪。"
+            ]
+          }
+        ],
+        "change_watchlist": [
+          {
+            "label": "新增问题",
+            "count": 0,
+            "hint": "优先判断是否与近期变更相关"
+          },
+          {
+            "label": "已恢复问题",
+            "count": 0,
+            "hint": "确认恢复证据并关闭工单"
+          },
+          {
+            "label": "持续问题",
+            "count": 0,
+            "hint": "需要升级处置或补充根因分析"
+          },
+          {
+            "label": "状态变化服务器",
+            "count": 0,
+            "hint": "复核服务窗口和变更记录"
+          }
+        ],
+        "service_health": {
+          "coverage": "未提供",
+          "total": 0,
+          "abnormal": 0,
+          "unknown": 0,
+          "summary": "未提供服务状态；应用层健康需责任人确认。"
+        },
+        "capacity_summary": {
+          "summary": "本次未采集主机指标；报告只说明网络或清单证据，不能判断 CPU、内存、磁盘和负载健康。",
+          "top_signals": [],
+          "watch_hint": "容量指标缺失时，不得把网络可达判断写成主机性能健康结论。"
+        },
+        "asset_segments": [
+          {
+            "segment": "系统等级",
+            "items": [
+              {
+                "name": "未提供",
+                "count": 1
+              }
+            ]
+          },
+          {
+            "segment": "操作系统",
+            "items": [
+              {
+                "name": "windows",
+                "count": 1
+              }
+            ]
+          }
+        ],
+        "business_impact": {
+          "core_assets": 0,
+          "missing_impact": 1,
+          "summary": "1 台服务器缺少业务影响说明，需由系统负责人确认。"
+        },
+        "control_checklist": [
+          {
+            "item": "敏感信息未入报告",
+            "state": "已审计",
+            "action": "质量审计扫描密码、会话凭据、私钥和接口密钥。"
+          },
+          {
+            "item": "只读采集",
+            "state": "已声明",
+            "action": "证据边界中说明只读路径和未覆盖项。"
+          },
+          {
+            "item": "导览图存在",
+            "state": "已审计",
+            "action": "HTML 表头必须展示 GPT 或 HTML/CSS 导览图。"
+          },
+          {
+            "item": "趋势对比",
+            "state": "本次为基线巡检，暂无趋势对比。",
+            "action": "下一轮沿用 JSON 作为上一期。"
+          }
+        ],
+        "work_order_actions": [
+          {
+            "server": "全部服务器",
+            "owner": "未提供",
+            "priority": "观察",
+            "due_time": "按计划复测",
+            "content": "全部服务器｜观察｜当前检查范围内未形成处置队列｜按计划复测｜保留本次报告作为基线，下一轮巡检继续对比趋势。"
+          }
+        ],
+        "appendix_index": [
+          {
+            "artifact": "final-report.html",
+            "purpose": "正式可视化报告入口"
+          },
+          {
+            "artifact": "final-report.pdf",
+            "purpose": "归档和流转版本"
+          },
+          {
+            "artifact": "final-report.json",
+            "purpose": "结构化证据和系统集成数据"
+          },
+          {
+            "artifact": "quality-audit.json",
+            "purpose": "机器可读质量审计结果"
+          },
+          {
+            "artifact": "delivery-manifest.md",
+            "purpose": "交付包入口清单"
+          }
+        ],
+        "readability_score": {
+          "score": 67,
+          "level": "需复核",
+          "signals": [
+            "结论、风险、责任、证据和附录按阅读顺序组织。",
+            "桌面保留矩阵密度，移动端提供卡片视图。",
+            "高级模块使用键值和列表版式，不以 JSON 作为正文主视觉。"
+          ]
+        },
+        "report_narrative": [
+          "先看总体状态与优先队列，再按证据边界决定是否补采主机指标。",
+          "网络可达性不等同于业务或主机内部健康。"
+        ],
+        "review_questions": [
+          "采集路径是否由安全策略允许？",
+          "主机只读账号或 SNMPv3 用户是否已部署？",
+          "业务端口清单是否完整？"
+        ],
+        "scope_statement": {
+          "included": "1 台服务器、网络/端口证据、已提供的主机指标和服务状态。",
+          "excluded": "未授权登录操作、密码读取、破坏性变更、未提供凭证的主机内部状态。",
+          "boundary": "网络层检查不能替代主机级持续监控；缺失证据以覆盖缺口呈现。"
+        },
+        "next_report_plan": [
+          "补齐未覆盖主机指标",
+          "确认责任人和业务等级",
+          "与下期报告进行趋势对比"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "name": "ftp服务器",
+      "address": "172.16.70.15",
+      "os_type": "windows",
+      "role": "vmware虚拟机ftp",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "credential_status": "not-provided",
+      "status": "healthy",
+      "priority": "",
+      "due_time": "",
+      "network": {
+        "mode": "live",
+        "ports": [],
+        "findings": [
+          {
+            "severity": "info",
+            "title": "未声明预期端口",
+            "evidence": "当前只能进行清单级检查。",
+            "category": "inventory",
+            "priority": "P4",
+            "due_time": "补齐清单",
+            "impact": {
+              "business_system": "",
+              "business_domain": "",
+              "user_group": "",
+              "criticality": "",
+              "has_redundancy": null,
+              "impact_note": "",
+              "department": "",
+              "summary": "业务影响未在清单中提供，需由系统负责人确认。"
+            },
+            "impact_summary": "业务影响未在清单中提供，需由系统负责人确认。",
+            "recommendation": "补齐资产清单并复核端口来源，避免将清单缺失误判为运行故障。",
+            "next_actions": [
+              "补齐资产清单字段，包括地址、负责人、业务影响、预期端口和端口来源。",
+              "补齐责任人，明确后续复核归属。"
+            ],
+            "review_required": true,
+            "evidence_strength": "needs-review"
+          }
+        ]
+      },
+      "metrics": {},
+      "services": [],
+      "application_checks": [],
+      "application_observation": [],
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115718",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115718-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "collection_errors": [],
+      "findings": [
+        {
+          "severity": "info",
+          "title": "未声明预期端口",
+          "evidence": "当前只能进行清单级检查。",
+          "category": "inventory",
+          "priority": "P4",
+          "due_time": "补齐清单",
+          "impact": {
+            "business_system": "",
+            "business_domain": "",
+            "user_group": "",
+            "criticality": "",
+            "has_redundancy": null,
+            "impact_note": "",
+            "department": "",
+            "summary": "业务影响未在清单中提供，需由系统负责人确认。"
+          },
+          "impact_summary": "业务影响未在清单中提供，需由系统负责人确认。",
+          "recommendation": "补齐资产清单并复核端口来源，避免将清单缺失误判为运行故障。",
+          "next_actions": [
+            "补齐资产清单字段，包括地址、负责人、业务影响、预期端口和端口来源。",
+            "补齐责任人，明确后续复核归属。"
+          ],
+          "review_required": true,
+          "evidence_strength": "needs-review"
+        }
+      ],
+      "evidence_boundary": "仅网络层检查；除非清单已提供指标，否则不代表主机内部状态。",
+      "notes": "Excel row 11; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115718."
+    }
+  ],
+  "thresholds": {
+    "cpu_warning_percent": 75,
+    "cpu_critical_percent": 90,
+    "memory_warning_percent": 80,
+    "memory_critical_percent": 92,
+    "disk_warning_percent": 80,
+    "disk_critical_percent": 90,
+    "load_warning_per_core": 1.5,
+    "load_critical_per_core": 2.5
+  },
+  "management_conclusion": "在本次检查范围内，未发现严重或预警级服务器运行健康证据。\n本次覆盖 1 台服务器；网络探测为实时 TCP 探测，主机指标为未提供，服务状态为未提供。\n风险概览：严重 0 项，预警 0 项，需复核 1 项；P1 0 项，P2 0 项，P3 0 项。\n证据边界：网络层探测不能替代主机性能、进程、数据库或业务服务状态；未覆盖项需要在后续巡检中补齐。\n本次为基线巡检，暂无趋势对比。\n首要建议：先复核端口来源和业务端口清单，再按优先级推进主机级采集、责任人确认和处置闭环。"
+}

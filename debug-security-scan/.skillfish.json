@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "debug-security-scan",
+  "owner": "local",
+  "repo": "",
+  "path": "skills/debug-security-scan",
+  "branch": "main",
+  "sha": "local",
+  "source": "manual"
+}

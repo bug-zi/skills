@@ -1,0 +1,4 @@
+interface:
+  display_name: "Server Health Monitor"
+  short_description: "Generate Chinese server health reports, using doops automatically for 浙音 and 杭电."
+  default_prompt: "Use $server-health-monitor to inspect server status. For 浙音 or 杭电, enter the environment through doops first, then produce HTML, PDF, Markdown, and JSON health reports."

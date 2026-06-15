@@ -1,0 +1,2 @@
+﻿name,address,os_type,role,owner,department,business_system,business_domain,user_group,criticality,has_redundancy,impact_note,ports,auth_ref
+zheyin-web-01,192.0.2.10,linux,portal web,web operations,Information Center,Campus portal,office,faculty and students,core,false,Portal access may be affected if HTTPS is unreachable.,"22,80,443",env:ZHEYIN_WEB01_SSH_PASSWORD

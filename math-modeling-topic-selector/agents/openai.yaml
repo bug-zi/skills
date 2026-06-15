@@ -1,0 +1,4 @@
+interface:
+  display_name: "Math Modeling Topic Selector"
+  short_description: "Choose math modeling contest topics."
+  default_prompt: "Use $math-modeling-topic-selector to analyze these math modeling contest problems and recommend which one to choose based on feasibility, data, modeling risk, paper-writing potential, and team fit."

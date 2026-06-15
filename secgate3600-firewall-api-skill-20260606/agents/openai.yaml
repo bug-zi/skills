@@ -1,0 +1,7 @@
+interface:
+  display_name: "SecGate 3600 Firewall API"
+  short_description: "SecGate 防火墙 RESTful API 操作"
+  default_prompt: "Use $secgate3600-firewall-api to inspect SecGate 3600 firewall address objects and policies safely."
+
+policy:
+  allow_implicit_invocation: true

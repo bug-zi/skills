@@ -1,0 +1,10 @@
+{
+  "nsg_firewall": {
+    "base_url": "https://<firewall-management-ip>:<restful-api-port>",
+    "username": "<restapi-username>",
+    "password": "<restapi-password>",
+    "insecure_tls": true,
+    "doops_target": "zy",
+    "doops_cwd": "/Users/wwyz/Documents/网络安全智能体"
+  }
+}

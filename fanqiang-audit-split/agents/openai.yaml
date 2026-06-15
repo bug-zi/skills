@@ -1,0 +1,7 @@
+interface:
+  display_name: "翻墙审核（分工版）"
+  short_description: "依赖翻墙管理与3600 skill 的编排型翻墙审计"
+  default_prompt: "Use $翻墙审核（分工版） to orchestrate the Zhejiang Conservatory proxy/VPN audit workflow with 翻墙管理_skill for log evidence and secgate3600-firewall-api-skill for SecGate 3600 verification or approved remediation."
+
+policy:
+  allow_implicit_invocation: true

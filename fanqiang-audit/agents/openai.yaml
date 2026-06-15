@@ -1,0 +1,7 @@
+interface:
+  display_name: "翻墙审核"
+  short_description: "自足型翻墙审计、行为评估与管控核验"
+  default_prompt: "Use $翻墙审核 to run the Zhejiang Conservatory proxy/VPN audit workflow: query logs, generate quick-audit and behavior-evaluation CSVs, verify SecGate 3600 control status, and prepare approved remediation."
+
+policy:
+  allow_implicit_invocation: true

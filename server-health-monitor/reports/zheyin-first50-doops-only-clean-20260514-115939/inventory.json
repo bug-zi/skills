@@ -1,0 +1,3147 @@
+{
+  "environment": {
+    "name": "服务器帐户和密码",
+    "inspection_window": "2026-05-14T12:00:18+08:00",
+    "notes": "Excel inventory imported with credential values redacted. Read-only network evidence collected from doops target zheyin for 50 server(s)."
+  },
+  "servers": [
+    {
+      "name": "x`",
+      "address": "172.16.70.2",
+      "os_type": "windows",
+      "role": "IBM_server",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-2-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.2",
+        "index": 1,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 2; raw_os=windows03_32; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "短信平台",
+      "address": "172.16.70.3",
+      "os_type": "windows",
+      "role": "vmware虚拟机message_win0864",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-3-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.3",
+        "index": 2,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "error": "OSError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 3; raw_os=windows0864; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "新信息门户平台_no14",
+      "address": "172.16.70.4",
+      "os_type": "linux",
+      "role": "vmware虚拟机menhu_centos7",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        22
+      ],
+      "port_obligations": [
+        {
+          "port": 22,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "SSH"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-4-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.4",
+        "index": 3,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 4; raw_os=linux7; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "站群系统_no4",
+      "address": "172.16.70.6",
+      "os_type": "windows",
+      "role": "H3C_server",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-5-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.6",
+        "index": 4,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 5; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "新短信平台",
+      "address": "172.16.70.8",
+      "os_type": "linux",
+      "role": "灾备机房超融合",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        22
+      ],
+      "port_obligations": [
+        {
+          "port": 22,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "SSH"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-6-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.8",
+        "index": 5,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 6; raw_os=unknown; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "国资系统_no17",
+      "address": "172.16.70.88",
+      "os_type": "windows",
+      "role": "DELL_server",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-7-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.88",
+        "index": 6,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 7; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "国资系统新",
+      "address": "172.16.70.89",
+      "os_type": "windows",
+      "role": "浪潮新服务器2021.11.24",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-8-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.89",
+        "index": 7,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 8; raw_os=win16server; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "学工系统",
+      "address": "172.16.70.11",
+      "os_type": "linux",
+      "role": "vmware虚拟机studentsys_centos6.5",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        22
+      ],
+      "port_obligations": [
+        {
+          "port": 22,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "SSH"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-9-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.11",
+        "index": 8,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 9; raw_os=centos6.5_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "人事系统_no6",
+      "address": "172.16.70.13",
+      "os_type": "windows",
+      "role": "H3C_server",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-10-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.13",
+        "index": 9,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 10; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "ftp服务器",
+      "address": "172.16.70.15",
+      "os_type": "windows",
+      "role": "vmware虚拟机ftp",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        21,
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 21,
+          "usage": "business",
+          "source": "role-inferred",
+          "required": true,
+          "label": "FTP"
+        },
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-11-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.15",
+        "index": 10,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 1,
+            "port": 21,
+            "status": "open"
+          },
+          {
+            "error": "ConnectionRefusedError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 11; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "科研系统_no16",
+      "address": "172.16.70.16",
+      "os_type": "windows",
+      "role": "DELL_server",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-12-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.16",
+        "index": 11,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 12; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "后勤财务系统_no10",
+      "address": "172.16.70.17",
+      "os_type": "windows",
+      "role": "DELL_server",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-13-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.17",
+        "index": 12,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 13; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "视窗系统",
+      "address": "172.16.70.18",
+      "os_type": "windows",
+      "role": "vmware虚拟机sc_win864",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-14-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.18",
+        "index": 13,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 14; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "大数据健康码、疫苗、核酸",
+      "address": "172.16.70.19",
+      "os_type": "windows",
+      "role": "vmware虚拟机wg",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-15-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.19",
+        "index": 14,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "error": "OSError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 15; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "linux测试",
+      "address": "172.16.70.20",
+      "os_type": "linux",
+      "role": "vmware虚拟机test_centos6_64",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        22
+      ],
+      "port_obligations": [
+        {
+          "port": 22,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "SSH"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-16-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.20",
+        "index": 15,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 22,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 16; raw_os=centOS6.5_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "无线认证系统1",
+      "address": "172.16.70.24",
+      "os_type": "windows",
+      "role": "vmware虚拟机wx1",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-17-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.24",
+        "index": 16,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "error": "ConnectionRefusedError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 17; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "无线认证系统2",
+      "address": "172.16.70.25",
+      "os_type": "windows",
+      "role": "vmware虚拟机wx2",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-18-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.25",
+        "index": 17,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "error": "ConnectionRefusedError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 18; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "能耗计量平台",
+      "address": "172.16.70.26",
+      "os_type": "windows",
+      "role": "vmware虚拟机nhjl",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-19-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.26",
+        "index": 18,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "error": "ConnectionRefusedError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 19; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "视频点播系统",
+      "address": "172.16.70.27",
+      "os_type": "unknown",
+      "role": "/",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [],
+      "port_obligations": [],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-20-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.27",
+        "index": 19,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 20; raw_os=/; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "学生上网认证1",
+      "address": "172.16.70.29",
+      "os_type": "linux",
+      "role": "studentauth",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        22
+      ],
+      "port_obligations": [
+        {
+          "port": 22,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "SSH"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-21-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.29",
+        "index": 20,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 22,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 21; raw_os=drcom_linux; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "学生上网认证2",
+      "address": "172.16.70.30",
+      "os_type": "linux",
+      "role": "守护进程(studentauth2)",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        22
+      ],
+      "port_obligations": [
+        {
+          "port": 22,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "SSH"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.30",
+        "index": 21,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 22; raw_os=drcom_linux; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "统一身份认证_no35",
+      "address": "172.16.70.31",
+      "os_type": "linux",
+      "role": "DELL_server",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        22
+      ],
+      "port_obligations": [
+        {
+          "port": 22,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "SSH"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-23-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.31",
+        "index": 22,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 1,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 23; raw_os=centos6.5_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "学生上网认证3",
+      "address": "172.16.70.32",
+      "os_type": "linux",
+      "role": "(studentauth3)",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        22
+      ],
+      "port_obligations": [
+        {
+          "port": 22,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "SSH"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.32",
+        "index": 23,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 24; raw_os=drcom_linux; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "学生体质管理系统（公基）",
+      "address": "172.16.70.34",
+      "os_type": "windows",
+      "role": "vmware虚拟机sport_win0864",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-25-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.34",
+        "index": 24,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 25; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "学生体质管理系统2（公基）",
+      "address": "172.16.70.35",
+      "os_type": "windows",
+      "role": "vmware虚拟机sport2_win0864",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-26-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.35",
+        "index": 25,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 2,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 26; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "数据中心系统_31",
+      "address": "172.16.70.37",
+      "os_type": "linux",
+      "role": "",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        22
+      ],
+      "port_obligations": [
+        {
+          "port": 22,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "SSH"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-27-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.37",
+        "index": 26,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 22,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 27; raw_os=centOS6.5_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "院办档案系统_32",
+      "address": "172.16.70.39",
+      "os_type": "windows",
+      "role": "System X3650 M5",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-28-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.39",
+        "index": 27,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 28; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "院办档案系统_45",
+      "address": "",
+      "os_type": "unknown",
+      "role": "华为服务器",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [],
+      "port_obligations": [],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "",
+        "index": 28,
+        "ping": {
+          "error": "invalid-address",
+          "latency_ms": null,
+          "status": "skipped"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 29; raw_os=unknown; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "学生宿舍APG防代理后台",
+      "address": "172.16.70.40",
+      "os_type": "linux",
+      "role": "vmware虚拟机1card_centos7",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        22
+      ],
+      "port_obligations": [
+        {
+          "port": 22,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "SSH"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-30-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.40",
+        "index": 29,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 30; raw_os=centos6.5_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "继续教育_netexam",
+      "address": "172.16.70.41",
+      "os_type": "windows",
+      "role": "vmware虚拟机netexam_win0864",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-31-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.41",
+        "index": 30,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 31; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "一卡通前置机（双网卡）",
+      "address": "172.16.70.42",
+      "os_type": "unknown",
+      "role": "",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [],
+      "port_obligations": [],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.42",
+        "index": 31,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 32; raw_os=unknown; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "日志管理系统_AC",
+      "address": "172.16.70.43",
+      "os_type": "windows",
+      "role": "vmware虚拟机aclog_win0864",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-33-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.43",
+        "index": 32,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 33; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "日志+行为感知_AC学生",
+      "address": "172.16.70.44",
+      "os_type": "windows",
+      "role": "vmware虚拟机aclog_stu_win0864",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-34-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.44",
+        "index": 33,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 34; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "日志管理系统_AF",
+      "address": "172.16.70.45",
+      "os_type": "windows",
+      "role": "vmware虚拟机aflog_win0864",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-35-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.45",
+        "index": 34,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "error": "ConnectionRefusedError",
+            "latency_ms": null,
+            "port": 3389,
+            "status": "closed"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 35; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "日志管理系统_VPN",
+      "address": "172.16.70.46",
+      "os_type": "windows",
+      "role": "vmware虚拟机vpnlog_win0864",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-36-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.46",
+        "index": 35,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 36; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "vmware虚拟化系统",
+      "address": "172.16.70.57",
+      "os_type": "windows",
+      "role": "vmware（IBM）",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-37-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.57",
+        "index": 36,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 37; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "vmware实体机",
+      "address": "",
+      "os_type": "linux",
+      "role": "",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [],
+      "port_obligations": [],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-38-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "",
+        "index": 37,
+        "ping": {
+          "error": "invalid-address",
+          "latency_ms": null,
+          "status": "skipped"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 38; raw_os=linux; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "ibm刀箱管理地址",
+      "address": "172.16.70.63",
+      "os_type": "unknown",
+      "role": "",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [],
+      "port_obligations": [],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-39-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.63",
+        "index": 38,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 39; raw_os=unknown; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "教务备份",
+      "address": "172.16.70.68",
+      "os_type": "linux",
+      "role": "vmware虚拟机jiaowu_bf_centos7",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        22
+      ],
+      "port_obligations": [
+        {
+          "port": 22,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "SSH"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-40-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.68",
+        "index": 39,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 22,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 40; raw_os=centos7; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "财务服务器新测试_no48",
+      "address": "172.16.70.69",
+      "os_type": "linux",
+      "role": "dell_r540",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        22
+      ],
+      "port_obligations": [
+        {
+          "port": 22,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "SSH"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.69",
+        "index": 40,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 22,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 41; raw_os=centos6.5; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "泛微oa系统",
+      "address": "172.16.70.70",
+      "os_type": "windows",
+      "role": "vmware虚拟机oa_fanwei_win0864",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-42-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.70",
+        "index": 41,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 42; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "研究生管理系统",
+      "address": "172.16.70.71",
+      "os_type": "windows",
+      "role": "vmware虚拟机graduate_win0864",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-43-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.71",
+        "index": 42,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 43; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "教务在线考试题库",
+      "address": "172.16.70.74",
+      "os_type": "windows",
+      "role": "vmware虚拟机onlineexam_win0864",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-44-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.74",
+        "index": 43,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 1,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 44; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "教务在线考试题库",
+      "address": "172.16.70.75",
+      "os_type": "unknown",
+      "role": "",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [],
+      "port_obligations": [],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.75",
+        "index": 44,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 45; raw_os=unknown; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "琴房监控",
+      "address": "172.16.70.76",
+      "os_type": "windows",
+      "role": "华为",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.76",
+        "index": 45,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": null,
+            "port": 3389,
+            "status": "timeout"
+          }
+        ],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 46; raw_os=windows2016_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "一卡通人脸识别",
+      "address": "172.16.70.79",
+      "os_type": "unknown",
+      "role": "",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [],
+      "port_obligations": [],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.79",
+        "index": 46,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 47; raw_os=unknown; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "新开普一卡通_no34",
+      "address": "172.16.70.80",
+      "os_type": "windows",
+      "role": "",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-48-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.80",
+        "index": 47,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 48; raw_os=unknown; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "纪检系统_46",
+      "address": "172.16.70.82",
+      "os_type": "windows",
+      "role": "DELL_server_R730",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [
+        3389
+      ],
+      "port_obligations": [
+        {
+          "port": 3389,
+          "usage": "management",
+          "source": "excel-inferred",
+          "required": true,
+          "label": "Windows RDP"
+        }
+      ],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.82",
+        "index": 48,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [
+          {
+            "latency_ms": 0,
+            "port": 3389,
+            "status": "open"
+          }
+        ],
+        "reachable": true
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 49; raw_os=windows08_64; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "深信服新waf管理地址",
+      "address": "172.16.70.85",
+      "os_type": "unknown",
+      "role": "",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [],
+      "port_obligations": [],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.85",
+        "index": 49,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 50; raw_os=unknown; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    },
+    {
+      "name": "深信服学生网ac管理地址",
+      "address": "172.16.70.90",
+      "os_type": "unknown",
+      "role": "",
+      "owner": "",
+      "department": "",
+      "business_system": "",
+      "business_domain": "",
+      "user_group": "",
+      "criticality": "",
+      "has_redundancy": null,
+      "impact_note": "",
+      "ports": [],
+      "port_obligations": [],
+      "application_checks": [],
+      "application_observation": [],
+      "auth_ref": "excel-row-51-credential-redacted",
+      "collect": {
+        "network": false,
+        "doops_probe": true,
+        "probe_target": "zheyin",
+        "ssh": false,
+        "winrm": false
+      },
+      "metrics": {},
+      "services": [],
+      "network_observation": {
+        "mode": "doops-network-probe",
+        "probe_target": "zheyin",
+        "address": "172.16.70.90",
+        "index": 50,
+        "ping": {
+          "error": "ping-unavailable",
+          "latency_ms": null,
+          "status": "not-available"
+        },
+        "ports": [],
+        "reachable": false
+      },
+      "collection_trace": {
+        "doops_target": "zheyin",
+        "session": "server-health-20260514-115939",
+        "transport_mode": "workspace-push",
+        "remote_result_path": "/root/ws/server-health-20260514-115939-probe-01/server-health/result.json",
+        "cleanup_status": "failed"
+      },
+      "notes": "Excel row 51; raw_os=unknown; credential-redacted. doops network probe through zheyin session server-health-20260514-115939."
+    }
+  ],
+  "doops_channel": {
+    "target": "zheyin",
+    "session": "server-health-20260514-115939",
+    "transport_mode": "workspace-push",
+    "target_online": true,
+    "target_busy": false,
+    "last_seen": "2026-05-14T03:59:37Z",
+    "last_seen_age_seconds": 9,
+    "gateway_mode_detected": true,
+    "collector_info_status": "collected",
+    "cleanup_status": "failed"
+  }
+}

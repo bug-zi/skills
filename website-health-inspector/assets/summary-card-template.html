@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      margin: 0;
+      width: 1600px;
+      height: 900px;
+      background: #f7f1e8;
+      color: #27231d;
+      font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+    }
+    .card { padding: 86px 104px; }
+    .eyebrow { color: #1b365d; font-size: 28px; letter-spacing: 3px; }
+    h1 { font-size: 76px; margin: 18px 0 26px; font-weight: 600; }
+    .status { display: inline-block; color: white; padding: 10px 22px; border-radius: 6px; font-size: 30px; margin-right: 20px; }
+    .critical { background: #a33a2b; }
+    .warning { background: #b7791f; }
+    .healthy { background: #2f6b4f; }
+    .unknown { background: #6b7280; }
+    .score { color: #1b365d; font-size: 54px; font-weight: 600; }
+    .summary { font-size: 34px; max-width: 1280px; line-height: 1.55; margin: 36px 0; }
+    .findings { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; margin-top: 40px; }
+    .finding { border-top: 4px solid #1b365d; padding-top: 16px; font-size: 28px; line-height: 1.35; }
+    .footer { position: absolute; left: 104px; bottom: 70px; color: #776f64; font-size: 24px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    {{BODY}}
+  </div>
+</body>
+</html>
+

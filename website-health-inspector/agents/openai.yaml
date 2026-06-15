@@ -1,0 +1,3 @@
+display_name: 网站健康巡检助手
+short_description: 生成正式网站健康巡检报告
+default_prompt: 使用正式管线执行网站健康巡检，优先交付整个 delivery 文件夹，其中包含 delivery/final-report.html 与 delivery/final-report.pdf；AI 导读图优先用内置 image_gen，不可用时先询问用户选择提供 API Key、使用 HTML 图文导览或启用内置生图后重试；不要交付临时手写 HTML。
