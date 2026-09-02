@@ -3095,8 +3095,11 @@ def test_skill_documents_zheyin_self_node_as_default_monitoring_path():
     assert "hdu 自身节点健康巡检" in skill_text
     assert "doops-only" in skill_text
     assert "do not enable `--host-metrics`, `--snmp-metrics`, SSH, WinRM, or SNMPv3" in skill_text
-    assert "python scripts/collect_doops_inventory.py --environment zheyin --out reports/zheyin-self-node/inventory.json" in skill_text
-    assert "python scripts/collect_doops_inventory.py --environment hdu --out reports/hdu-self-node/inventory.json" in skill_text
+    assert "python scripts/collect_doops_inventory.py --environment zheyin --out <REPORT_HOME>/zheyin-self-node/inventory.json" in skill_text
+    assert "python scripts/collect_doops_inventory.py --environment hdu --out <REPORT_HOME>/hdu-self-node/inventory.json" in skill_text
+    assert "Report Output Location (Hard Rule)" in skill_text
+    assert "vibe实验室" in skill_text and "巡检报告report" in skill_text
+    assert "--out reports/" not in skill_text
     assert "doops 节点自身" in doops_reference
     assert "无需 SSH/WinRM/SNMPv3" in doops_reference
     assert "Do not run SSH/WinRM/SNMPv3 when the user asks to test zheyin or 杭电 managed node CPU/memory/disk health" in doops_reference

@@ -5,6 +5,15 @@ description: 面向管理平台管理员的网站健康巡检 Skill。支持 Exc
 
 # 网站健康巡检助手
 
+## 输出路径规范（硬性规则）
+
+- 所有运行目录与报告必须写到 Skill 目录之外，禁止在 Skill 目录内使用 `reports/` 或 `output/`。
+- 默认报告根目录：`D:\Code\vibe实验室\巡检报告report\website-health-inspector\<运行名>`。
+- 用户明确指定输出路径时以用户为准；未指定时静默使用上述默认根目录。
+- `--out` 等输出参数必须使用报告根目录下的绝对路径（例如 `--out "D:\Code\vibe实验室\巡检报告report\website-health-inspector
+un-001"`）。
+- 下文命令示例中的 `<REPORT_HOME>` 指 `D:\Code\vibe实验室\巡检报告report\website-health-inspector`。
+
 ## 自然语言调用前置确认
 
 - 当用户用自然语言要求“巡检网站、生成报告、跑当前 Skill、检查 URL、检查 Excel 清单、复核管理后台”等任务时，如果用户没有在同一条消息中明确指定导读图方式，必须先停下来询问用户，不得直接运行 `run_health_inspection.py`、`inspect_sites.py`、`run_multi_site_inspection.py` 或 `render_report.py`。
@@ -18,7 +27,7 @@ description: 面向管理平台管理员的网站健康巡检 Skill。支持 Exc
 
 - 正式 PDF 交付前运行 `python scripts/check_runtime_dependencies.py --pdf`；输入为 Excel 清单时加 `--excel`。
 - `inspect_sites.py --strict` 会在任一检查模块失败时立即停止；不加 `--strict` 时，检查模块失败会写入 runtime-failed 子报告并继续合并，`merge` / `render` 失败仍然是致命错误。
-- `merge_reports.py` 生成 `final-report.json` 后，正式渲染前必须运行 `python scripts/audit_score_reasonableness.py --report reports/run-001/final-report.json --out reports/run-001 --threshold 60`；评分低于阈值、分数重算不一致、状态与评分不一致或发现疑似重复扣分时先阻断渲染。
+- `merge_reports.py` 生成 `final-report.json` 后，正式渲染前必须运行 `python scripts/audit_score_reasonableness.py --report <REPORT_HOME>/run-001/final-report.json --out <REPORT_HOME>/run-001 --threshold 60`；评分低于阈值、分数重算不一致、状态与评分不一致或发现疑似重复扣分时先阻断渲染。
 - `render_report.py` 必须通过 Chrome/Edge 从正式 HTML 打印生成 PDF，不得生成占位 PDF；浏览器不可用时写入 `pdf-generation-error.txt` 并返回非零，除非显式使用仅供调试的 `--no-pdf`。
 - `audit_report_quality.py` 会写出 `quality-audit.md/json`、刷新 `delivery-manifest.json`，并在 `status=fail` 时返回非零。
 - `delivery-manifest.json` 中 `package_complete` 表示必要产物存在；`ready_to_deliver` 还要求评分审计产物存在、评分门禁通过或已人工批准、质量审计产物存在且质量门禁未失败。
@@ -83,25 +92,25 @@ description: 面向管理平台管理员的网站健康巡检 Skill。支持 Exc
 临时 URL 或带凭证深度巡检时，优先使用一键管线：
 
 ```bash
-python scripts/run_health_inspection.py --url https://example.com/admin --out reports/run-001
+python scripts/run_health_inspection.py --url https://example.com/admin --out <REPORT_HOME>/run-001
 ```
 
 带管理员账号密码的深度浏览巡检：
 
 ```bash
-python scripts/run_health_inspection.py --url https://example.com/admin --username admin --password-env WEBSITE_HEALTH_ADMIN_PASSWORD --out reports/deep
+python scripts/run_health_inspection.py --url https://example.com/admin --username admin --password-env WEBSITE_HEALTH_ADMIN_PASSWORD --out <REPORT_HOME>/deep
 ```
 
 如果用户直接给了密码，可在当前 shell 临时设置环境变量后运行，或使用 `--password` 传入；不要把密码写进报告、文档或命令回显。
 
 ```bash
-python scripts/run_health_inspection.py --url https://example.com/admin --username admin --password-env WEBSITE_HEALTH_ADMIN_PASSWORD --out reports/deep
+python scripts/run_health_inspection.py --url https://example.com/admin --username admin --password-env WEBSITE_HEALTH_ADMIN_PASSWORD --out <REPORT_HOME>/deep
 ```
 
 用户明确选择复用已有 GPT 导读图、不重新调用图片接口：
 
 ```bash
-python scripts/run_health_inspection.py --url https://example.com/admin --out reports/run-001 --guide-mode reuse-existing
+python scripts/run_health_inspection.py --url https://example.com/admin --out <REPORT_HOME>/run-001 --guide-mode reuse-existing
 ```
 
 在没有可用 `image_gen` 能力或本地图片接口配置时，先向用户确认导览图方式：
@@ -137,7 +146,7 @@ python scripts/check_image_generation_readiness.py --json
 首选命令：
 
 ```bash
-python scripts/run_multi_site_inspection.py --excel path/to/sites.xlsx --out reports/batch --max-workers 5 --guide-mode html-guide
+python scripts/run_multi_site_inspection.py --excel path/to/sites.xlsx --out <REPORT_HOME>/batch --max-workers 5 --guide-mode html-guide
 ```
 
 简单 URL Excel 至少包含 `网站名称` 和 `URL`；可选包含 `负责人`、`优先级`、`备注`、`期望状态码`、`超时时间`。标准资源清单 Excel 会按网站页面拆分成独立单站巡检任务。
@@ -145,7 +154,7 @@ python scripts/run_multi_site_inspection.py --excel path/to/sites.xlsx --out rep
 交付入口：
 
 ```text
-reports/batch/delivery-batch/index.html
+<REPORT_HOME>/batch/delivery-batch/index.html
 ```
 
 对外发送时必须发送整个 `delivery-batch/` 文件夹。该文件夹包含首页索引、整体总报告、批次摘要，以及每个网站自己的 `delivery/final-report.html` 和配套素材。整体报告正式入口是 `delivery-batch/overall/final-report.html`，只做聚合治理和跳转，不承载单站证据详情。单个站点失败不得阻断整个批次，应在首页和整体报告中标记为 `unknown` 或 `warning` 并保留错误原因。
@@ -155,23 +164,23 @@ reports/batch/delivery-batch/index.html
 适用于管理员维护了 Excel 资源清单，需要按系统、站点、主机或服务批量巡检的场景。
 
 ```bash
-python scripts/import_inventory_excel.py --excel path/to/inventory.xlsx --out reports/run-001
-python scripts/inspect_sites.py --inventory reports/run-001/inventory.normalized.json --out reports/run-001
+python scripts/import_inventory_excel.py --excel path/to/inventory.xlsx --out <REPORT_HOME>/run-001
+python scripts/inspect_sites.py --inventory <REPORT_HOME>/run-001/inventory.normalized.json --out <REPORT_HOME>/run-001
 ```
 
 `inspect_sites.py` 默认会执行 discovery、content、deep-browser、host、merge、render。若拆分执行，最终仍必须运行：
 
 ```bash
-python scripts/merge_reports.py --in reports/run-001 --out reports/run-001/final-report.json
-python scripts/audit_score_reasonableness.py --report reports/run-001/final-report.json --out reports/run-001 --threshold 60
-python scripts/render_report.py --report reports/run-001/final-report.json --out reports/run-001
-python scripts/audit_report_quality.py --run-dir reports/run-001 --iteration 1 --out reports/run-001/quality-audit.md
+python scripts/merge_reports.py --in <REPORT_HOME>/run-001 --out <REPORT_HOME>/run-001/final-report.json
+python scripts/audit_score_reasonableness.py --report <REPORT_HOME>/run-001/final-report.json --out <REPORT_HOME>/run-001 --threshold 60
+python scripts/render_report.py --report <REPORT_HOME>/run-001/final-report.json --out <REPORT_HOME>/run-001
+python scripts/audit_report_quality.py --run-dir <REPORT_HOME>/run-001 --iteration 1 --out <REPORT_HOME>/run-001/quality-audit.md
 ```
 
 若评分审计阻断但人工确认低分合理且没有重复扣分，可继续渲染：
 
 ```bash
-python scripts/render_report.py --report reports/run-001/final-report.json --out reports/run-001 --score-review-approved --score-review-note "人工确认低分合理，未发现重复扣分"
+python scripts/render_report.py --report <REPORT_HOME>/run-001/final-report.json --out <REPORT_HOME>/run-001 --score-review-approved --score-review-note "人工确认低分合理，未发现重复扣分"
 ```
 
 可选：生成空白 Excel 模板。
@@ -187,21 +196,21 @@ python scripts/create_inventory_template.py --out assets/inventory-template.xlsx
 推荐命令：
 
 ```bash
-python scripts/run_health_inspection.py --url https://example.com/admin --out reports/adhoc
+python scripts/run_health_inspection.py --url https://example.com/admin --out <REPORT_HOME>/adhoc
 ```
 
 拆分命令：
 
 ```bash
-python scripts/build_adhoc_inventory.py --url https://example.com/admin --out reports/adhoc
-python scripts/inspect_sites.py --inventory reports/adhoc/inventory.normalized.json --out reports/adhoc
-python scripts/audit_report_quality.py --run-dir reports/adhoc --iteration 1 --out reports/adhoc/quality-audit.md
+python scripts/build_adhoc_inventory.py --url https://example.com/admin --out <REPORT_HOME>/adhoc
+python scripts/inspect_sites.py --inventory <REPORT_HOME>/adhoc/inventory.normalized.json --out <REPORT_HOME>/adhoc
+python scripts/audit_report_quality.py --run-dir <REPORT_HOME>/adhoc --iteration 1 --out <REPORT_HOME>/adhoc/quality-audit.md
 ```
 
 如需页面发现，可在构建清单后运行受控站点发现，再继续巡检：
 
 ```bash
-python scripts/discover_site_pages.py --inventory reports/adhoc/inventory.normalized.json --out reports/adhoc --merge
+python scripts/discover_site_pages.py --inventory <REPORT_HOME>/adhoc/inventory.normalized.json --out <REPORT_HOME>/adhoc --merge
 ```
 
 ## 带凭证深度浏览模式：URL + 管理员账号密码
@@ -211,15 +220,15 @@ python scripts/discover_site_pages.py --inventory reports/adhoc/inventory.normal
 推荐命令：
 
 ```bash
-python scripts/run_health_inspection.py --url https://example.com/admin --username admin --password-env WEBSITE_HEALTH_ADMIN_PASSWORD --out reports/deep
+python scripts/run_health_inspection.py --url https://example.com/admin --username admin --password-env WEBSITE_HEALTH_ADMIN_PASSWORD --out <REPORT_HOME>/deep
 ```
 
 拆分命令：
 
 ```bash
-python scripts/build_adhoc_inventory.py --url https://example.com/admin --username admin --password-env WEBSITE_HEALTH_ADMIN_PASSWORD --out reports/deep
-python scripts/inspect_sites.py --inventory reports/deep/inventory.normalized.json --out reports/deep
-python scripts/audit_report_quality.py --run-dir reports/deep --iteration 1 --out reports/deep/quality-audit.md
+python scripts/build_adhoc_inventory.py --url https://example.com/admin --username admin --password-env WEBSITE_HEALTH_ADMIN_PASSWORD --out <REPORT_HOME>/deep
+python scripts/inspect_sites.py --inventory <REPORT_HOME>/deep/inventory.normalized.json --out <REPORT_HOME>/deep
+python scripts/audit_report_quality.py --run-dir <REPORT_HOME>/deep --iteration 1 --out <REPORT_HOME>/deep/quality-audit.md
 ```
 
 深度浏览结果应写入 `browser-inspection-report.json`。格式和交互流程可按需读取 `references/interactive-browser-inspection.md`。
@@ -233,25 +242,25 @@ AI 导览图提示词必须按报告类型分流，而不是生成泛用运维�
 报告生成前必须完成导读图方式确认：有可用 `image_gen` 时优先使用内置生图；没有 `image_gen` 时，必须让用户在“提供自己的图片接口 API Key”“使用 HTML/CSS 图文导览”“启用内置 image_gen 后重试”之间作出选择。未确认且无可用 API Key 时，默认命令会停止并写入 `needs_user_choice` 状态：
 
 ```bash
-python scripts/render_report.py --report reports/run-001/final-report.json --out reports/run-001
+python scripts/render_report.py --report <REPORT_HOME>/run-001/final-report.json --out <REPORT_HOME>/run-001
 ```
 
 用户提供 API Key 后使用：
 
 ```bash
-python scripts/render_report.py --report reports/run-001/final-report.json --out reports/run-001 --guide-mode ai-image
+python scripts/render_report.py --report <REPORT_HOME>/run-001/final-report.json --out <REPORT_HOME>/run-001 --guide-mode ai-image
 ```
 
 用户不提供 API Key，或希望不调用图片接口，使用：
 
 ```bash
-python scripts/render_report.py --report reports/run-001/final-report.json --out reports/run-001 --guide-mode html-guide
+python scripts/render_report.py --report <REPORT_HOME>/run-001/final-report.json --out <REPORT_HOME>/run-001 --guide-mode html-guide
 ```
 
 用户明确要求复用运行目录已有 `ai-report-guide.png` 时使用：
 
 ```bash
-python scripts/render_report.py --report reports/run-001/final-report.json --out reports/run-001 --guide-mode reuse-existing
+python scripts/render_report.py --report <REPORT_HOME>/run-001/final-report.json --out <REPORT_HOME>/run-001 --guide-mode reuse-existing
 ```
 
 `reuse-existing` 只接受有效 `ai-report-guide.png`；缺失、空文件或普通摘要图冒充时会停止并要求重新确认。
@@ -275,7 +284,7 @@ python scripts/render_report.py --report reports/run-001/final-report.json --out
 评分审计是健康检测完成后、正式报告渲染前的独立闸门，用来专门复核低分和疑似重复扣分。默认阈值为 60 分，可用 `--score-audit-threshold` 或审计脚本的 `--threshold` 显式覆盖。
 
 ```bash
-python scripts/audit_score_reasonableness.py --report reports/run-001/final-report.json --out reports/run-001 --threshold 60
+python scripts/audit_score_reasonableness.py --report <REPORT_HOME>/run-001/final-report.json --out <REPORT_HOME>/run-001 --threshold 60
 ```
 
 该命令会生成：
@@ -327,7 +336,7 @@ python scripts/audit_score_reasonableness.py --report reports/run-001/final-repo
 生成报告后，运行质量审计：
 
 ```bash
-python scripts/audit_report_quality.py --run-dir reports/run-001 --iteration 1 --out reports/run-001/quality-audit.md
+python scripts/audit_report_quality.py --run-dir <REPORT_HOME>/run-001 --iteration 1 --out <REPORT_HOME>/run-001/quality-audit.md
 ```
 
 质量审计重点包括：

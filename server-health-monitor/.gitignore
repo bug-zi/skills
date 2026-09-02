@@ -5,8 +5,8 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 reports/
-output/
 runs/
+output/
 delivery/
 delivery-next/
 html-assets/

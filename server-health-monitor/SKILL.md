@@ -9,6 +9,14 @@ Use this skill to produce read-only, Chinese, management-ready server health rep
 
 Current default for 浙音/zheyin and 杭电/hdu requests: run a doops 自身节点健康巡检 for the resolved managed target (`zheyin` or `hdu`). This monitors the doops node itself through doops workspace execution and collects CPU, memory, disk, load, uptime, main running processes, doops channel status, and key service states. This default path must not use SSH, WinRM, SNMPv3, Excel passwords, or target business-server credentials. Excel batch probing and SSH/WinRM/SNMPv3 host metrics remain optional extension paths only when the user explicitly provides an ordinary server inventory and asks for deeper per-server collection.
 
+## Report Output Location (Hard Rule)
+
+- All run directories and reports MUST be written OUTSIDE this skill folder. Never use `reports/` inside the skill directory.
+- Default report root: `D:\Code\vibe实验室\巡检报告report\server-health-monitor\<run-name>`.
+- If the user explicitly specifies an output path, use that path instead. Otherwise use the default root above silently.
+- The `--out` / inventory output arguments must always point to an absolute path under the report root (e.g. `--out "D:\Code\vibe实验室\巡检报告report\server-health-monitor\zheyin-self-node"`).
+- `<REPORT_HOME>` in the command examples below means `D:\Code\vibe实验室\巡检报告report\server-health-monitor`.
+
 ## Core Rules
 
 - Treat checks as read-only unless the user explicitly asks for another mode.
@@ -36,8 +44,8 @@ zheyin 自身节点健康巡检（默认主路径）：
 
 ```bash
 $env:DOOPS_ALLOW_INSECURE_GATEWAY='1'
-python scripts/collect_doops_inventory.py --environment zheyin --out reports/zheyin-self-node/inventory.json
-python scripts/run_server_health_monitor.py --inventory reports/zheyin-self-node/inventory.json --out reports/zheyin-self-node
+python scripts/collect_doops_inventory.py --environment zheyin --out <REPORT_HOME>/zheyin-self-node/inventory.json
+python scripts/run_server_health_monitor.py --inventory <REPORT_HOME>/zheyin-self-node/inventory.json --out <REPORT_HOME>/zheyin-self-node
 ```
 
 If the render stops because `auto` lacks an AI guide image decision, ask the user whether to use an AI guide image first. Only rerun with `--guide-mode html-guide` after the user explicitly confirms HTML/CSS is acceptable.
@@ -48,8 +56,8 @@ This reports `doops-self-collected` host metrics, main process, and service cove
 
 ```bash
 $env:DOOPS_ALLOW_INSECURE_GATEWAY='1'
-python scripts/collect_doops_inventory.py --environment hdu --out reports/hdu-self-node/inventory.json
-python scripts/run_server_health_monitor.py --inventory reports/hdu-self-node/inventory.json --out reports/hdu-self-node
+python scripts/collect_doops_inventory.py --environment hdu --out <REPORT_HOME>/hdu-self-node/inventory.json
+python scripts/run_server_health_monitor.py --inventory <REPORT_HOME>/hdu-self-node/inventory.json --out <REPORT_HOME>/hdu-self-node
 ```
 
 This reports `doops-self-collected` host metrics, main process, and service coverage for the `hdu` doops node itself.
@@ -57,7 +65,7 @@ This reports `doops-self-collected` host metrics, main process, and service cove
 Dry-run the desensitized sample:
 
 ```bash
-python scripts/run_server_health_monitor.py --inventory assets/samples/zheyin-inventory.example.json --out reports/zheyin-sample --offline
+python scripts/run_server_health_monitor.py --inventory assets/samples/zheyin-inventory.example.json --out <REPORT_HOME>/zheyin-sample --offline
 ```
 
 Preflight 浙音 doops access:
@@ -77,43 +85,43 @@ python scripts/collect_doops_inventory.py --preflight --environment hdu
 Collect a managed environment through doops, then render the formal report:
 
 ```bash
-python scripts/collect_doops_inventory.py --environment zheyin --out reports/zheyin-live/inventory.json
-python scripts/run_server_health_monitor.py --inventory reports/zheyin-live/inventory.json --out reports/zheyin-live
+python scripts/collect_doops_inventory.py --environment zheyin --out <REPORT_HOME>/zheyin-live/inventory.json
+python scripts/run_server_health_monitor.py --inventory <REPORT_HOME>/zheyin-live/inventory.json --out <REPORT_HOME>/zheyin-live
 ```
 
 Force workspace transport for a doops batch collection:
 
 ```bash
-python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --host-metrics --doops-workspace-mode workspace --out reports/zheyin-workspace/inventory.json
-python scripts/run_server_health_monitor.py --inventory reports/zheyin-workspace/inventory.json --out reports/zheyin-workspace
+python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --host-metrics --doops-workspace-mode workspace --out <REPORT_HOME>/zheyin-workspace/inventory.json
+python scripts/run_server_health_monitor.py --inventory <REPORT_HOME>/zheyin-workspace/inventory.json --out <REPORT_HOME>/zheyin-workspace
 ```
 
 Use a managed doops node as an internal network probe for an Excel inventory sample:
 
 ```bash
-python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --limit 30 --out reports/zheyin-excel/inventory.json
-python scripts/run_server_health_monitor.py --inventory reports/zheyin-excel/inventory.json --out reports/zheyin-excel
+python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --limit 30 --out <REPORT_HOME>/zheyin-excel/inventory.json
+python scripts/run_server_health_monitor.py --inventory <REPORT_HOME>/zheyin-excel/inventory.json --out <REPORT_HOME>/zheyin-excel
 ```
 
 Collect host-internal metrics from an Excel inventory through read-only SSH/WinRM launched from a managed doops node:
 
 ```bash
-python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --host-metrics-profile zheyin-monitor --limit 30 --out reports/zheyin-excel-hostmetrics/inventory.json
-python scripts/run_server_health_monitor.py --inventory reports/zheyin-excel-hostmetrics/inventory.json --out reports/zheyin-excel-hostmetrics
+python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --host-metrics-profile zheyin-monitor --limit 30 --out <REPORT_HOME>/zheyin-excel-hostmetrics/inventory.json
+python scripts/run_server_health_monitor.py --inventory <REPORT_HOME>/zheyin-excel-hostmetrics/inventory.json --out <REPORT_HOME>/zheyin-excel-hostmetrics
 ```
 
 Collect authentication-security evidence with logs and protection configuration:
 
 ```bash
-python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --host-metrics-profile zheyin-monitor --auth-security --auth-log-window-days 7 --limit 30 --out reports/zheyin-auth-security/inventory.json
-python scripts/run_server_health_monitor.py --inventory reports/zheyin-auth-security/inventory.json --out reports/zheyin-auth-security
+python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --host-metrics-profile zheyin-monitor --auth-security --auth-log-window-days 7 --limit 30 --out <REPORT_HOME>/zheyin-auth-security/inventory.json
+python scripts/run_server_health_monitor.py --inventory <REPORT_HOME>/zheyin-auth-security/inventory.json --out <REPORT_HOME>/zheyin-auth-security
 ```
 
 Add local password-strength scoring only after explicit user authorization:
 
 ```bash
-python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --use-excel-runtime-credentials --auth-security --password-strength-audit --password-strength-source runtime-auth --limit 30 --out reports/zheyin-auth-strength/inventory.json
-python scripts/run_server_health_monitor.py --inventory reports/zheyin-auth-strength/inventory.json --out reports/zheyin-auth-strength
+python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --use-excel-runtime-credentials --auth-security --password-strength-audit --password-strength-source runtime-auth --limit 30 --out <REPORT_HOME>/zheyin-auth-strength/inventory.json
+python scripts/run_server_health_monitor.py --inventory <REPORT_HOME>/zheyin-auth-strength/inventory.json --out <REPORT_HOME>/zheyin-auth-strength
 ```
 
 This never performs online password guessing and never writes plaintext passwords. If logs or Security Event Log permissions are missing, the report must say “认证安全证据未覆盖” instead of calling the host safe.
@@ -122,8 +130,8 @@ Classify a server run-status inventory, then monitor only servers that are still
 
 ```bash
 $env:DOOPS_ALLOW_INSECURE_GATEWAY='1'
-python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --host-metrics-profile excel-runtime-credentials --use-excel-runtime-credentials --classify-inventory --doops-workspace-mode inline --out reports/zheyin-inventory-classified/inventory.json
-python scripts/run_server_health_monitor.py --inventory reports/zheyin-inventory-classified/inventory.json --out reports/zheyin-inventory-classified --guide-mode ai-image
+python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --host-metrics-profile excel-runtime-credentials --use-excel-runtime-credentials --classify-inventory --doops-workspace-mode inline --out <REPORT_HOME>/zheyin-inventory-classified/inventory.json
+python scripts/run_server_health_monitor.py --inventory <REPORT_HOME>/zheyin-inventory-classified/inventory.json --out <REPORT_HOME>/zheyin-inventory-classified --guide-mode ai-image
 ```
 
 This writes four CSV files beside `inventory.json`: `inventory-active-servers.csv`, `inventory-inactive-servers.csv`, `inventory-monitorable-servers.csv`, and `inventory-unmonitorable-servers.csv`. The final report contains the full inventory rollup, while `delivery-batch/servers/index.html` is the designed entrypoint for individual reports whose CPU/memory host metrics were successfully collected. When SSH or WinRM metrics succeed, the report also shows the main running processes and flags high CPU, high memory, or abnormal process states.
@@ -131,15 +139,15 @@ This writes four CSV files beside `inventory.json`: `inventory-active-servers.cs
 Collect host-internal metrics from an Excel inventory through read-only SNMPv3 launched from a managed doops node:
 
 ```bash
-python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --snmp-metrics --snmp-target zheyin --snmp-profile zheyin-snmpv3-monitor --limit 30 --out reports/zheyin-excel-snmp/inventory.json
-python scripts/run_server_health_monitor.py --inventory reports/zheyin-excel-snmp/inventory.json --out reports/zheyin-excel-snmp
+python scripts/collect_doops_inventory.py --inventory path/to/servers.xlsx --probe-target zheyin --snmp-metrics --snmp-target zheyin --snmp-profile zheyin-snmpv3-monitor --limit 30 --out <REPORT_HOME>/zheyin-excel-snmp/inventory.json
+python scripts/run_server_health_monitor.py --inventory <REPORT_HOME>/zheyin-excel-snmp/inventory.json --out <REPORT_HOME>/zheyin-excel-snmp
 ```
 
 Collect a user-supplied multi-server doops inventory:
 
 ```bash
-python scripts/collect_doops_inventory.py --inventory path/to/server-inventory.json --out reports/run-001/inventory.json
-python scripts/run_server_health_monitor.py --inventory reports/run-001/inventory.json --out reports/run-001
+python scripts/collect_doops_inventory.py --inventory path/to/server-inventory.json --out <REPORT_HOME>/run-001/inventory.json
+python scripts/run_server_health_monitor.py --inventory <REPORT_HOME>/run-001/inventory.json --out <REPORT_HOME>/run-001
 ```
 
 Create a CSV template:

@@ -1,5 +1,7 @@
 # Server Inventory Schema
 
+> `<REPORT_HOME>` = `D:\Code\vibe实验室\巡检报告report\server-health-monitor`（默认报告根目录；用户另有指定时以其为准）。
+
 Use JSON for the most complete server inventory. CSV/TSV is supported for simple network checks. Excel `.xlsx` inventories are supported for operations sheets with columns such as `业务系统名称`, `IP地址`, `操作系统`, `服务器初始帐户/密码`, and `服务器描述`; credentials are converted to redacted references and are never written to output.
 
 ## JSON
@@ -73,7 +75,7 @@ The report runner labels this coverage as `doops-self-collected`. It means CPU, 
 Inventory classification for run-status sheets:
 
 ```bash
-python scripts/collect_doops_inventory.py --inventory servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --use-excel-runtime-credentials --classify-inventory --doops-workspace-mode inline --out reports/run/inventory.json
+python scripts/collect_doops_inventory.py --inventory servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --use-excel-runtime-credentials --classify-inventory --doops-workspace-mode inline --out <REPORT_HOME>/run/inventory.json
 ```
 
 With `--classify-inventory`, the collector first reads all records and writes:
@@ -222,7 +224,7 @@ Doops collection target precedence:
 Doops internal network probing:
 
 ```bash
-python scripts/collect_doops_inventory.py --inventory servers.xlsx --probe-target zheyin --limit 30 --out reports/run/inventory.json
+python scripts/collect_doops_inventory.py --inventory servers.xlsx --probe-target zheyin --limit 30 --out <REPORT_HOME>/run/inventory.json
 ```
 
 This writes servers with `collect.doops_probe=true` and `network_observation` containing `mode`, `probe_target`, `reachable`, `ping`, and `ports`. This is network reachability evidence from the doops environment, not host CPU/memory/disk evidence.
@@ -267,7 +269,7 @@ Formal report JSON also mirrors the top-level management conclusion into `summar
 Doops internal host-metrics collection:
 
 ```bash
-python scripts/collect_doops_inventory.py --inventory servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --host-metrics-profile zheyin-monitor --limit 30 --out reports/run/inventory.json
+python scripts/collect_doops_inventory.py --inventory servers.xlsx --probe-target zheyin --host-metrics --host-metrics-target zheyin --host-metrics-profile zheyin-monitor --limit 30 --out <REPORT_HOME>/run/inventory.json
 ```
 
 This first preserves any doops network observations, then attempts read-only host metrics from the doops target. Linux rows use SSH as `monitor@<ip>` with the collector-node key `/opt/server-health-monitor/secrets/zheyin_monitor_ed25519`. Windows rows use WinRM credentials from `/opt/server-health-monitor/secrets/winrm_zheyin_monitor.json` on the collector node. Credential values are used only inside the remote collection process and are not written to inventory, evidence, or reports.
@@ -275,7 +277,7 @@ This first preserves any doops network observations, then attempts read-only hos
 Doops internal SNMPv3 host-metrics collection:
 
 ```bash
-python scripts/collect_doops_inventory.py --inventory servers.xlsx --probe-target zheyin --snmp-metrics --snmp-target zheyin --snmp-profile zheyin-snmpv3-monitor --limit 30 --out reports/run/inventory.json
+python scripts/collect_doops_inventory.py --inventory servers.xlsx --probe-target zheyin --snmp-metrics --snmp-target zheyin --snmp-profile zheyin-snmpv3-monitor --limit 30 --out <REPORT_HOME>/run/inventory.json
 ```
 
 This uses `snmpget` and `snmpwalk` on the doops collector node and reads SNMPv3 credentials only from `/opt/server-health-monitor/secrets/snmp_zheyin_monitor.json` on that node. The config file is used only in the remote process memory and must not be written to inventory, evidence, or reports.
@@ -316,7 +318,7 @@ Supported columns:
 The report runner accepts an optional previous report:
 
 ```bash
-python scripts/run_server_health_monitor.py --inventory reports/current/inventory.json --previous-report reports/previous/delivery/final-report.json --out reports/current
+python scripts/run_server_health_monitor.py --inventory <REPORT_HOME>/current/inventory.json --previous-report <REPORT_HOME>/previous/delivery/final-report.json --out <REPORT_HOME>/current
 ```
 
 Trend comparison uses the previous `final-report.json` and reports new, resolved, and persistent findings plus status changes for servers present in both reports. When no previous report is supplied, the report states that the current run is a baseline inspection.
